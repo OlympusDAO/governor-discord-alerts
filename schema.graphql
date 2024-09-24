@@ -1,0 +1,2507 @@
+schema {
+  query: Query
+  subscription: Subscription
+}
+
+"""
+creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API.
+"""
+directive @derivedFrom(field: String!) on FIELD_DEFINITION
+
+"""
+Marks the GraphQL type as indexable entity.  Each type that should be an entity is required to be annotated with this directive.
+"""
+directive @entity on OBJECT
+
+"""
+Defined a Subgraph ID for an object type
+"""
+directive @subgraphId(id: String!) on OBJECT
+
+enum Aggregation_interval {
+  day
+  hour
+}
+
+scalar BigDecimal
+
+scalar BigInt
+
+input BlockChangedFilter {
+  number_gte: Int!
+}
+
+input Block_height {
+  hash: Bytes
+  number: Int
+  number_gte: Int
+}
+
+scalar Bytes
+
+"""
+8 bytes signed integer
+"""
+scalar Int8
+
+type NewAdmin {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newAdmin: Bytes!
+  oldAdmin: Bytes!
+  transactionHash: Bytes!
+}
+
+input NewAdmin_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [NewAdmin_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newAdmin: Bytes
+  newAdmin_contains: Bytes
+  newAdmin_gt: Bytes
+  newAdmin_gte: Bytes
+  newAdmin_in: [Bytes!]
+  newAdmin_lt: Bytes
+  newAdmin_lte: Bytes
+  newAdmin_not: Bytes
+  newAdmin_not_contains: Bytes
+  newAdmin_not_in: [Bytes!]
+  oldAdmin: Bytes
+  oldAdmin_contains: Bytes
+  oldAdmin_gt: Bytes
+  oldAdmin_gte: Bytes
+  oldAdmin_in: [Bytes!]
+  oldAdmin_lt: Bytes
+  oldAdmin_lte: Bytes
+  oldAdmin_not: Bytes
+  oldAdmin_not_contains: Bytes
+  oldAdmin_not_in: [Bytes!]
+  or: [NewAdmin_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum NewAdmin_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newAdmin
+  oldAdmin
+  transactionHash
+}
+
+type NewImplementation {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newImplementation: Bytes!
+  oldImplementation: Bytes!
+  transactionHash: Bytes!
+}
+
+input NewImplementation_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [NewImplementation_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newImplementation: Bytes
+  newImplementation_contains: Bytes
+  newImplementation_gt: Bytes
+  newImplementation_gte: Bytes
+  newImplementation_in: [Bytes!]
+  newImplementation_lt: Bytes
+  newImplementation_lte: Bytes
+  newImplementation_not: Bytes
+  newImplementation_not_contains: Bytes
+  newImplementation_not_in: [Bytes!]
+  oldImplementation: Bytes
+  oldImplementation_contains: Bytes
+  oldImplementation_gt: Bytes
+  oldImplementation_gte: Bytes
+  oldImplementation_in: [Bytes!]
+  oldImplementation_lt: Bytes
+  oldImplementation_lte: Bytes
+  oldImplementation_not: Bytes
+  oldImplementation_not_contains: Bytes
+  oldImplementation_not_in: [Bytes!]
+  or: [NewImplementation_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum NewImplementation_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newImplementation
+  oldImplementation
+  transactionHash
+}
+
+type NewPendingAdmin {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newPendingAdmin: Bytes!
+  oldPendingAdmin: Bytes!
+  transactionHash: Bytes!
+}
+
+input NewPendingAdmin_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [NewPendingAdmin_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newPendingAdmin: Bytes
+  newPendingAdmin_contains: Bytes
+  newPendingAdmin_gt: Bytes
+  newPendingAdmin_gte: Bytes
+  newPendingAdmin_in: [Bytes!]
+  newPendingAdmin_lt: Bytes
+  newPendingAdmin_lte: Bytes
+  newPendingAdmin_not: Bytes
+  newPendingAdmin_not_contains: Bytes
+  newPendingAdmin_not_in: [Bytes!]
+  oldPendingAdmin: Bytes
+  oldPendingAdmin_contains: Bytes
+  oldPendingAdmin_gt: Bytes
+  oldPendingAdmin_gte: Bytes
+  oldPendingAdmin_in: [Bytes!]
+  oldPendingAdmin_lt: Bytes
+  oldPendingAdmin_lte: Bytes
+  oldPendingAdmin_not: Bytes
+  oldPendingAdmin_not_contains: Bytes
+  oldPendingAdmin_not_in: [Bytes!]
+  or: [NewPendingAdmin_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum NewPendingAdmin_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newPendingAdmin
+  oldPendingAdmin
+  transactionHash
+}
+
+"""
+Defines the order direction, either ascending or descending
+"""
+enum OrderDirection {
+  asc
+  desc
+}
+
+type ProposalCanceled {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  proposal: ProposalCreated!
+  proposalId: BigInt!
+  transactionHash: Bytes!
+}
+
+input ProposalCanceled_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [ProposalCanceled_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [ProposalCanceled_filter]
+  proposal: String
+  proposalId: BigInt
+  proposalId_gt: BigInt
+  proposalId_gte: BigInt
+  proposalId_in: [BigInt!]
+  proposalId_lt: BigInt
+  proposalId_lte: BigInt
+  proposalId_not: BigInt
+  proposalId_not_in: [BigInt!]
+  proposal_: ProposalCreated_filter
+  proposal_contains: String
+  proposal_contains_nocase: String
+  proposal_ends_with: String
+  proposal_ends_with_nocase: String
+  proposal_gt: String
+  proposal_gte: String
+  proposal_in: [String!]
+  proposal_lt: String
+  proposal_lte: String
+  proposal_not: String
+  proposal_not_contains: String
+  proposal_not_contains_nocase: String
+  proposal_not_ends_with: String
+  proposal_not_ends_with_nocase: String
+  proposal_not_in: [String!]
+  proposal_not_starts_with: String
+  proposal_not_starts_with_nocase: String
+  proposal_starts_with: String
+  proposal_starts_with_nocase: String
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum ProposalCanceled_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  proposal
+  proposalId
+  proposal__blockNumber
+  proposal__blockTimestamp
+  proposal__description
+  proposal__id
+  proposal__proposalId
+  proposal__proposer
+  proposal__startBlock
+  proposal__transactionHash
+  transactionHash
+}
+
+type ProposalCreated {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  calldatas: [Bytes!]!
+  cancelled: ProposalCanceled
+  description: String!
+  executed: ProposalExecuted
+  id: Bytes!
+  proposalId: BigInt!
+  proposer: Bytes!
+  queued: ProposalQueued
+  signatures: [String!]!
+  startBlock: BigInt!
+  targets: [Bytes!]!
+  transactionHash: Bytes!
+  values: [BigInt!]!
+  vetoed: ProposalVetoed
+  votingStarted: ProposalVotingStarted
+}
+
+input ProposalCreated_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [ProposalCreated_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  calldatas: [Bytes!]
+  calldatas_contains: [Bytes!]
+  calldatas_contains_nocase: [Bytes!]
+  calldatas_not: [Bytes!]
+  calldatas_not_contains: [Bytes!]
+  calldatas_not_contains_nocase: [Bytes!]
+  cancelled_: ProposalCanceled_filter
+  description: String
+  description_contains: String
+  description_contains_nocase: String
+  description_ends_with: String
+  description_ends_with_nocase: String
+  description_gt: String
+  description_gte: String
+  description_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_not: String
+  description_not_contains: String
+  description_not_contains_nocase: String
+  description_not_ends_with: String
+  description_not_ends_with_nocase: String
+  description_not_in: [String!]
+  description_not_starts_with: String
+  description_not_starts_with_nocase: String
+  description_starts_with: String
+  description_starts_with_nocase: String
+  executed_: ProposalExecuted_filter
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [ProposalCreated_filter]
+  proposalId: BigInt
+  proposalId_gt: BigInt
+  proposalId_gte: BigInt
+  proposalId_in: [BigInt!]
+  proposalId_lt: BigInt
+  proposalId_lte: BigInt
+  proposalId_not: BigInt
+  proposalId_not_in: [BigInt!]
+  proposer: Bytes
+  proposer_contains: Bytes
+  proposer_gt: Bytes
+  proposer_gte: Bytes
+  proposer_in: [Bytes!]
+  proposer_lt: Bytes
+  proposer_lte: Bytes
+  proposer_not: Bytes
+  proposer_not_contains: Bytes
+  proposer_not_in: [Bytes!]
+  queued_: ProposalQueued_filter
+  signatures: [String!]
+  signatures_contains: [String!]
+  signatures_contains_nocase: [String!]
+  signatures_not: [String!]
+  signatures_not_contains: [String!]
+  signatures_not_contains_nocase: [String!]
+  startBlock: BigInt
+  startBlock_gt: BigInt
+  startBlock_gte: BigInt
+  startBlock_in: [BigInt!]
+  startBlock_lt: BigInt
+  startBlock_lte: BigInt
+  startBlock_not: BigInt
+  startBlock_not_in: [BigInt!]
+  targets: [Bytes!]
+  targets_contains: [Bytes!]
+  targets_contains_nocase: [Bytes!]
+  targets_not: [Bytes!]
+  targets_not_contains: [Bytes!]
+  targets_not_contains_nocase: [Bytes!]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+  values: [BigInt!]
+  values_contains: [BigInt!]
+  values_contains_nocase: [BigInt!]
+  values_not: [BigInt!]
+  values_not_contains: [BigInt!]
+  values_not_contains_nocase: [BigInt!]
+  vetoed_: ProposalVetoed_filter
+  votingStarted_: ProposalVotingStarted_filter
+}
+
+enum ProposalCreated_orderBy {
+  blockNumber
+  blockTimestamp
+  calldatas
+  cancelled
+  cancelled__blockNumber
+  cancelled__blockTimestamp
+  cancelled__id
+  cancelled__proposalId
+  cancelled__transactionHash
+  description
+  executed
+  executed__blockNumber
+  executed__blockTimestamp
+  executed__id
+  executed__proposalId
+  executed__transactionHash
+  id
+  proposalId
+  proposer
+  queued
+  queued__blockNumber
+  queued__blockTimestamp
+  queued__eta
+  queued__id
+  queued__proposalId
+  queued__transactionHash
+  signatures
+  startBlock
+  targets
+  transactionHash
+  values
+  vetoed
+  vetoed__blockNumber
+  vetoed__blockTimestamp
+  vetoed__id
+  vetoed__proposalId
+  vetoed__transactionHash
+  votingStarted
+  votingStarted__blockNumber
+  votingStarted__blockTimestamp
+  votingStarted__id
+  votingStarted__proposalId
+  votingStarted__transactionHash
+}
+
+type ProposalExecuted {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  proposal: ProposalCreated!
+  proposalId: BigInt!
+  transactionHash: Bytes!
+}
+
+input ProposalExecuted_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [ProposalExecuted_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [ProposalExecuted_filter]
+  proposal: String
+  proposalId: BigInt
+  proposalId_gt: BigInt
+  proposalId_gte: BigInt
+  proposalId_in: [BigInt!]
+  proposalId_lt: BigInt
+  proposalId_lte: BigInt
+  proposalId_not: BigInt
+  proposalId_not_in: [BigInt!]
+  proposal_: ProposalCreated_filter
+  proposal_contains: String
+  proposal_contains_nocase: String
+  proposal_ends_with: String
+  proposal_ends_with_nocase: String
+  proposal_gt: String
+  proposal_gte: String
+  proposal_in: [String!]
+  proposal_lt: String
+  proposal_lte: String
+  proposal_not: String
+  proposal_not_contains: String
+  proposal_not_contains_nocase: String
+  proposal_not_ends_with: String
+  proposal_not_ends_with_nocase: String
+  proposal_not_in: [String!]
+  proposal_not_starts_with: String
+  proposal_not_starts_with_nocase: String
+  proposal_starts_with: String
+  proposal_starts_with_nocase: String
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum ProposalExecuted_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  proposal
+  proposalId
+  proposal__blockNumber
+  proposal__blockTimestamp
+  proposal__description
+  proposal__id
+  proposal__proposalId
+  proposal__proposer
+  proposal__startBlock
+  proposal__transactionHash
+  transactionHash
+}
+
+type ProposalQueued {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  eta: BigInt!
+  id: Bytes!
+  proposal: ProposalCreated!
+  proposalId: BigInt!
+  transactionHash: Bytes!
+}
+
+input ProposalQueued_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [ProposalQueued_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  eta: BigInt
+  eta_gt: BigInt
+  eta_gte: BigInt
+  eta_in: [BigInt!]
+  eta_lt: BigInt
+  eta_lte: BigInt
+  eta_not: BigInt
+  eta_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [ProposalQueued_filter]
+  proposal: String
+  proposalId: BigInt
+  proposalId_gt: BigInt
+  proposalId_gte: BigInt
+  proposalId_in: [BigInt!]
+  proposalId_lt: BigInt
+  proposalId_lte: BigInt
+  proposalId_not: BigInt
+  proposalId_not_in: [BigInt!]
+  proposal_: ProposalCreated_filter
+  proposal_contains: String
+  proposal_contains_nocase: String
+  proposal_ends_with: String
+  proposal_ends_with_nocase: String
+  proposal_gt: String
+  proposal_gte: String
+  proposal_in: [String!]
+  proposal_lt: String
+  proposal_lte: String
+  proposal_not: String
+  proposal_not_contains: String
+  proposal_not_contains_nocase: String
+  proposal_not_ends_with: String
+  proposal_not_ends_with_nocase: String
+  proposal_not_in: [String!]
+  proposal_not_starts_with: String
+  proposal_not_starts_with_nocase: String
+  proposal_starts_with: String
+  proposal_starts_with_nocase: String
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum ProposalQueued_orderBy {
+  blockNumber
+  blockTimestamp
+  eta
+  id
+  proposal
+  proposalId
+  proposal__blockNumber
+  proposal__blockTimestamp
+  proposal__description
+  proposal__id
+  proposal__proposalId
+  proposal__proposer
+  proposal__startBlock
+  proposal__transactionHash
+  transactionHash
+}
+
+type ProposalThresholdSet {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newProposalThreshold: BigInt!
+  oldProposalThreshold: BigInt!
+  transactionHash: Bytes!
+}
+
+input ProposalThresholdSet_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [ProposalThresholdSet_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newProposalThreshold: BigInt
+  newProposalThreshold_gt: BigInt
+  newProposalThreshold_gte: BigInt
+  newProposalThreshold_in: [BigInt!]
+  newProposalThreshold_lt: BigInt
+  newProposalThreshold_lte: BigInt
+  newProposalThreshold_not: BigInt
+  newProposalThreshold_not_in: [BigInt!]
+  oldProposalThreshold: BigInt
+  oldProposalThreshold_gt: BigInt
+  oldProposalThreshold_gte: BigInt
+  oldProposalThreshold_in: [BigInt!]
+  oldProposalThreshold_lt: BigInt
+  oldProposalThreshold_lte: BigInt
+  oldProposalThreshold_not: BigInt
+  oldProposalThreshold_not_in: [BigInt!]
+  or: [ProposalThresholdSet_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum ProposalThresholdSet_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newProposalThreshold
+  oldProposalThreshold
+  transactionHash
+}
+
+type ProposalVetoed {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  proposal: ProposalCreated!
+  proposalId: BigInt!
+  transactionHash: Bytes!
+}
+
+input ProposalVetoed_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [ProposalVetoed_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [ProposalVetoed_filter]
+  proposal: String
+  proposalId: BigInt
+  proposalId_gt: BigInt
+  proposalId_gte: BigInt
+  proposalId_in: [BigInt!]
+  proposalId_lt: BigInt
+  proposalId_lte: BigInt
+  proposalId_not: BigInt
+  proposalId_not_in: [BigInt!]
+  proposal_: ProposalCreated_filter
+  proposal_contains: String
+  proposal_contains_nocase: String
+  proposal_ends_with: String
+  proposal_ends_with_nocase: String
+  proposal_gt: String
+  proposal_gte: String
+  proposal_in: [String!]
+  proposal_lt: String
+  proposal_lte: String
+  proposal_not: String
+  proposal_not_contains: String
+  proposal_not_contains_nocase: String
+  proposal_not_ends_with: String
+  proposal_not_ends_with_nocase: String
+  proposal_not_in: [String!]
+  proposal_not_starts_with: String
+  proposal_not_starts_with_nocase: String
+  proposal_starts_with: String
+  proposal_starts_with_nocase: String
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum ProposalVetoed_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  proposal
+  proposalId
+  proposal__blockNumber
+  proposal__blockTimestamp
+  proposal__description
+  proposal__id
+  proposal__proposalId
+  proposal__proposer
+  proposal__startBlock
+  proposal__transactionHash
+  transactionHash
+}
+
+type ProposalVotingStarted {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  proposal: ProposalCreated!
+  proposalId: BigInt!
+  transactionHash: Bytes!
+}
+
+input ProposalVotingStarted_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [ProposalVotingStarted_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [ProposalVotingStarted_filter]
+  proposal: String
+  proposalId: BigInt
+  proposalId_gt: BigInt
+  proposalId_gte: BigInt
+  proposalId_in: [BigInt!]
+  proposalId_lt: BigInt
+  proposalId_lte: BigInt
+  proposalId_not: BigInt
+  proposalId_not_in: [BigInt!]
+  proposal_: ProposalCreated_filter
+  proposal_contains: String
+  proposal_contains_nocase: String
+  proposal_ends_with: String
+  proposal_ends_with_nocase: String
+  proposal_gt: String
+  proposal_gte: String
+  proposal_in: [String!]
+  proposal_lt: String
+  proposal_lte: String
+  proposal_not: String
+  proposal_not_contains: String
+  proposal_not_contains_nocase: String
+  proposal_not_ends_with: String
+  proposal_not_ends_with_nocase: String
+  proposal_not_in: [String!]
+  proposal_not_starts_with: String
+  proposal_not_starts_with_nocase: String
+  proposal_starts_with: String
+  proposal_starts_with_nocase: String
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum ProposalVotingStarted_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  proposal
+  proposalId
+  proposal__blockNumber
+  proposal__blockTimestamp
+  proposal__description
+  proposal__id
+  proposal__proposalId
+  proposal__proposer
+  proposal__startBlock
+  proposal__transactionHash
+  transactionHash
+}
+
+type Query {
+  """
+  Access to subgraph metadata
+  """
+  _meta(block: Block_height): _Meta_
+  newAdmin(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): NewAdmin
+  newAdmins(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: NewAdmin_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: NewAdmin_filter
+  ): [NewAdmin!]!
+  newImplementation(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): NewImplementation
+  newImplementations(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: NewImplementation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: NewImplementation_filter
+  ): [NewImplementation!]!
+  newPendingAdmin(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): NewPendingAdmin
+  newPendingAdmins(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: NewPendingAdmin_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: NewPendingAdmin_filter
+  ): [NewPendingAdmin!]!
+  proposalCanceled(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalCanceled
+  proposalCanceleds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalCanceled_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalCanceled_filter
+  ): [ProposalCanceled!]!
+  proposalCreated(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalCreated
+  proposalCreateds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalCreated_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalCreated_filter
+  ): [ProposalCreated!]!
+  proposalExecuted(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalExecuted
+  proposalExecuteds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalExecuted_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalExecuted_filter
+  ): [ProposalExecuted!]!
+  proposalQueued(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalQueued
+  proposalQueueds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalQueued_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalQueued_filter
+  ): [ProposalQueued!]!
+  proposalThresholdSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalThresholdSet
+  proposalThresholdSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalThresholdSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalThresholdSet_filter
+  ): [ProposalThresholdSet!]!
+  proposalVetoed(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalVetoed
+  proposalVetoeds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalVetoed_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalVetoed_filter
+  ): [ProposalVetoed!]!
+  proposalVotingStarted(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalVotingStarted
+  proposalVotingStarteds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalVotingStarted_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalVotingStarted_filter
+  ): [ProposalVotingStarted!]!
+  vetoGuardianSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VetoGuardianSet
+  vetoGuardianSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VetoGuardianSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VetoGuardianSet_filter
+  ): [VetoGuardianSet!]!
+  voteCast(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VoteCast
+  voteCasts(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VoteCast_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VoteCast_filter
+  ): [VoteCast!]!
+  votingDelaySet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VotingDelaySet
+  votingDelaySets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VotingDelaySet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VotingDelaySet_filter
+  ): [VotingDelaySet!]!
+  votingPeriodSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VotingPeriodSet
+  votingPeriodSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VotingPeriodSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VotingPeriodSet_filter
+  ): [VotingPeriodSet!]!
+  whitelistAccountExpirationSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): WhitelistAccountExpirationSet
+  whitelistAccountExpirationSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: WhitelistAccountExpirationSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: WhitelistAccountExpirationSet_filter
+  ): [WhitelistAccountExpirationSet!]!
+  whitelistGuardianSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): WhitelistGuardianSet
+  whitelistGuardianSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: WhitelistGuardianSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: WhitelistGuardianSet_filter
+  ): [WhitelistGuardianSet!]!
+}
+
+type Subscription {
+  """
+  Access to subgraph metadata
+  """
+  _meta(block: Block_height): _Meta_
+  newAdmin(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): NewAdmin
+  newAdmins(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: NewAdmin_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: NewAdmin_filter
+  ): [NewAdmin!]!
+  newImplementation(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): NewImplementation
+  newImplementations(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: NewImplementation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: NewImplementation_filter
+  ): [NewImplementation!]!
+  newPendingAdmin(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): NewPendingAdmin
+  newPendingAdmins(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: NewPendingAdmin_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: NewPendingAdmin_filter
+  ): [NewPendingAdmin!]!
+  proposalCanceled(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalCanceled
+  proposalCanceleds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalCanceled_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalCanceled_filter
+  ): [ProposalCanceled!]!
+  proposalCreated(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalCreated
+  proposalCreateds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalCreated_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalCreated_filter
+  ): [ProposalCreated!]!
+  proposalExecuted(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalExecuted
+  proposalExecuteds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalExecuted_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalExecuted_filter
+  ): [ProposalExecuted!]!
+  proposalQueued(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalQueued
+  proposalQueueds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalQueued_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalQueued_filter
+  ): [ProposalQueued!]!
+  proposalThresholdSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalThresholdSet
+  proposalThresholdSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalThresholdSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalThresholdSet_filter
+  ): [ProposalThresholdSet!]!
+  proposalVetoed(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalVetoed
+  proposalVetoeds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalVetoed_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalVetoed_filter
+  ): [ProposalVetoed!]!
+  proposalVotingStarted(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): ProposalVotingStarted
+  proposalVotingStarteds(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: ProposalVotingStarted_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: ProposalVotingStarted_filter
+  ): [ProposalVotingStarted!]!
+  vetoGuardianSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VetoGuardianSet
+  vetoGuardianSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VetoGuardianSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VetoGuardianSet_filter
+  ): [VetoGuardianSet!]!
+  voteCast(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VoteCast
+  voteCasts(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VoteCast_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VoteCast_filter
+  ): [VoteCast!]!
+  votingDelaySet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VotingDelaySet
+  votingDelaySets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VotingDelaySet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VotingDelaySet_filter
+  ): [VotingDelaySet!]!
+  votingPeriodSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): VotingPeriodSet
+  votingPeriodSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: VotingPeriodSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: VotingPeriodSet_filter
+  ): [VotingPeriodSet!]!
+  whitelistAccountExpirationSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): WhitelistAccountExpirationSet
+  whitelistAccountExpirationSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: WhitelistAccountExpirationSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: WhitelistAccountExpirationSet_filter
+  ): [WhitelistAccountExpirationSet!]!
+  whitelistGuardianSet(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    id: ID!
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): WhitelistGuardianSet
+  whitelistGuardianSets(
+    """
+    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+    first: Int = 100
+    orderBy: WhitelistGuardianSet_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+    where: WhitelistGuardianSet_filter
+  ): [WhitelistGuardianSet!]!
+}
+
+"""
+A string representation of microseconds UNIX timestamp (16 digits)
+"""
+scalar Timestamp
+
+type VetoGuardianSet {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newGuardian: Bytes!
+  oldGuardian: Bytes!
+  transactionHash: Bytes!
+}
+
+input VetoGuardianSet_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [VetoGuardianSet_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newGuardian: Bytes
+  newGuardian_contains: Bytes
+  newGuardian_gt: Bytes
+  newGuardian_gte: Bytes
+  newGuardian_in: [Bytes!]
+  newGuardian_lt: Bytes
+  newGuardian_lte: Bytes
+  newGuardian_not: Bytes
+  newGuardian_not_contains: Bytes
+  newGuardian_not_in: [Bytes!]
+  oldGuardian: Bytes
+  oldGuardian_contains: Bytes
+  oldGuardian_gt: Bytes
+  oldGuardian_gte: Bytes
+  oldGuardian_in: [Bytes!]
+  oldGuardian_lt: Bytes
+  oldGuardian_lte: Bytes
+  oldGuardian_not: Bytes
+  oldGuardian_not_contains: Bytes
+  oldGuardian_not_in: [Bytes!]
+  or: [VetoGuardianSet_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum VetoGuardianSet_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newGuardian
+  oldGuardian
+  transactionHash
+}
+
+type VoteCast {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  proposalId: BigInt!
+  reason: String!
+  support: Int!
+  transactionHash: Bytes!
+  voter: Bytes!
+  votes: BigInt!
+}
+
+input VoteCast_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [VoteCast_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [VoteCast_filter]
+  proposalId: BigInt
+  proposalId_gt: BigInt
+  proposalId_gte: BigInt
+  proposalId_in: [BigInt!]
+  proposalId_lt: BigInt
+  proposalId_lte: BigInt
+  proposalId_not: BigInt
+  proposalId_not_in: [BigInt!]
+  reason: String
+  reason_contains: String
+  reason_contains_nocase: String
+  reason_ends_with: String
+  reason_ends_with_nocase: String
+  reason_gt: String
+  reason_gte: String
+  reason_in: [String!]
+  reason_lt: String
+  reason_lte: String
+  reason_not: String
+  reason_not_contains: String
+  reason_not_contains_nocase: String
+  reason_not_ends_with: String
+  reason_not_ends_with_nocase: String
+  reason_not_in: [String!]
+  reason_not_starts_with: String
+  reason_not_starts_with_nocase: String
+  reason_starts_with: String
+  reason_starts_with_nocase: String
+  support: Int
+  support_gt: Int
+  support_gte: Int
+  support_in: [Int!]
+  support_lt: Int
+  support_lte: Int
+  support_not: Int
+  support_not_in: [Int!]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+  voter: Bytes
+  voter_contains: Bytes
+  voter_gt: Bytes
+  voter_gte: Bytes
+  voter_in: [Bytes!]
+  voter_lt: Bytes
+  voter_lte: Bytes
+  voter_not: Bytes
+  voter_not_contains: Bytes
+  voter_not_in: [Bytes!]
+  votes: BigInt
+  votes_gt: BigInt
+  votes_gte: BigInt
+  votes_in: [BigInt!]
+  votes_lt: BigInt
+  votes_lte: BigInt
+  votes_not: BigInt
+  votes_not_in: [BigInt!]
+}
+
+enum VoteCast_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  proposalId
+  reason
+  support
+  transactionHash
+  voter
+  votes
+}
+
+type VotingDelaySet {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newVotingDelay: BigInt!
+  oldVotingDelay: BigInt!
+  transactionHash: Bytes!
+}
+
+input VotingDelaySet_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [VotingDelaySet_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newVotingDelay: BigInt
+  newVotingDelay_gt: BigInt
+  newVotingDelay_gte: BigInt
+  newVotingDelay_in: [BigInt!]
+  newVotingDelay_lt: BigInt
+  newVotingDelay_lte: BigInt
+  newVotingDelay_not: BigInt
+  newVotingDelay_not_in: [BigInt!]
+  oldVotingDelay: BigInt
+  oldVotingDelay_gt: BigInt
+  oldVotingDelay_gte: BigInt
+  oldVotingDelay_in: [BigInt!]
+  oldVotingDelay_lt: BigInt
+  oldVotingDelay_lte: BigInt
+  oldVotingDelay_not: BigInt
+  oldVotingDelay_not_in: [BigInt!]
+  or: [VotingDelaySet_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum VotingDelaySet_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newVotingDelay
+  oldVotingDelay
+  transactionHash
+}
+
+type VotingPeriodSet {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newVotingPeriod: BigInt!
+  oldVotingPeriod: BigInt!
+  transactionHash: Bytes!
+}
+
+input VotingPeriodSet_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [VotingPeriodSet_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newVotingPeriod: BigInt
+  newVotingPeriod_gt: BigInt
+  newVotingPeriod_gte: BigInt
+  newVotingPeriod_in: [BigInt!]
+  newVotingPeriod_lt: BigInt
+  newVotingPeriod_lte: BigInt
+  newVotingPeriod_not: BigInt
+  newVotingPeriod_not_in: [BigInt!]
+  oldVotingPeriod: BigInt
+  oldVotingPeriod_gt: BigInt
+  oldVotingPeriod_gte: BigInt
+  oldVotingPeriod_in: [BigInt!]
+  oldVotingPeriod_lt: BigInt
+  oldVotingPeriod_lte: BigInt
+  oldVotingPeriod_not: BigInt
+  oldVotingPeriod_not_in: [BigInt!]
+  or: [VotingPeriodSet_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum VotingPeriodSet_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newVotingPeriod
+  oldVotingPeriod
+  transactionHash
+}
+
+type WhitelistAccountExpirationSet {
+  account: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  expiration: BigInt!
+  id: Bytes!
+  transactionHash: Bytes!
+}
+
+input WhitelistAccountExpirationSet_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  account: Bytes
+  account_contains: Bytes
+  account_gt: Bytes
+  account_gte: Bytes
+  account_in: [Bytes!]
+  account_lt: Bytes
+  account_lte: Bytes
+  account_not: Bytes
+  account_not_contains: Bytes
+  account_not_in: [Bytes!]
+  and: [WhitelistAccountExpirationSet_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  expiration: BigInt
+  expiration_gt: BigInt
+  expiration_gte: BigInt
+  expiration_in: [BigInt!]
+  expiration_lt: BigInt
+  expiration_lte: BigInt
+  expiration_not: BigInt
+  expiration_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  or: [WhitelistAccountExpirationSet_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum WhitelistAccountExpirationSet_orderBy {
+  account
+  blockNumber
+  blockTimestamp
+  expiration
+  id
+  transactionHash
+}
+
+type WhitelistGuardianSet {
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  id: Bytes!
+  newGuardian: Bytes!
+  oldGuardian: Bytes!
+  transactionHash: Bytes!
+}
+
+input WhitelistGuardianSet_filter {
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [WhitelistGuardianSet_filter]
+  blockNumber: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_lt: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_not: BigInt
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_lt: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_not_in: [BigInt!]
+  id: Bytes
+  id_contains: Bytes
+  id_gt: Bytes
+  id_gte: Bytes
+  id_in: [Bytes!]
+  id_lt: Bytes
+  id_lte: Bytes
+  id_not: Bytes
+  id_not_contains: Bytes
+  id_not_in: [Bytes!]
+  newGuardian: Bytes
+  newGuardian_contains: Bytes
+  newGuardian_gt: Bytes
+  newGuardian_gte: Bytes
+  newGuardian_in: [Bytes!]
+  newGuardian_lt: Bytes
+  newGuardian_lte: Bytes
+  newGuardian_not: Bytes
+  newGuardian_not_contains: Bytes
+  newGuardian_not_in: [Bytes!]
+  oldGuardian: Bytes
+  oldGuardian_contains: Bytes
+  oldGuardian_gt: Bytes
+  oldGuardian_gte: Bytes
+  oldGuardian_in: [Bytes!]
+  oldGuardian_lt: Bytes
+  oldGuardian_lte: Bytes
+  oldGuardian_not: Bytes
+  oldGuardian_not_contains: Bytes
+  oldGuardian_not_in: [Bytes!]
+  or: [WhitelistGuardianSet_filter]
+  transactionHash: Bytes
+  transactionHash_contains: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_lt: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_not: Bytes
+  transactionHash_not_contains: Bytes
+  transactionHash_not_in: [Bytes!]
+}
+
+enum WhitelistGuardianSet_orderBy {
+  blockNumber
+  blockTimestamp
+  id
+  newGuardian
+  oldGuardian
+  transactionHash
+}
+
+type _Block_ {
+  """
+  The hash of the block
+  """
+  hash: Bytes
+  """
+  The block number
+  """
+  number: Int!
+  """
+  The hash of the parent block
+  """
+  parentHash: Bytes
+  """
+  Integer representation of the timestamp stored in blocks for the chain
+  """
+  timestamp: Int
+}
+
+"""
+The type for the top-level _meta field
+"""
+type _Meta_ {
+  """
+  Information about a specific subgraph block. The hash of the block
+  will be null if the _meta field has a block constraint that asks for
+  a block number. It will be filled if the _meta field has no block constraint
+  and therefore asks for the latest  block
+  """
+  block: _Block_!
+  """
+  The deployment ID
+  """
+  deployment: String!
+  """
+  If `true`, the subgraph encountered indexing errors at some past block
+  """
+  hasIndexingErrors: Boolean!
+}
+
+enum _SubgraphErrorPolicy_ {
+  """
+  Data will be returned even if the subgraph has indexing errors
+  """
+  allow
+  """
+  If the subgraph has indexing errors, data will be omitted. The default.
+  """
+  deny
+}

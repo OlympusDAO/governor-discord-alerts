@@ -3,6 +3,8 @@ import * as gcp from "@pulumi/gcp";
 import * as express from "express";
 import { run } from "./src/index";
 
+const config = new pulumi.Config();
+
 // Create a GCS bucket
 const bucket = new gcp.storage.Bucket(`olympus-governor-discord-alerts`, {
   location: "us-central1",
@@ -23,6 +25,8 @@ const cloudFunction = new gcp.cloudfunctions.HttpCallbackFunction(
     timeout: 60,
     environmentVariables: {
       BUCKET_NAME: bucket.name,
+      SUBGRAPH_API_KEY: config.requireSecret("subgraphApiKey"),
+      DISCORD_WEBHOOK_URL: config.requireSecret("discordWebhookUrl"),
     },
   },
 );

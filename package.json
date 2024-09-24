@@ -1,0 +1,30 @@
+{
+  "name": "governor-discord-alerts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "pulumi.ts",
+  "scripts": {
+    "codegen": "graphql-codegen",
+    "lint": "prettier --write .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.14",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@pulumi/gcp": "^8.2.0",
+    "@pulumi/pulumi": "^3.134.0",
+    "@types/express": "^4.17.21",
+    "@types/express-serve-static-core": "^4.17.30",
+    "@types/node": "^18",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.13.0",
+    "express": "^4.21.0"
+  }
+}

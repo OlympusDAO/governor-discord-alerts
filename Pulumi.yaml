@@ -1,0 +1,7 @@
+name: governor-discord-alerts
+runtime: nodejs
+description: Provides updates on Olympus Governance
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: ""

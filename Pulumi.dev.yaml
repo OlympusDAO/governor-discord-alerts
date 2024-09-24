@@ -1,0 +1,3 @@
+config:
+  gcp:project: governor-discord-alerts-dev
+  gcp:region: us-central1

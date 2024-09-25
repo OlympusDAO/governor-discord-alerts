@@ -26,6 +26,8 @@ export const sendDiscordAlert = async (
   await webhookClient.send({
     embeds: [embed],
   });
+
+  console.log(`Sent Discord alert: ${title}`);
 };
 
 const prepareDescription = (description: string) => {

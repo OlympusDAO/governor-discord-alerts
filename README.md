@@ -1,6 +1,6 @@
 # Governor Discord Alerts
 
-This is a simple Google Cloud Function that watches for events in the olympus-governor subgraph and sends alerts to a Discord channel.
+This is a simple Google Cloud Function that watches for events in the [olympus-governor subgraph](https://github.com/OlympusDAO/governor-subgraph/) and sends alerts to a Discord channel.
 
 ## Process
 

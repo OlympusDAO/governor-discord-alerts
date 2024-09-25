@@ -1,5 +1,6 @@
 import { getLatestProcessedBlock, updateLatestProcessedBlock } from "./storage";
 import { getLatestProposalEvents } from "./subgraph";
+import { processProposalEvents } from "./discord";
 
 export const run = async () => {
   console.log("Starting function");
@@ -12,6 +13,7 @@ export const run = async () => {
     await getLatestProposalEvents(previousBlock);
 
   // Send alerts
+  await processProposalEvents(proposalData);
 
   // Update the latest processed block
   await updateLatestProcessedBlock(latestBlock);

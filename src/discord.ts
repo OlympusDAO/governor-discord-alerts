@@ -17,11 +17,12 @@ export const sendDiscordAlert = async (
 
   const webhookClient = new WebhookClient({ url: webhookUrl });
 
-  const embed = new EmbedBuilder()
-    .setTitle(title)
-    .setDescription(content)
-    .setColor(0x0099ff);
-  embed.setURL(url);
+  const embed = new EmbedBuilder({
+    title: title,
+    description: content,
+    color: 0x0099ff,
+    url: url,
+  });
 
   await webhookClient.send({
     embeds: [embed],

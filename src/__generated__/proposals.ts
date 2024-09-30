@@ -29,8 +29,8 @@ export type Scalars = {
   BigDecimal: { input: string; output: string };
   BigInt: { input: string; output: string };
   Bytes: { input: string; output: string };
-  Int8: { input: any; output: any };
-  Timestamp: { input: any; output: any };
+  Int8: { input: string; output: string };
+  Timestamp: { input: string; output: string };
 };
 
 export enum Aggregation_interval {

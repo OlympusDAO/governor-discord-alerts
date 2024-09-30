@@ -1,5 +1,5 @@
 const SUBGRAPH_URL =
-  "https://api.studio.thegraph.com/query/46563/olympus-governor/version/latest";
+  "https://gateway.thegraph.com/api/{api-key}/subgraphs/id/AQoLCXebY1Ga7DrqVaVQ85KMwS7iFof73tv9XMVGRtyJ";
 
 export const getSubgraphUrl = (): string => {
   // Get the API key
@@ -8,5 +8,5 @@ export const getSubgraphUrl = (): string => {
     throw new Error("SUBGRAPH_API_KEY is not set");
   }
 
-  return SUBGRAPH_URL.replace("[api-key]", apiKey);
+  return SUBGRAPH_URL.replace("{api-key}", apiKey);
 };

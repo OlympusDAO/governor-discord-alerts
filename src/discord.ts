@@ -45,6 +45,8 @@ const getProposalUrl = (proposalId: string) => {
 export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
   // Created first
   for (const createdProposal of proposalEvents.created) {
+    console.log(`Processing created proposal: ${createdProposal.proposalId}`);
+
     await sendDiscordAlert(
       `Proposal Created: ${createdProposal.proposalId}`,
       prepareDescription(createdProposal.description),
@@ -54,6 +56,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
 
   // Cancelled
   for (const cancelledProposal of proposalEvents.cancelled) {
+    console.log(`Processing cancelled proposal: ${cancelledProposal.id}`);
+
     await sendDiscordAlert(
       `Proposal Cancelled: ${cancelledProposal.id}`,
       prepareDescription(cancelledProposal.proposal.description),
@@ -63,6 +67,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
 
   // Vetoed
   for (const vetoedProposal of proposalEvents.vetoed) {
+    console.log(`Processing vetoed proposal: ${vetoedProposal.id}`);
+
     await sendDiscordAlert(
       `Proposal Vetoed: ${vetoedProposal.id}`,
       prepareDescription(vetoedProposal.proposal.description),
@@ -72,6 +78,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
 
   // Voting started
   for (const votingStartedProposal of proposalEvents.votingStarted) {
+    console.log(`Processing voting started proposal: ${votingStartedProposal.id}`);
+
     await sendDiscordAlert(
       `Proposal Voting Started: ${votingStartedProposal.id}`,
       prepareDescription(votingStartedProposal.proposal.description),
@@ -81,6 +89,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
 
   // Queued
   for (const queuedProposal of proposalEvents.queued) {
+    console.log(`Processing queued proposal: ${queuedProposal.id}`);
+
     await sendDiscordAlert(
       `Proposal Queued: ${queuedProposal.id}`,
       prepareDescription(queuedProposal.proposal.description),
@@ -90,6 +100,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
 
   // Executed
   for (const executedProposal of proposalEvents.executed) {
+    console.log(`Processing executed proposal: ${executedProposal.id}`);
+
     await sendDiscordAlert(
       `Proposal Executed: ${executedProposal.id}`,
       prepareDescription(executedProposal.proposal.description),

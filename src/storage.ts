@@ -30,6 +30,8 @@ export const updateLatestProcessedBlock = async (
     throw new Error("BUCKET_NAME environment variable is not set");
   }
 
+  console.log(`Updating latest processed block to ${block}`);
+
   const storage = new Storage();
   const bucket = storage.bucket(bucketName);
   const file = bucket.file(fileName);

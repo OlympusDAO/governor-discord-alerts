@@ -5,6 +5,30 @@ import { run } from "./src/index";
 
 const config = new pulumi.Config();
 
+// Ensure that the required APIs are enabled
+// Requires the Compute Engine API to be manually enabled
+// https://console.cloud.google.com/apis/api/compute.googleapis.com/overview
+const enabledApisCloudFunctions = new gcp.projects.Service("cloud-functions", {
+  project: gcp.config.project,
+  service: "cloudfunctions.googleapis.com",
+});
+
+const enabledApisCloudScheduler = new gcp.projects.Service("cloud-scheduler", {
+  project: gcp.config.project,
+  service: "cloudscheduler.googleapis.com",
+});
+
+const enabledApisStorage = new gcp.projects.Service("storage", {
+  project: gcp.config.project,
+  service: "storage.googleapis.com",
+});
+
+export const enabledApis = [
+  enabledApisCloudFunctions,
+  enabledApisCloudScheduler,
+  enabledApisStorage,
+];
+
 // Create a GCS bucket
 const bucket = new gcp.storage.Bucket(`olympus-governor-discord-alerts`, {
   location: "us-central1",

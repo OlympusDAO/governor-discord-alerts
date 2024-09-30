@@ -1,7 +1,8 @@
 import { graphql } from "./graphql";
-import { ApolloClient, InMemoryCache } from "@apollo/client/core";
 import { getSubgraphUrl } from "./constants";
 import { ProposalEvents } from "./types";
+import { cacheExchange, Client, fetchExchange } from "@urql/core";
+import fetch from "cross-fetch";
 
 const PROPOSAL_QUERY = graphql(`
   query ProposalQuery($block: BigInt!) {
@@ -93,7 +94,7 @@ const PROPOSAL_QUERY = graphql(`
 export const getLatestProposalEvents = async (
   block: number,
 ): Promise<[ProposalEvents, number]> => {
-  const proposalData = {
+  const proposalData: ProposalEvents = {
     cancelled: [],
     created: [],
     executed: [],
@@ -103,17 +104,19 @@ export const getLatestProposalEvents = async (
   };
 
   // Create a new client
-  const client = new ApolloClient({
-    uri: getSubgraphUrl(),
-    cache: new InMemoryCache(),
+  const client = new Client({
+    url: getSubgraphUrl(),
+    // fetch,
+    exchanges: [cacheExchange, fetchExchange],
   });
 
-  const { data } = await client.query({
-    query: PROPOSAL_QUERY,
-    variables: {
-      block: block,
-    },
+  const { data } = await client.query(PROPOSAL_QUERY, {
+    block: block,
   });
+
+  if (!data) {
+    throw new Error("No data returned from subgraph");
+  }
 
   proposalData.cancelled = data.proposalCanceleds;
   proposalData.created = data.proposalCreateds;

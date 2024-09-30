@@ -9,9 +9,8 @@ const config: CodegenConfig = {
     "./src/graphql/": {
       preset: "client",
       config: {
-        documentMode: "string",
         skipTypename: true,
-        namingConvention: "keep",
+        namingConvention: "keep", // Avoids duplicate identifier errors
       },
     },
     "./schema.graphql": {
@@ -24,6 +23,7 @@ const config: CodegenConfig = {
   hooks: {
     afterAllFileWrite: ["pnpm run lint"],
   },
+  overwrite: true,
 };
 
 export default config;

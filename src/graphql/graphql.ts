@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { DocumentTypeDecoration } from "@graphql-typed-document-node/core";
+import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -2264,110 +2264,411 @@ export type ProposalQueryQuery = {
   _meta?: { block: { number: number } } | null;
 };
 
-export class TypedDocumentString<TResult, TVariables>
-  extends String
-  implements DocumentTypeDecoration<TResult, TVariables>
-{
-  __apiType?: DocumentTypeDecoration<TResult, TVariables>["__apiType"];
-
-  constructor(
-    private value: string,
-    public __meta__?: Record<string, any>,
-  ) {
-    super(value);
-  }
-
-  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
-    return this.value;
-  }
-}
-
-export const ProposalQueryDocument = new TypedDocumentString(`
-    query ProposalQuery($block: BigInt!) {
-  proposalCreateds(
-    where: {blockNumber_gt: $block}
-    orderBy: blockNumber
-    orderDirection: asc
-  ) {
-    blockNumber
-    blockTimestamp
-    description
-    proposalId
-    proposer
-    transactionHash
-  }
-  proposalCanceleds(
-    where: {blockNumber_gt: $block}
-    orderBy: blockNumber
-    orderDirection: asc
-  ) {
-    blockNumber
-    blockTimestamp
-    proposalId
-    transactionHash
-    proposal {
-      description
-    }
-  }
-  proposalExecuteds(
-    where: {blockNumber_gt: $block}
-    orderBy: blockNumber
-    orderDirection: asc
-  ) {
-    blockNumber
-    blockTimestamp
-    proposalId
-    transactionHash
-    proposal {
-      description
-    }
-  }
-  proposalQueueds(
-    where: {blockNumber_gt: $block}
-    orderBy: blockNumber
-    orderDirection: asc
-  ) {
-    blockNumber
-    blockTimestamp
-    proposalId
-    transactionHash
-    proposal {
-      description
-    }
-  }
-  proposalVetoeds(
-    where: {blockNumber_gt: $block}
-    orderBy: blockNumber
-    orderDirection: asc
-  ) {
-    blockNumber
-    blockTimestamp
-    proposalId
-    transactionHash
-    proposal {
-      description
-    }
-  }
-  proposalVotingStarteds(
-    where: {blockNumber_gt: $block}
-    orderBy: blockNumber
-    orderDirection: asc
-  ) {
-    blockNumber
-    blockTimestamp
-    proposalId
-    transactionHash
-    proposal {
-      description
-    }
-  }
-  _meta {
-    block {
-      number
-    }
-  }
-}
-    `) as unknown as TypedDocumentString<
-  ProposalQueryQuery,
-  ProposalQueryQueryVariables
->;
+export const ProposalQueryDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "ProposalQuery" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "block" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "BigInt" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalCreateds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "blockNumber_gt" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "block" },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderBy" },
+                value: { kind: "EnumValue", value: "blockNumber" },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderDirection" },
+                value: { kind: "EnumValue", value: "asc" },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "blockTimestamp" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+                { kind: "Field", name: { kind: "Name", value: "proposer" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transactionHash" },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalCanceleds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "blockNumber_gt" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "block" },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderBy" },
+                value: { kind: "EnumValue", value: "blockNumber" },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderDirection" },
+                value: { kind: "EnumValue", value: "asc" },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "blockTimestamp" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transactionHash" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "proposal" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalExecuteds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "blockNumber_gt" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "block" },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderBy" },
+                value: { kind: "EnumValue", value: "blockNumber" },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderDirection" },
+                value: { kind: "EnumValue", value: "asc" },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "blockTimestamp" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transactionHash" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "proposal" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalQueueds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "blockNumber_gt" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "block" },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderBy" },
+                value: { kind: "EnumValue", value: "blockNumber" },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderDirection" },
+                value: { kind: "EnumValue", value: "asc" },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "blockTimestamp" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transactionHash" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "proposal" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalVetoeds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "blockNumber_gt" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "block" },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderBy" },
+                value: { kind: "EnumValue", value: "blockNumber" },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderDirection" },
+                value: { kind: "EnumValue", value: "asc" },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "blockTimestamp" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transactionHash" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "proposal" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalVotingStarteds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "blockNumber_gt" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "block" },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderBy" },
+                value: { kind: "EnumValue", value: "blockNumber" },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderDirection" },
+                value: { kind: "EnumValue", value: "asc" },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "blockTimestamp" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transactionHash" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "proposal" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "_meta" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "number" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProposalQueryQuery, ProposalQueryQueryVariables>;

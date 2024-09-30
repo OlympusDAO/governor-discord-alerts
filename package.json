@@ -46,5 +46,12 @@
     "discord.js": "^14.16.2",
     "express": "^4.21.0",
     "graphql": "^15.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.5.0",
+    "yarn": "please-use-npm",
+    "pnpm": "please-use-npm",
+    "bun": "please-use-npm"
   }
 }

@@ -1,5 +1,5 @@
 import { graphql } from "./graphql";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client/core";
 import { getSubgraphUrl } from "./constants";
 import { ProposalEvents } from "./types";
 

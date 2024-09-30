@@ -10,6 +10,8 @@ const config: CodegenConfig = {
       preset: "client",
       config: {
         documentMode: "string",
+        skipTypename: true,
+        namingConvention: "keep",
       },
     },
     "./schema.graphql": {

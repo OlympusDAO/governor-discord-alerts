@@ -42,23 +42,22 @@ export type Scalars = {
   Timestamp: { input: any; output: any };
 };
 
-export enum Aggregation_Interval {
-  Day = "day",
-  Hour = "hour",
+export enum Aggregation_interval {
+  day = "day",
+  hour = "hour",
 }
 
 export type BlockChangedFilter = {
   number_gte: Scalars["Int"]["input"];
 };
 
-export type Block_Height = {
+export type Block_height = {
   hash?: InputMaybe<Scalars["Bytes"]["input"]>;
   number?: InputMaybe<Scalars["Int"]["input"]>;
   number_gte?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type NewAdmin = {
-  __typename?: "NewAdmin";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -67,10 +66,10 @@ export type NewAdmin = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type NewAdmin_Filter = {
+export type NewAdmin_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<NewAdmin_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<NewAdmin_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -117,7 +116,7 @@ export type NewAdmin_Filter = {
   oldAdmin_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldAdmin_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldAdmin_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<NewAdmin_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<NewAdmin_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -130,17 +129,16 @@ export type NewAdmin_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum NewAdmin_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewAdmin = "newAdmin",
-  OldAdmin = "oldAdmin",
-  TransactionHash = "transactionHash",
+export enum NewAdmin_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newAdmin = "newAdmin",
+  oldAdmin = "oldAdmin",
+  transactionHash = "transactionHash",
 }
 
 export type NewImplementation = {
-  __typename?: "NewImplementation";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -149,10 +147,10 @@ export type NewImplementation = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type NewImplementation_Filter = {
+export type NewImplementation_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<NewImplementation_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<NewImplementation_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -199,7 +197,7 @@ export type NewImplementation_Filter = {
   oldImplementation_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldImplementation_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldImplementation_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<NewImplementation_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<NewImplementation_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -212,17 +210,16 @@ export type NewImplementation_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum NewImplementation_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewImplementation = "newImplementation",
-  OldImplementation = "oldImplementation",
-  TransactionHash = "transactionHash",
+export enum NewImplementation_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newImplementation = "newImplementation",
+  oldImplementation = "oldImplementation",
+  transactionHash = "transactionHash",
 }
 
 export type NewPendingAdmin = {
-  __typename?: "NewPendingAdmin";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -231,10 +228,10 @@ export type NewPendingAdmin = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type NewPendingAdmin_Filter = {
+export type NewPendingAdmin_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<NewPendingAdmin_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<NewPendingAdmin_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -281,7 +278,7 @@ export type NewPendingAdmin_Filter = {
   oldPendingAdmin_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldPendingAdmin_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldPendingAdmin_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<NewPendingAdmin_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<NewPendingAdmin_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -294,23 +291,22 @@ export type NewPendingAdmin_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum NewPendingAdmin_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewPendingAdmin = "newPendingAdmin",
-  OldPendingAdmin = "oldPendingAdmin",
-  TransactionHash = "transactionHash",
+export enum NewPendingAdmin_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newPendingAdmin = "newPendingAdmin",
+  oldPendingAdmin = "oldPendingAdmin",
+  transactionHash = "transactionHash",
 }
 
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
-  Asc = "asc",
-  Desc = "desc",
+  asc = "asc",
+  desc = "desc",
 }
 
 export type ProposalCanceled = {
-  __typename?: "ProposalCanceled";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -319,10 +315,10 @@ export type ProposalCanceled = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type ProposalCanceled_Filter = {
+export type ProposalCanceled_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProposalCanceled_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<ProposalCanceled_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -349,7 +345,7 @@ export type ProposalCanceled_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<ProposalCanceled_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ProposalCanceled_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -359,7 +355,7 @@ export type ProposalCanceled_Filter = {
   proposalId_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  proposal_?: InputMaybe<ProposalCreated_Filter>;
+  proposal_?: InputMaybe<ProposalCreated_filter>;
   proposal_contains?: InputMaybe<Scalars["String"]["input"]>;
   proposal_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
   proposal_ends_with?: InputMaybe<Scalars["String"]["input"]>;
@@ -391,25 +387,24 @@ export type ProposalCanceled_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum ProposalCanceled_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  Proposal = "proposal",
-  ProposalId = "proposalId",
-  ProposalBlockNumber = "proposal__blockNumber",
-  ProposalBlockTimestamp = "proposal__blockTimestamp",
-  ProposalDescription = "proposal__description",
-  ProposalId = "proposal__id",
-  ProposalProposalId = "proposal__proposalId",
-  ProposalProposer = "proposal__proposer",
-  ProposalStartBlock = "proposal__startBlock",
-  ProposalTransactionHash = "proposal__transactionHash",
-  TransactionHash = "transactionHash",
+export enum ProposalCanceled_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  proposal = "proposal",
+  proposalId = "proposalId",
+  proposal__blockNumber = "proposal__blockNumber",
+  proposal__blockTimestamp = "proposal__blockTimestamp",
+  proposal__description = "proposal__description",
+  proposal__id = "proposal__id",
+  proposal__proposalId = "proposal__proposalId",
+  proposal__proposer = "proposal__proposer",
+  proposal__startBlock = "proposal__startBlock",
+  proposal__transactionHash = "proposal__transactionHash",
+  transactionHash = "transactionHash",
 }
 
 export type ProposalCreated = {
-  __typename?: "ProposalCreated";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   calldatas: Array<Scalars["Bytes"]["output"]>;
@@ -429,10 +424,10 @@ export type ProposalCreated = {
   votingStarted?: Maybe<ProposalVotingStarted>;
 };
 
-export type ProposalCreated_Filter = {
+export type ProposalCreated_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProposalCreated_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<ProposalCreated_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -455,7 +450,7 @@ export type ProposalCreated_Filter = {
   calldatas_not?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
   calldatas_not_contains?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
   calldatas_not_contains_nocase?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  cancelled_?: InputMaybe<ProposalCanceled_Filter>;
+  cancelled_?: InputMaybe<ProposalCanceled_filter>;
   description?: InputMaybe<Scalars["String"]["input"]>;
   description_contains?: InputMaybe<Scalars["String"]["input"]>;
   description_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
@@ -476,7 +471,7 @@ export type ProposalCreated_Filter = {
   description_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   description_starts_with?: InputMaybe<Scalars["String"]["input"]>;
   description_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
-  executed_?: InputMaybe<ProposalExecuted_Filter>;
+  executed_?: InputMaybe<ProposalExecuted_filter>;
   id?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -487,7 +482,7 @@ export type ProposalCreated_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<ProposalCreated_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ProposalCreated_filter>>>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -506,7 +501,7 @@ export type ProposalCreated_Filter = {
   proposer_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   proposer_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   proposer_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  queued_?: InputMaybe<ProposalQueued_Filter>;
+  queued_?: InputMaybe<ProposalQueued_filter>;
   signatures?: InputMaybe<Array<Scalars["String"]["input"]>>;
   signatures_contains?: InputMaybe<Array<Scalars["String"]["input"]>>;
   signatures_contains_nocase?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -545,58 +540,57 @@ export type ProposalCreated_Filter = {
   values_not?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
   values_not_contains?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
   values_not_contains_nocase?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  vetoed_?: InputMaybe<ProposalVetoed_Filter>;
-  votingStarted_?: InputMaybe<ProposalVotingStarted_Filter>;
+  vetoed_?: InputMaybe<ProposalVetoed_filter>;
+  votingStarted_?: InputMaybe<ProposalVotingStarted_filter>;
 };
 
-export enum ProposalCreated_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Calldatas = "calldatas",
-  Cancelled = "cancelled",
-  CancelledBlockNumber = "cancelled__blockNumber",
-  CancelledBlockTimestamp = "cancelled__blockTimestamp",
-  CancelledId = "cancelled__id",
-  CancelledProposalId = "cancelled__proposalId",
-  CancelledTransactionHash = "cancelled__transactionHash",
-  Description = "description",
-  Executed = "executed",
-  ExecutedBlockNumber = "executed__blockNumber",
-  ExecutedBlockTimestamp = "executed__blockTimestamp",
-  ExecutedId = "executed__id",
-  ExecutedProposalId = "executed__proposalId",
-  ExecutedTransactionHash = "executed__transactionHash",
-  Id = "id",
-  ProposalId = "proposalId",
-  Proposer = "proposer",
-  Queued = "queued",
-  QueuedBlockNumber = "queued__blockNumber",
-  QueuedBlockTimestamp = "queued__blockTimestamp",
-  QueuedEta = "queued__eta",
-  QueuedId = "queued__id",
-  QueuedProposalId = "queued__proposalId",
-  QueuedTransactionHash = "queued__transactionHash",
-  Signatures = "signatures",
-  StartBlock = "startBlock",
-  Targets = "targets",
-  TransactionHash = "transactionHash",
-  Values = "values",
-  Vetoed = "vetoed",
-  VetoedBlockNumber = "vetoed__blockNumber",
-  VetoedBlockTimestamp = "vetoed__blockTimestamp",
-  VetoedId = "vetoed__id",
-  VetoedProposalId = "vetoed__proposalId",
-  VetoedTransactionHash = "vetoed__transactionHash",
-  VotingStarted = "votingStarted",
-  VotingStartedBlockNumber = "votingStarted__blockNumber",
-  VotingStartedBlockTimestamp = "votingStarted__blockTimestamp",
-  VotingStartedId = "votingStarted__id",
-  VotingStartedProposalId = "votingStarted__proposalId",
-  VotingStartedTransactionHash = "votingStarted__transactionHash",
+export enum ProposalCreated_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  calldatas = "calldatas",
+  cancelled = "cancelled",
+  cancelled__blockNumber = "cancelled__blockNumber",
+  cancelled__blockTimestamp = "cancelled__blockTimestamp",
+  cancelled__id = "cancelled__id",
+  cancelled__proposalId = "cancelled__proposalId",
+  cancelled__transactionHash = "cancelled__transactionHash",
+  description = "description",
+  executed = "executed",
+  executed__blockNumber = "executed__blockNumber",
+  executed__blockTimestamp = "executed__blockTimestamp",
+  executed__id = "executed__id",
+  executed__proposalId = "executed__proposalId",
+  executed__transactionHash = "executed__transactionHash",
+  id = "id",
+  proposalId = "proposalId",
+  proposer = "proposer",
+  queued = "queued",
+  queued__blockNumber = "queued__blockNumber",
+  queued__blockTimestamp = "queued__blockTimestamp",
+  queued__eta = "queued__eta",
+  queued__id = "queued__id",
+  queued__proposalId = "queued__proposalId",
+  queued__transactionHash = "queued__transactionHash",
+  signatures = "signatures",
+  startBlock = "startBlock",
+  targets = "targets",
+  transactionHash = "transactionHash",
+  values = "values",
+  vetoed = "vetoed",
+  vetoed__blockNumber = "vetoed__blockNumber",
+  vetoed__blockTimestamp = "vetoed__blockTimestamp",
+  vetoed__id = "vetoed__id",
+  vetoed__proposalId = "vetoed__proposalId",
+  vetoed__transactionHash = "vetoed__transactionHash",
+  votingStarted = "votingStarted",
+  votingStarted__blockNumber = "votingStarted__blockNumber",
+  votingStarted__blockTimestamp = "votingStarted__blockTimestamp",
+  votingStarted__id = "votingStarted__id",
+  votingStarted__proposalId = "votingStarted__proposalId",
+  votingStarted__transactionHash = "votingStarted__transactionHash",
 }
 
 export type ProposalExecuted = {
-  __typename?: "ProposalExecuted";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -605,10 +599,10 @@ export type ProposalExecuted = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type ProposalExecuted_Filter = {
+export type ProposalExecuted_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProposalExecuted_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<ProposalExecuted_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -635,7 +629,7 @@ export type ProposalExecuted_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<ProposalExecuted_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ProposalExecuted_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -645,7 +639,7 @@ export type ProposalExecuted_Filter = {
   proposalId_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  proposal_?: InputMaybe<ProposalCreated_Filter>;
+  proposal_?: InputMaybe<ProposalCreated_filter>;
   proposal_contains?: InputMaybe<Scalars["String"]["input"]>;
   proposal_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
   proposal_ends_with?: InputMaybe<Scalars["String"]["input"]>;
@@ -677,25 +671,24 @@ export type ProposalExecuted_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum ProposalExecuted_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  Proposal = "proposal",
-  ProposalId = "proposalId",
-  ProposalBlockNumber = "proposal__blockNumber",
-  ProposalBlockTimestamp = "proposal__blockTimestamp",
-  ProposalDescription = "proposal__description",
-  ProposalId = "proposal__id",
-  ProposalProposalId = "proposal__proposalId",
-  ProposalProposer = "proposal__proposer",
-  ProposalStartBlock = "proposal__startBlock",
-  ProposalTransactionHash = "proposal__transactionHash",
-  TransactionHash = "transactionHash",
+export enum ProposalExecuted_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  proposal = "proposal",
+  proposalId = "proposalId",
+  proposal__blockNumber = "proposal__blockNumber",
+  proposal__blockTimestamp = "proposal__blockTimestamp",
+  proposal__description = "proposal__description",
+  proposal__id = "proposal__id",
+  proposal__proposalId = "proposal__proposalId",
+  proposal__proposer = "proposal__proposer",
+  proposal__startBlock = "proposal__startBlock",
+  proposal__transactionHash = "proposal__transactionHash",
+  transactionHash = "transactionHash",
 }
 
 export type ProposalQueued = {
-  __typename?: "ProposalQueued";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   eta: Scalars["BigInt"]["output"];
@@ -705,10 +698,10 @@ export type ProposalQueued = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type ProposalQueued_Filter = {
+export type ProposalQueued_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProposalQueued_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<ProposalQueued_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -743,7 +736,7 @@ export type ProposalQueued_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<ProposalQueued_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ProposalQueued_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -753,7 +746,7 @@ export type ProposalQueued_Filter = {
   proposalId_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  proposal_?: InputMaybe<ProposalCreated_Filter>;
+  proposal_?: InputMaybe<ProposalCreated_filter>;
   proposal_contains?: InputMaybe<Scalars["String"]["input"]>;
   proposal_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
   proposal_ends_with?: InputMaybe<Scalars["String"]["input"]>;
@@ -785,26 +778,25 @@ export type ProposalQueued_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum ProposalQueued_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Eta = "eta",
-  Id = "id",
-  Proposal = "proposal",
-  ProposalId = "proposalId",
-  ProposalBlockNumber = "proposal__blockNumber",
-  ProposalBlockTimestamp = "proposal__blockTimestamp",
-  ProposalDescription = "proposal__description",
-  ProposalId = "proposal__id",
-  ProposalProposalId = "proposal__proposalId",
-  ProposalProposer = "proposal__proposer",
-  ProposalStartBlock = "proposal__startBlock",
-  ProposalTransactionHash = "proposal__transactionHash",
-  TransactionHash = "transactionHash",
+export enum ProposalQueued_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  eta = "eta",
+  id = "id",
+  proposal = "proposal",
+  proposalId = "proposalId",
+  proposal__blockNumber = "proposal__blockNumber",
+  proposal__blockTimestamp = "proposal__blockTimestamp",
+  proposal__description = "proposal__description",
+  proposal__id = "proposal__id",
+  proposal__proposalId = "proposal__proposalId",
+  proposal__proposer = "proposal__proposer",
+  proposal__startBlock = "proposal__startBlock",
+  proposal__transactionHash = "proposal__transactionHash",
+  transactionHash = "transactionHash",
 }
 
 export type ProposalThresholdSet = {
-  __typename?: "ProposalThresholdSet";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -813,10 +805,10 @@ export type ProposalThresholdSet = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type ProposalThresholdSet_Filter = {
+export type ProposalThresholdSet_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProposalThresholdSet_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<ProposalThresholdSet_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -859,7 +851,7 @@ export type ProposalThresholdSet_Filter = {
   oldProposalThreshold_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   oldProposalThreshold_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   oldProposalThreshold_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<ProposalThresholdSet_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ProposalThresholdSet_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -872,17 +864,16 @@ export type ProposalThresholdSet_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum ProposalThresholdSet_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewProposalThreshold = "newProposalThreshold",
-  OldProposalThreshold = "oldProposalThreshold",
-  TransactionHash = "transactionHash",
+export enum ProposalThresholdSet_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newProposalThreshold = "newProposalThreshold",
+  oldProposalThreshold = "oldProposalThreshold",
+  transactionHash = "transactionHash",
 }
 
 export type ProposalVetoed = {
-  __typename?: "ProposalVetoed";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -891,10 +882,10 @@ export type ProposalVetoed = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type ProposalVetoed_Filter = {
+export type ProposalVetoed_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProposalVetoed_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<ProposalVetoed_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -921,7 +912,7 @@ export type ProposalVetoed_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<ProposalVetoed_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ProposalVetoed_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -931,7 +922,7 @@ export type ProposalVetoed_Filter = {
   proposalId_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  proposal_?: InputMaybe<ProposalCreated_Filter>;
+  proposal_?: InputMaybe<ProposalCreated_filter>;
   proposal_contains?: InputMaybe<Scalars["String"]["input"]>;
   proposal_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
   proposal_ends_with?: InputMaybe<Scalars["String"]["input"]>;
@@ -963,25 +954,24 @@ export type ProposalVetoed_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum ProposalVetoed_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  Proposal = "proposal",
-  ProposalId = "proposalId",
-  ProposalBlockNumber = "proposal__blockNumber",
-  ProposalBlockTimestamp = "proposal__blockTimestamp",
-  ProposalDescription = "proposal__description",
-  ProposalId = "proposal__id",
-  ProposalProposalId = "proposal__proposalId",
-  ProposalProposer = "proposal__proposer",
-  ProposalStartBlock = "proposal__startBlock",
-  ProposalTransactionHash = "proposal__transactionHash",
-  TransactionHash = "transactionHash",
+export enum ProposalVetoed_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  proposal = "proposal",
+  proposalId = "proposalId",
+  proposal__blockNumber = "proposal__blockNumber",
+  proposal__blockTimestamp = "proposal__blockTimestamp",
+  proposal__description = "proposal__description",
+  proposal__id = "proposal__id",
+  proposal__proposalId = "proposal__proposalId",
+  proposal__proposer = "proposal__proposer",
+  proposal__startBlock = "proposal__startBlock",
+  proposal__transactionHash = "proposal__transactionHash",
+  transactionHash = "transactionHash",
 }
 
 export type ProposalVotingStarted = {
-  __typename?: "ProposalVotingStarted";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -990,10 +980,10 @@ export type ProposalVotingStarted = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type ProposalVotingStarted_Filter = {
+export type ProposalVotingStarted_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProposalVotingStarted_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<ProposalVotingStarted_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1020,7 +1010,7 @@ export type ProposalVotingStarted_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<ProposalVotingStarted_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ProposalVotingStarted_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1030,7 +1020,7 @@ export type ProposalVotingStarted_Filter = {
   proposalId_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  proposal_?: InputMaybe<ProposalCreated_Filter>;
+  proposal_?: InputMaybe<ProposalCreated_filter>;
   proposal_contains?: InputMaybe<Scalars["String"]["input"]>;
   proposal_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
   proposal_ends_with?: InputMaybe<Scalars["String"]["input"]>;
@@ -1062,25 +1052,24 @@ export type ProposalVotingStarted_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum ProposalVotingStarted_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  Proposal = "proposal",
-  ProposalId = "proposalId",
-  ProposalBlockNumber = "proposal__blockNumber",
-  ProposalBlockTimestamp = "proposal__blockTimestamp",
-  ProposalDescription = "proposal__description",
-  ProposalId = "proposal__id",
-  ProposalProposalId = "proposal__proposalId",
-  ProposalProposer = "proposal__proposer",
-  ProposalStartBlock = "proposal__startBlock",
-  ProposalTransactionHash = "proposal__transactionHash",
-  TransactionHash = "transactionHash",
+export enum ProposalVotingStarted_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  proposal = "proposal",
+  proposalId = "proposalId",
+  proposal__blockNumber = "proposal__blockNumber",
+  proposal__blockTimestamp = "proposal__blockTimestamp",
+  proposal__description = "proposal__description",
+  proposal__id = "proposal__id",
+  proposal__proposalId = "proposal__proposalId",
+  proposal__proposer = "proposal__proposer",
+  proposal__startBlock = "proposal__startBlock",
+  proposal__transactionHash = "proposal__transactionHash",
+  transactionHash = "transactionHash",
 }
 
 export type Query = {
-  __typename?: "Query";
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
   newAdmin?: Maybe<NewAdmin>;
@@ -1117,268 +1106,267 @@ export type Query = {
   whitelistGuardianSets: Array<WhitelistGuardianSet>;
 };
 
-export type Query_MetaArgs = {
-  block?: InputMaybe<Block_Height>;
+export type Query_metaArgs = {
+  block?: InputMaybe<Block_height>;
 };
 
-export type QueryNewAdminArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerynewAdminArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryNewAdminsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerynewAdminsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<NewAdmin_OrderBy>;
+  orderBy?: InputMaybe<NewAdmin_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<NewAdmin_Filter>;
+  where?: InputMaybe<NewAdmin_filter>;
 };
 
-export type QueryNewImplementationArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerynewImplementationArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryNewImplementationsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerynewImplementationsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<NewImplementation_OrderBy>;
+  orderBy?: InputMaybe<NewImplementation_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<NewImplementation_Filter>;
+  where?: InputMaybe<NewImplementation_filter>;
 };
 
-export type QueryNewPendingAdminArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerynewPendingAdminArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryNewPendingAdminsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerynewPendingAdminsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<NewPendingAdmin_OrderBy>;
+  orderBy?: InputMaybe<NewPendingAdmin_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<NewPendingAdmin_Filter>;
+  where?: InputMaybe<NewPendingAdmin_filter>;
 };
 
-export type QueryProposalCanceledArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalCanceledArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryProposalCanceledsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalCanceledsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalCanceled_OrderBy>;
+  orderBy?: InputMaybe<ProposalCanceled_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalCanceled_Filter>;
+  where?: InputMaybe<ProposalCanceled_filter>;
 };
 
-export type QueryProposalCreatedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalCreatedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryProposalCreatedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalCreatedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalCreated_OrderBy>;
+  orderBy?: InputMaybe<ProposalCreated_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalCreated_Filter>;
+  where?: InputMaybe<ProposalCreated_filter>;
 };
 
-export type QueryProposalExecutedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalExecutedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryProposalExecutedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalExecutedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalExecuted_OrderBy>;
+  orderBy?: InputMaybe<ProposalExecuted_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalExecuted_Filter>;
+  where?: InputMaybe<ProposalExecuted_filter>;
 };
 
-export type QueryProposalQueuedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalQueuedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryProposalQueuedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalQueuedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalQueued_OrderBy>;
+  orderBy?: InputMaybe<ProposalQueued_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalQueued_Filter>;
+  where?: InputMaybe<ProposalQueued_filter>;
 };
 
-export type QueryProposalThresholdSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalThresholdSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryProposalThresholdSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalThresholdSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalThresholdSet_OrderBy>;
+  orderBy?: InputMaybe<ProposalThresholdSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalThresholdSet_Filter>;
+  where?: InputMaybe<ProposalThresholdSet_filter>;
 };
 
-export type QueryProposalVetoedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalVetoedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryProposalVetoedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalVetoedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalVetoed_OrderBy>;
+  orderBy?: InputMaybe<ProposalVetoed_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalVetoed_Filter>;
+  where?: InputMaybe<ProposalVetoed_filter>;
 };
 
-export type QueryProposalVotingStartedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalVotingStartedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryProposalVotingStartedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryproposalVotingStartedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalVotingStarted_OrderBy>;
+  orderBy?: InputMaybe<ProposalVotingStarted_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalVotingStarted_Filter>;
+  where?: InputMaybe<ProposalVotingStarted_filter>;
 };
 
-export type QueryVetoGuardianSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvetoGuardianSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryVetoGuardianSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvetoGuardianSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VetoGuardianSet_OrderBy>;
+  orderBy?: InputMaybe<VetoGuardianSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VetoGuardianSet_Filter>;
+  where?: InputMaybe<VetoGuardianSet_filter>;
 };
 
-export type QueryVoteCastArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvoteCastArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryVoteCastsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvoteCastsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VoteCast_OrderBy>;
+  orderBy?: InputMaybe<VoteCast_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VoteCast_Filter>;
+  where?: InputMaybe<VoteCast_filter>;
 };
 
-export type QueryVotingDelaySetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvotingDelaySetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryVotingDelaySetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvotingDelaySetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VotingDelaySet_OrderBy>;
+  orderBy?: InputMaybe<VotingDelaySet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VotingDelaySet_Filter>;
+  where?: InputMaybe<VotingDelaySet_filter>;
 };
 
-export type QueryVotingPeriodSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvotingPeriodSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryVotingPeriodSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QueryvotingPeriodSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VotingPeriodSet_OrderBy>;
+  orderBy?: InputMaybe<VotingPeriodSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VotingPeriodSet_Filter>;
+  where?: InputMaybe<VotingPeriodSet_filter>;
 };
 
-export type QueryWhitelistAccountExpirationSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerywhitelistAccountExpirationSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryWhitelistAccountExpirationSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerywhitelistAccountExpirationSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<WhitelistAccountExpirationSet_OrderBy>;
+  orderBy?: InputMaybe<WhitelistAccountExpirationSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<WhitelistAccountExpirationSet_Filter>;
+  where?: InputMaybe<WhitelistAccountExpirationSet_filter>;
 };
 
-export type QueryWhitelistGuardianSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerywhitelistGuardianSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryWhitelistGuardianSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type QuerywhitelistGuardianSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<WhitelistGuardianSet_OrderBy>;
+  orderBy?: InputMaybe<WhitelistGuardianSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<WhitelistGuardianSet_Filter>;
+  where?: InputMaybe<WhitelistGuardianSet_filter>;
 };
 
 export type Subscription = {
-  __typename?: "Subscription";
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
   newAdmin?: Maybe<NewAdmin>;
@@ -1415,268 +1403,267 @@ export type Subscription = {
   whitelistGuardianSets: Array<WhitelistGuardianSet>;
 };
 
-export type Subscription_MetaArgs = {
-  block?: InputMaybe<Block_Height>;
+export type Subscription_metaArgs = {
+  block?: InputMaybe<Block_height>;
 };
 
-export type SubscriptionNewAdminArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionnewAdminArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionNewAdminsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionnewAdminsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<NewAdmin_OrderBy>;
+  orderBy?: InputMaybe<NewAdmin_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<NewAdmin_Filter>;
+  where?: InputMaybe<NewAdmin_filter>;
 };
 
-export type SubscriptionNewImplementationArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionnewImplementationArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionNewImplementationsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionnewImplementationsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<NewImplementation_OrderBy>;
+  orderBy?: InputMaybe<NewImplementation_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<NewImplementation_Filter>;
+  where?: InputMaybe<NewImplementation_filter>;
 };
 
-export type SubscriptionNewPendingAdminArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionnewPendingAdminArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionNewPendingAdminsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionnewPendingAdminsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<NewPendingAdmin_OrderBy>;
+  orderBy?: InputMaybe<NewPendingAdmin_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<NewPendingAdmin_Filter>;
+  where?: InputMaybe<NewPendingAdmin_filter>;
 };
 
-export type SubscriptionProposalCanceledArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalCanceledArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionProposalCanceledsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalCanceledsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalCanceled_OrderBy>;
+  orderBy?: InputMaybe<ProposalCanceled_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalCanceled_Filter>;
+  where?: InputMaybe<ProposalCanceled_filter>;
 };
 
-export type SubscriptionProposalCreatedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalCreatedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionProposalCreatedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalCreatedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalCreated_OrderBy>;
+  orderBy?: InputMaybe<ProposalCreated_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalCreated_Filter>;
+  where?: InputMaybe<ProposalCreated_filter>;
 };
 
-export type SubscriptionProposalExecutedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalExecutedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionProposalExecutedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalExecutedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalExecuted_OrderBy>;
+  orderBy?: InputMaybe<ProposalExecuted_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalExecuted_Filter>;
+  where?: InputMaybe<ProposalExecuted_filter>;
 };
 
-export type SubscriptionProposalQueuedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalQueuedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionProposalQueuedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalQueuedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalQueued_OrderBy>;
+  orderBy?: InputMaybe<ProposalQueued_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalQueued_Filter>;
+  where?: InputMaybe<ProposalQueued_filter>;
 };
 
-export type SubscriptionProposalThresholdSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalThresholdSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionProposalThresholdSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalThresholdSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalThresholdSet_OrderBy>;
+  orderBy?: InputMaybe<ProposalThresholdSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalThresholdSet_Filter>;
+  where?: InputMaybe<ProposalThresholdSet_filter>;
 };
 
-export type SubscriptionProposalVetoedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalVetoedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionProposalVetoedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalVetoedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalVetoed_OrderBy>;
+  orderBy?: InputMaybe<ProposalVetoed_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalVetoed_Filter>;
+  where?: InputMaybe<ProposalVetoed_filter>;
 };
 
-export type SubscriptionProposalVotingStartedArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalVotingStartedArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionProposalVotingStartedsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionproposalVotingStartedsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<ProposalVotingStarted_OrderBy>;
+  orderBy?: InputMaybe<ProposalVotingStarted_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ProposalVotingStarted_Filter>;
+  where?: InputMaybe<ProposalVotingStarted_filter>;
 };
 
-export type SubscriptionVetoGuardianSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvetoGuardianSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionVetoGuardianSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvetoGuardianSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VetoGuardianSet_OrderBy>;
+  orderBy?: InputMaybe<VetoGuardianSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VetoGuardianSet_Filter>;
+  where?: InputMaybe<VetoGuardianSet_filter>;
 };
 
-export type SubscriptionVoteCastArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvoteCastArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionVoteCastsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvoteCastsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VoteCast_OrderBy>;
+  orderBy?: InputMaybe<VoteCast_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VoteCast_Filter>;
+  where?: InputMaybe<VoteCast_filter>;
 };
 
-export type SubscriptionVotingDelaySetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvotingDelaySetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionVotingDelaySetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvotingDelaySetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VotingDelaySet_OrderBy>;
+  orderBy?: InputMaybe<VotingDelaySet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VotingDelaySet_Filter>;
+  where?: InputMaybe<VotingDelaySet_filter>;
 };
 
-export type SubscriptionVotingPeriodSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvotingPeriodSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionVotingPeriodSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionvotingPeriodSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<VotingPeriodSet_OrderBy>;
+  orderBy?: InputMaybe<VotingPeriodSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VotingPeriodSet_Filter>;
+  where?: InputMaybe<VotingPeriodSet_filter>;
 };
 
-export type SubscriptionWhitelistAccountExpirationSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionwhitelistAccountExpirationSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionWhitelistAccountExpirationSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionwhitelistAccountExpirationSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<WhitelistAccountExpirationSet_OrderBy>;
+  orderBy?: InputMaybe<WhitelistAccountExpirationSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<WhitelistAccountExpirationSet_Filter>;
+  where?: InputMaybe<WhitelistAccountExpirationSet_filter>;
 };
 
-export type SubscriptionWhitelistGuardianSetArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionwhitelistGuardianSetArgs = {
+  block?: InputMaybe<Block_height>;
   id: Scalars["ID"]["input"];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionWhitelistGuardianSetsArgs = {
-  block?: InputMaybe<Block_Height>;
+export type SubscriptionwhitelistGuardianSetsArgs = {
+  block?: InputMaybe<Block_height>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<WhitelistGuardianSet_OrderBy>;
+  orderBy?: InputMaybe<WhitelistGuardianSet_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars["Int"]["input"]>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<WhitelistGuardianSet_Filter>;
+  where?: InputMaybe<WhitelistGuardianSet_filter>;
 };
 
 export type VetoGuardianSet = {
-  __typename?: "VetoGuardianSet";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -1685,10 +1672,10 @@ export type VetoGuardianSet = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type VetoGuardianSet_Filter = {
+export type VetoGuardianSet_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<VetoGuardianSet_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<VetoGuardianSet_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1735,7 +1722,7 @@ export type VetoGuardianSet_Filter = {
   oldGuardian_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldGuardian_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldGuardian_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<VetoGuardianSet_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<VetoGuardianSet_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -1748,17 +1735,16 @@ export type VetoGuardianSet_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum VetoGuardianSet_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewGuardian = "newGuardian",
-  OldGuardian = "oldGuardian",
-  TransactionHash = "transactionHash",
+export enum VetoGuardianSet_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newGuardian = "newGuardian",
+  oldGuardian = "oldGuardian",
+  transactionHash = "transactionHash",
 }
 
 export type VoteCast = {
-  __typename?: "VoteCast";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -1770,10 +1756,10 @@ export type VoteCast = {
   votes: Scalars["BigInt"]["output"];
 };
 
-export type VoteCast_Filter = {
+export type VoteCast_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<VoteCast_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<VoteCast_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1800,7 +1786,7 @@ export type VoteCast_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<VoteCast_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<VoteCast_filter>>>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1867,20 +1853,19 @@ export type VoteCast_Filter = {
   votes_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
 };
 
-export enum VoteCast_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  ProposalId = "proposalId",
-  Reason = "reason",
-  Support = "support",
-  TransactionHash = "transactionHash",
-  Voter = "voter",
-  Votes = "votes",
+export enum VoteCast_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  proposalId = "proposalId",
+  reason = "reason",
+  support = "support",
+  transactionHash = "transactionHash",
+  voter = "voter",
+  votes = "votes",
 }
 
 export type VotingDelaySet = {
-  __typename?: "VotingDelaySet";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -1889,10 +1874,10 @@ export type VotingDelaySet = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type VotingDelaySet_Filter = {
+export type VotingDelaySet_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<VotingDelaySet_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<VotingDelaySet_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1935,7 +1920,7 @@ export type VotingDelaySet_Filter = {
   oldVotingDelay_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   oldVotingDelay_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   oldVotingDelay_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<VotingDelaySet_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<VotingDelaySet_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -1948,17 +1933,16 @@ export type VotingDelaySet_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum VotingDelaySet_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewVotingDelay = "newVotingDelay",
-  OldVotingDelay = "oldVotingDelay",
-  TransactionHash = "transactionHash",
+export enum VotingDelaySet_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newVotingDelay = "newVotingDelay",
+  oldVotingDelay = "oldVotingDelay",
+  transactionHash = "transactionHash",
 }
 
 export type VotingPeriodSet = {
-  __typename?: "VotingPeriodSet";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -1967,10 +1951,10 @@ export type VotingPeriodSet = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type VotingPeriodSet_Filter = {
+export type VotingPeriodSet_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<VotingPeriodSet_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<VotingPeriodSet_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -2013,7 +1997,7 @@ export type VotingPeriodSet_Filter = {
   oldVotingPeriod_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   oldVotingPeriod_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   oldVotingPeriod_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<VotingPeriodSet_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<VotingPeriodSet_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -2026,17 +2010,16 @@ export type VotingPeriodSet_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum VotingPeriodSet_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewVotingPeriod = "newVotingPeriod",
-  OldVotingPeriod = "oldVotingPeriod",
-  TransactionHash = "transactionHash",
+export enum VotingPeriodSet_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newVotingPeriod = "newVotingPeriod",
+  oldVotingPeriod = "oldVotingPeriod",
+  transactionHash = "transactionHash",
 }
 
 export type WhitelistAccountExpirationSet = {
-  __typename?: "WhitelistAccountExpirationSet";
   account: Scalars["Bytes"]["output"];
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
@@ -2045,7 +2028,7 @@ export type WhitelistAccountExpirationSet = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type WhitelistAccountExpirationSet_Filter = {
+export type WhitelistAccountExpirationSet_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   account?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -2058,7 +2041,7 @@ export type WhitelistAccountExpirationSet_Filter = {
   account_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   account_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   account_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  and?: InputMaybe<Array<InputMaybe<WhitelistAccountExpirationSet_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<WhitelistAccountExpirationSet_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -2093,7 +2076,7 @@ export type WhitelistAccountExpirationSet_Filter = {
   id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<WhitelistAccountExpirationSet_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<WhitelistAccountExpirationSet_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -2106,17 +2089,16 @@ export type WhitelistAccountExpirationSet_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum WhitelistAccountExpirationSet_OrderBy {
-  Account = "account",
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Expiration = "expiration",
-  Id = "id",
-  TransactionHash = "transactionHash",
+export enum WhitelistAccountExpirationSet_orderBy {
+  account = "account",
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  expiration = "expiration",
+  id = "id",
+  transactionHash = "transactionHash",
 }
 
 export type WhitelistGuardianSet = {
-  __typename?: "WhitelistGuardianSet";
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   id: Scalars["Bytes"]["output"];
@@ -2125,10 +2107,10 @@ export type WhitelistGuardianSet = {
   transactionHash: Scalars["Bytes"]["output"];
 };
 
-export type WhitelistGuardianSet_Filter = {
+export type WhitelistGuardianSet_filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<WhitelistGuardianSet_Filter>>>;
+  and?: InputMaybe<Array<InputMaybe<WhitelistGuardianSet_filter>>>;
   blockNumber?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockNumber_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -2175,7 +2157,7 @@ export type WhitelistGuardianSet_Filter = {
   oldGuardian_not?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldGuardian_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   oldGuardian_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  or?: InputMaybe<Array<InputMaybe<WhitelistGuardianSet_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<WhitelistGuardianSet_filter>>>;
   transactionHash?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
@@ -2188,17 +2170,16 @@ export type WhitelistGuardianSet_Filter = {
   transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
 };
 
-export enum WhitelistGuardianSet_OrderBy {
-  BlockNumber = "blockNumber",
-  BlockTimestamp = "blockTimestamp",
-  Id = "id",
-  NewGuardian = "newGuardian",
-  OldGuardian = "oldGuardian",
-  TransactionHash = "transactionHash",
+export enum WhitelistGuardianSet_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newGuardian = "newGuardian",
+  oldGuardian = "oldGuardian",
+  transactionHash = "transactionHash",
 }
 
 export type _Block_ = {
-  __typename?: "_Block_";
   /** The hash of the block */
   hash?: Maybe<Scalars["Bytes"]["output"]>;
   /** The block number */
@@ -2211,7 +2192,6 @@ export type _Block_ = {
 
 /** The type for the top-level _meta field */
 export type _Meta_ = {
-  __typename?: "_Meta_";
   /**
    * Information about a specific subgraph block. The hash of the block
    * will be null if the _meta field has a block constraint that asks for
@@ -2228,9 +2208,9 @@ export type _Meta_ = {
 
 export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
-  Allow = "allow",
+  allow = "allow",
   /** If the subgraph has indexing errors, data will be omitted. The default. */
-  Deny = "deny",
+  deny = "deny",
 }
 
 export type ProposalQueryQueryVariables = Exact<{
@@ -2238,9 +2218,7 @@ export type ProposalQueryQueryVariables = Exact<{
 }>;
 
 export type ProposalQueryQuery = {
-  __typename?: "Query";
   proposalCreateds: Array<{
-    __typename?: "ProposalCreated";
     blockNumber: any;
     blockTimestamp: any;
     description: string;
@@ -2249,49 +2227,41 @@ export type ProposalQueryQuery = {
     transactionHash: any;
   }>;
   proposalCanceleds: Array<{
-    __typename?: "ProposalCanceled";
     blockNumber: any;
     blockTimestamp: any;
     proposalId: any;
     transactionHash: any;
-    proposal: { __typename?: "ProposalCreated"; description: string };
+    proposal: { description: string };
   }>;
   proposalExecuteds: Array<{
-    __typename?: "ProposalExecuted";
     blockNumber: any;
     blockTimestamp: any;
     proposalId: any;
     transactionHash: any;
-    proposal: { __typename?: "ProposalCreated"; description: string };
+    proposal: { description: string };
   }>;
   proposalQueueds: Array<{
-    __typename?: "ProposalQueued";
     blockNumber: any;
     blockTimestamp: any;
     proposalId: any;
     transactionHash: any;
-    proposal: { __typename?: "ProposalCreated"; description: string };
+    proposal: { description: string };
   }>;
   proposalVetoeds: Array<{
-    __typename?: "ProposalVetoed";
     blockNumber: any;
     blockTimestamp: any;
     proposalId: any;
     transactionHash: any;
-    proposal: { __typename?: "ProposalCreated"; description: string };
+    proposal: { description: string };
   }>;
   proposalVotingStarteds: Array<{
-    __typename?: "ProposalVotingStarted";
     blockNumber: any;
     blockTimestamp: any;
     proposalId: any;
     transactionHash: any;
-    proposal: { __typename?: "ProposalCreated"; description: string };
+    proposal: { description: string };
   }>;
-  _meta?: {
-    __typename?: "_Meta_";
-    block: { __typename?: "_Block_"; number: number };
-  } | null;
+  _meta?: { block: { number: number } } | null;
 };
 
 export class TypedDocumentString<TResult, TVariables>

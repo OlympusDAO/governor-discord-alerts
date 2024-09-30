@@ -23,15 +23,23 @@ const enabledApisStorage = new gcp.projects.Service("storage", {
   service: "storage.googleapis.com",
 });
 
-export const enabledApis = [
-  enabledApisCloudFunctions,
-  enabledApisCloudScheduler,
-  enabledApisStorage,
-];
+const enabledApisArtifactRegistry = new gcp.projects.Service("artifact-registry", {
+  project: gcp.config.project,
+  service: "artifactregistry.googleapis.com",
+});
+
+const enabledApisCloudBuild = new gcp.projects.Service("cloud-build", {
+  project: gcp.config.project,
+  service: "cloudbuild.googleapis.com",
+});
 
 // Create a GCS bucket
 const bucket = new gcp.storage.Bucket(`olympus-governor-discord-alerts`, {
   location: "us-central1",
+}, {
+  dependsOn: [
+    enabledApisStorage,
+  ],
 });
 
 // Create a Google Cloud Function
@@ -53,6 +61,14 @@ const cloudFunction = new gcp.cloudfunctions.HttpCallbackFunction(
       DISCORD_WEBHOOK_URL: config.requireSecret("discordWebhookUrl"),
     },
   },
+  {
+    dependsOn: [
+      enabledApisCloudFunctions,
+      enabledApisArtifactRegistry,
+      enabledApisStorage,
+      enabledApisCloudBuild,
+    ]
+  }
 );
 
 // Create a Google Cloud Scheduler job
@@ -61,8 +77,13 @@ const schedulerJob = new gcp.cloudscheduler.Job(`function-invoker`, {
   timeZone: "UTC",
   httpTarget: {
     httpMethod: "GET",
-    uri: pulumi.interpolate`https://${cloudFunction.httpsTriggerUrl}`,
+    uri: cloudFunction.httpsTriggerUrl,
   },
+}, {
+  dependsOn: [
+    cloudFunction,
+    enabledApisCloudScheduler,
+  ],
 });
 
 // Allow Cloud Scheduler to invoke the Cloud Function
@@ -74,8 +95,14 @@ const functionInvoker = new gcp.cloudfunctions.FunctionIamMember(
     cloudFunction: cloudFunction.function.name,
     role: "roles/cloudfunctions.invoker",
     member:
-      "serviceAccount:cloud-scheduler@${gcp.config.project}.iam.gserviceaccount.com",
+      pulumi.interpolate`serviceAccount:${gcp.config.project}@appspot.gserviceaccount.com`,
   },
+  {
+    dependsOn: [
+      enabledApisCloudScheduler,
+      cloudFunction,
+    ],
+  }
 );
 
 // Export the bucket name and Cloud Function URL

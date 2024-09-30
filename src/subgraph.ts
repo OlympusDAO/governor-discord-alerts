@@ -4,7 +4,7 @@ import { getSubgraphUrl } from "./constants";
 import { ProposalEvents } from "./types";
 
 const PROPOSAL_QUERY = graphql(`
-  query ProposalQuery($block: Int!) {
+  query ProposalQuery($block: BigInt!) {
     proposalCreateds(
       where: { blockNumber_gt: $block }
       orderBy: blockNumber

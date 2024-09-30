@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { DocumentTypeDecoration } from "@graphql-typed-document-node/core";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -2232,6 +2233,67 @@ export enum _SubgraphErrorPolicy_ {
   Deny = "deny",
 }
 
+export type ProposalQueryQueryVariables = Exact<{
+  block: Scalars["BigInt"]["input"];
+}>;
+
+export type ProposalQueryQuery = {
+  __typename?: "Query";
+  proposalCreateds: Array<{
+    __typename?: "ProposalCreated";
+    blockNumber: any;
+    blockTimestamp: any;
+    description: string;
+    proposalId: any;
+    proposer: any;
+    transactionHash: any;
+  }>;
+  proposalCanceleds: Array<{
+    __typename?: "ProposalCanceled";
+    blockNumber: any;
+    blockTimestamp: any;
+    proposalId: any;
+    transactionHash: any;
+    proposal: { __typename?: "ProposalCreated"; description: string };
+  }>;
+  proposalExecuteds: Array<{
+    __typename?: "ProposalExecuted";
+    blockNumber: any;
+    blockTimestamp: any;
+    proposalId: any;
+    transactionHash: any;
+    proposal: { __typename?: "ProposalCreated"; description: string };
+  }>;
+  proposalQueueds: Array<{
+    __typename?: "ProposalQueued";
+    blockNumber: any;
+    blockTimestamp: any;
+    proposalId: any;
+    transactionHash: any;
+    proposal: { __typename?: "ProposalCreated"; description: string };
+  }>;
+  proposalVetoeds: Array<{
+    __typename?: "ProposalVetoed";
+    blockNumber: any;
+    blockTimestamp: any;
+    proposalId: any;
+    transactionHash: any;
+    proposal: { __typename?: "ProposalCreated"; description: string };
+  }>;
+  proposalVotingStarteds: Array<{
+    __typename?: "ProposalVotingStarted";
+    blockNumber: any;
+    blockTimestamp: any;
+    proposalId: any;
+    transactionHash: any;
+    proposal: { __typename?: "ProposalCreated"; description: string };
+  }>;
+  _meta?: {
+    __typename?: "_Meta_";
+    block: { __typename?: "_Block_"; number: number };
+  } | null;
+};
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -2249,3 +2311,93 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
+
+export const ProposalQueryDocument = new TypedDocumentString(`
+    query ProposalQuery($block: BigInt!) {
+  proposalCreateds(
+    where: {blockNumber_gt: $block}
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    blockNumber
+    blockTimestamp
+    description
+    proposalId
+    proposer
+    transactionHash
+  }
+  proposalCanceleds(
+    where: {blockNumber_gt: $block}
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      description
+    }
+  }
+  proposalExecuteds(
+    where: {blockNumber_gt: $block}
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      description
+    }
+  }
+  proposalQueueds(
+    where: {blockNumber_gt: $block}
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      description
+    }
+  }
+  proposalVetoeds(
+    where: {blockNumber_gt: $block}
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      description
+    }
+  }
+  proposalVotingStarteds(
+    where: {blockNumber_gt: $block}
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      description
+    }
+  }
+  _meta {
+    block {
+      number
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  ProposalQueryQuery,
+  ProposalQueryQueryVariables
+>;

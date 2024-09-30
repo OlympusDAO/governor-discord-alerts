@@ -13,6 +13,9 @@ importers:
       "@google-cloud/storage":
         specifier: ^7.13.0
         version: 7.13.0(encoding@0.1.13)
+      "@graphql-typed-document-node/core":
+        specifier: ^3.2.0
+        version: 3.2.0(graphql@16.9.0)
       discord.js:
         specifier: ^14.16.2
         version: 14.16.2
@@ -50,6 +53,9 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
+      dotenv-cli:
+        specifier: ^7.4.2
+        version: 7.4.2
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.19.50)
@@ -2931,6 +2937,20 @@ packages:
       {
         integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==,
       }
+
+  dotenv-cli@7.4.2:
+    resolution:
+      {
+        integrity: sha512-SbUj8l61zIbzyhIbg0FwPJq6+wjbzdn9oEtozQpZ6kW2ihCcapKVZj49oCT3oPM+mgQm+itgvUQcG5szxVrZTA==,
+      }
+    hasBin: true
+
+  dotenv-expand@10.0.0:
+    resolution:
+      {
+        integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==,
+      }
+    engines: { node: ">=12" }
 
   dotenv@16.4.5:
     resolution:
@@ -8876,6 +8896,15 @@ snapshots:
     dependencies:
       no-case: 3.0.4
       tslib: 2.7.0
+
+  dotenv-cli@7.4.2:
+    dependencies:
+      cross-spawn: 7.0.3
+      dotenv: 16.4.5
+      dotenv-expand: 10.0.0
+      minimist: 1.2.8
+
+  dotenv-expand@10.0.0: {}
 
   dotenv@16.4.5: {}
 

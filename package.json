@@ -5,7 +5,7 @@
   "main": "pulumi.ts",
   "scripts": {
     "codegen": "dotenv -e .env -- graphql-codegen",
-    "lint": "prettier --write .",
+    "lint": "prettier --write . && eslint .",
     "test": "jest"
   },
   "keywords": [],
@@ -13,6 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@0no-co/graphqlsp": "^1.12.14",
+    "@eslint/js": "^9.11.1",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/schema-ast": "^4.1.0",
     "@graphql-codegen/typed-document-node": "^5.0.9",
@@ -26,10 +27,16 @@
     "@types/node": "^18",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "globals": "^15.9.0",
     "jest": "^29.7.0",
     "prettier": "^3.3.3",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",

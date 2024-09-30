@@ -15,10 +15,12 @@ export const getLatestProcessedBlock = async (): Promise<number> => {
   // Handle if the file doesn't exist
   const [exists] = await file.exists();
   if (!exists) {
+    console.warn(`No latest processed block found, returning 0`);
     return 0;
   }
 
   const [contents] = await file.download();
+  console.log(`Latest processed block: ${contents.toString()}`);
   return parseInt(contents.toString());
 };
 

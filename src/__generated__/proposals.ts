@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -27,18 +26,10 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  BigDecimal: { input: any; output: any };
-  BigInt: { input: any; output: any };
-  Bytes: { input: any; output: any };
-  /**
-   * 8 bytes signed integer
-   *
-   */
+  BigDecimal: { input: string; output: string };
+  BigInt: { input: string; output: string };
+  Bytes: { input: string; output: string };
   Int8: { input: any; output: any };
-  /**
-   * A string representation of microseconds UNIX timestamp (16 digits)
-   *
-   */
   Timestamp: { input: any; output: any };
 };
 
@@ -2213,57 +2204,179 @@ export enum _SubgraphErrorPolicy_ {
   deny = "deny",
 }
 
+export type CreatedProposalFragment = {
+  id: string;
+  blockNumber: string;
+  blockTimestamp: string;
+  description: string;
+  proposalId: string;
+  proposer: string;
+  transactionHash: string;
+  calldatas: Array<string>;
+  targets: Array<string>;
+  values: Array<string>;
+  signatures: Array<string>;
+  startBlock: string;
+};
+
 export type ProposalQueryQueryVariables = Exact<{
   block: Scalars["BigInt"]["input"];
 }>;
 
 export type ProposalQueryQuery = {
   proposalCreateds: Array<{
-    blockNumber: any;
-    blockTimestamp: any;
+    id: string;
+    blockNumber: string;
+    blockTimestamp: string;
     description: string;
-    proposalId: any;
-    proposer: any;
-    transactionHash: any;
+    proposalId: string;
+    proposer: string;
+    transactionHash: string;
+    calldatas: Array<string>;
+    targets: Array<string>;
+    values: Array<string>;
+    signatures: Array<string>;
+    startBlock: string;
   }>;
   proposalCanceleds: Array<{
-    blockNumber: any;
-    blockTimestamp: any;
-    proposalId: any;
-    transactionHash: any;
-    proposal: { description: string };
+    id: string;
+    blockNumber: string;
+    blockTimestamp: string;
+    proposalId: string;
+    transactionHash: string;
+    proposal: {
+      id: string;
+      blockNumber: string;
+      blockTimestamp: string;
+      description: string;
+      proposalId: string;
+      proposer: string;
+      transactionHash: string;
+      calldatas: Array<string>;
+      targets: Array<string>;
+      values: Array<string>;
+      signatures: Array<string>;
+      startBlock: string;
+    };
   }>;
   proposalExecuteds: Array<{
-    blockNumber: any;
-    blockTimestamp: any;
-    proposalId: any;
-    transactionHash: any;
-    proposal: { description: string };
+    id: string;
+    blockNumber: string;
+    blockTimestamp: string;
+    proposalId: string;
+    transactionHash: string;
+    proposal: {
+      id: string;
+      blockNumber: string;
+      blockTimestamp: string;
+      description: string;
+      proposalId: string;
+      proposer: string;
+      transactionHash: string;
+      calldatas: Array<string>;
+      targets: Array<string>;
+      values: Array<string>;
+      signatures: Array<string>;
+      startBlock: string;
+    };
   }>;
   proposalQueueds: Array<{
-    blockNumber: any;
-    blockTimestamp: any;
-    proposalId: any;
-    transactionHash: any;
-    proposal: { description: string };
+    id: string;
+    blockNumber: string;
+    blockTimestamp: string;
+    proposalId: string;
+    transactionHash: string;
+    eta: string;
+    proposal: {
+      id: string;
+      blockNumber: string;
+      blockTimestamp: string;
+      description: string;
+      proposalId: string;
+      proposer: string;
+      transactionHash: string;
+      calldatas: Array<string>;
+      targets: Array<string>;
+      values: Array<string>;
+      signatures: Array<string>;
+      startBlock: string;
+    };
   }>;
   proposalVetoeds: Array<{
-    blockNumber: any;
-    blockTimestamp: any;
-    proposalId: any;
-    transactionHash: any;
-    proposal: { description: string };
+    id: string;
+    blockNumber: string;
+    blockTimestamp: string;
+    proposalId: string;
+    transactionHash: string;
+    proposal: {
+      id: string;
+      blockNumber: string;
+      blockTimestamp: string;
+      description: string;
+      proposalId: string;
+      proposer: string;
+      transactionHash: string;
+      calldatas: Array<string>;
+      targets: Array<string>;
+      values: Array<string>;
+      signatures: Array<string>;
+      startBlock: string;
+    };
   }>;
   proposalVotingStarteds: Array<{
-    blockNumber: any;
-    blockTimestamp: any;
-    proposalId: any;
-    transactionHash: any;
-    proposal: { description: string };
+    id: string;
+    blockNumber: string;
+    blockTimestamp: string;
+    proposalId: string;
+    transactionHash: string;
+    proposal: {
+      id: string;
+      blockNumber: string;
+      blockTimestamp: string;
+      description: string;
+      proposalId: string;
+      proposer: string;
+      transactionHash: string;
+      calldatas: Array<string>;
+      targets: Array<string>;
+      values: Array<string>;
+      signatures: Array<string>;
+      startBlock: string;
+    };
   }>;
   _meta?: { block: { number: number } } | null;
 };
 
+export const CreatedProposalFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "CreatedProposal" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "ProposalCreated" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "blockTimestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+          { kind: "Field", name: { kind: "Name", value: "proposer" } },
+          { kind: "Field", name: { kind: "Name", value: "transactionHash" } },
+          { kind: "Field", name: { kind: "Name", value: "calldatas" } },
+          { kind: "Field", name: { kind: "Name", value: "targets" } },
+          { kind: "Field", name: { kind: "Name", value: "values" } },
+          { kind: "Field", name: { kind: "Name", value: "signatures" } },
+          { kind: "Field", name: { kind: "Name", value: "startBlock" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreatedProposalFragment, unknown>;
 export const ProposalQueryDocument = {
   kind: "Document",
   definitions: [
@@ -2325,17 +2438,9 @@ export const ProposalQueryDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
                 {
-                  kind: "Field",
-                  name: { kind: "Name", value: "blockTimestamp" },
-                },
-                { kind: "Field", name: { kind: "Name", value: "description" } },
-                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
-                { kind: "Field", name: { kind: "Name", value: "proposer" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "transactionHash" },
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "CreatedProposal" },
                 },
               ],
             },
@@ -2375,6 +2480,7 @@ export const ProposalQueryDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
                 {
                   kind: "Field",
@@ -2392,8 +2498,8 @@ export const ProposalQueryDocument = {
                     kind: "SelectionSet",
                     selections: [
                       {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "CreatedProposal" },
                       },
                     ],
                   },
@@ -2436,6 +2542,7 @@ export const ProposalQueryDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
                 {
                   kind: "Field",
@@ -2453,8 +2560,8 @@ export const ProposalQueryDocument = {
                     kind: "SelectionSet",
                     selections: [
                       {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "CreatedProposal" },
                       },
                     ],
                   },
@@ -2497,6 +2604,7 @@ export const ProposalQueryDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
                 {
                   kind: "Field",
@@ -2507,6 +2615,7 @@ export const ProposalQueryDocument = {
                   kind: "Field",
                   name: { kind: "Name", value: "transactionHash" },
                 },
+                { kind: "Field", name: { kind: "Name", value: "eta" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "proposal" },
@@ -2514,8 +2623,8 @@ export const ProposalQueryDocument = {
                     kind: "SelectionSet",
                     selections: [
                       {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "CreatedProposal" },
                       },
                     ],
                   },
@@ -2558,6 +2667,7 @@ export const ProposalQueryDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
                 {
                   kind: "Field",
@@ -2575,8 +2685,8 @@ export const ProposalQueryDocument = {
                     kind: "SelectionSet",
                     selections: [
                       {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "CreatedProposal" },
                       },
                     ],
                   },
@@ -2619,6 +2729,7 @@ export const ProposalQueryDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
                 {
                   kind: "Field",
@@ -2636,8 +2747,8 @@ export const ProposalQueryDocument = {
                     kind: "SelectionSet",
                     selections: [
                       {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" },
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "CreatedProposal" },
                       },
                     ],
                   },
@@ -2667,6 +2778,31 @@ export const ProposalQueryDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "CreatedProposal" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "ProposalCreated" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "blockTimestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+          { kind: "Field", name: { kind: "Name", value: "proposer" } },
+          { kind: "Field", name: { kind: "Name", value: "transactionHash" } },
+          { kind: "Field", name: { kind: "Name", value: "calldatas" } },
+          { kind: "Field", name: { kind: "Name", value: "targets" } },
+          { kind: "Field", name: { kind: "Name", value: "values" } },
+          { kind: "Field", name: { kind: "Name", value: "signatures" } },
+          { kind: "Field", name: { kind: "Name", value: "startBlock" } },
         ],
       },
     },

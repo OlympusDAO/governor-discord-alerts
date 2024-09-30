@@ -5,7 +5,7 @@ import {
   ProposalQueued,
   ProposalVetoed,
   ProposalVotingStarted,
-} from "./graphql/graphql";
+} from "./__generated__/proposals";
 
 export type ProposalEvents = {
   cancelled: ProposalCanceled[];

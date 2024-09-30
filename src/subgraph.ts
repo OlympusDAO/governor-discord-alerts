@@ -1,95 +1,7 @@
-import { graphql } from "./graphql";
+import { ProposalQueryDocument } from "./__generated__/proposals";
 import { getSubgraphUrl } from "./constants";
 import { ProposalEvents } from "./types";
 import { cacheExchange, Client, fetchExchange } from "@urql/core";
-import fetch from "cross-fetch";
-
-const PROPOSAL_QUERY = graphql(`
-  query ProposalQuery($block: BigInt!) {
-    proposalCreateds(
-      where: { blockNumber_gt: $block }
-      orderBy: blockNumber
-      orderDirection: asc
-    ) {
-      blockNumber
-      blockTimestamp
-      description
-      proposalId
-      proposer
-      transactionHash
-    }
-    proposalCanceleds(
-      where: { blockNumber_gt: $block }
-      orderBy: blockNumber
-      orderDirection: asc
-    ) {
-      blockNumber
-      blockTimestamp
-      proposalId
-      transactionHash
-      proposal {
-        description
-      }
-    }
-    proposalExecuteds(
-      where: { blockNumber_gt: $block }
-      orderBy: blockNumber
-      orderDirection: asc
-    ) {
-      blockNumber
-      blockTimestamp
-      proposalId
-      transactionHash
-      proposal {
-        description
-      }
-    }
-    proposalQueueds(
-      where: { blockNumber_gt: $block }
-      orderBy: blockNumber
-      orderDirection: asc
-    ) {
-      blockNumber
-      blockTimestamp
-      proposalId
-      transactionHash
-      proposal {
-        description
-      }
-    }
-    proposalVetoeds(
-      where: { blockNumber_gt: $block }
-      orderBy: blockNumber
-      orderDirection: asc
-    ) {
-      blockNumber
-      blockTimestamp
-      proposalId
-      transactionHash
-      proposal {
-        description
-      }
-    }
-    proposalVotingStarteds(
-      where: { blockNumber_gt: $block }
-      orderBy: blockNumber
-      orderDirection: asc
-    ) {
-      blockNumber
-      blockTimestamp
-      proposalId
-      transactionHash
-      proposal {
-        description
-      }
-    }
-    _meta {
-      block {
-        number
-      }
-    }
-  }
-`);
 
 export const getLatestProposalEvents = async (
   block: number,
@@ -104,18 +16,21 @@ export const getLatestProposalEvents = async (
   };
 
   // Create a new client
-  const client = new Client({
+  const subgraphClient = new Client({
     url: getSubgraphUrl(),
-    // fetch,
     exchanges: [cacheExchange, fetchExchange],
   });
 
-  const { data } = await client.query(PROPOSAL_QUERY, {
-    block: block,
+  const { data } = await subgraphClient.query(ProposalQueryDocument, {
+    block: block.toString(),
   });
 
   if (!data) {
     throw new Error("No data returned from subgraph");
+  }
+
+  if (!data._meta) {
+    throw new Error("No meta data returned from subgraph");
   }
 
   proposalData.cancelled = data.proposalCanceleds;

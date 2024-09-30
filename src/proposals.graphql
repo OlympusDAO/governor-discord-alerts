@@ -1,0 +1,101 @@
+fragment CreatedProposal on ProposalCreated {
+  id
+  blockNumber
+  blockTimestamp
+  description
+  proposalId
+  proposer
+  transactionHash
+
+  calldatas
+  targets
+  values
+  signatures
+  startBlock
+}
+
+query ProposalQuery($block: BigInt!) {
+  proposalCreateds(
+    where: { blockNumber_gt: $block }
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    ...CreatedProposal
+  }
+  proposalCanceleds(
+    where: { blockNumber_gt: $block }
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    id
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      ...CreatedProposal
+    }
+  }
+  proposalExecuteds(
+    where: { blockNumber_gt: $block }
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    id
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      ...CreatedProposal
+    }
+  }
+  proposalQueueds(
+    where: { blockNumber_gt: $block }
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    id
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    eta
+    proposal {
+      ...CreatedProposal
+    }
+  }
+  proposalVetoeds(
+    where: { blockNumber_gt: $block }
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    id
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      ...CreatedProposal
+    }
+  }
+  proposalVotingStarteds(
+    where: { blockNumber_gt: $block }
+    orderBy: blockNumber
+    orderDirection: asc
+  ) {
+    id
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    proposal {
+      ...CreatedProposal
+    }
+  }
+  _meta {
+    block {
+      number
+    }
+  }
+}

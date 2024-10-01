@@ -1,8 +1,9 @@
 import { getLatestProcessedBlock, updateLatestProcessedBlock } from "./storage";
 import { getLatestProposalEvents } from "./subgraph";
 import { processProposalEvents } from "./discord";
+import * as express from "express";
 
-export const run = async () => {
+export const run = async (req: express.Request, res: express.Response) => {
   console.log("Starting function");
 
   // Fetch the latest processed block
@@ -19,4 +20,6 @@ export const run = async () => {
   await updateLatestProcessedBlock(latestBlock);
 
   console.log("Function complete");
+
+  res.status(200).send();
 };

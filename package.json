@@ -4,54 +4,26 @@
   "description": "",
   "main": "pulumi.ts",
   "scripts": {
-    "codegen": "dotenv -e .env -- graphql-codegen",
-    "lint": "prettier --write . && eslint .",
-    "test": "jest"
+    "build": "cd function && yarn build",
+    "codegen": "dotenv -e .env -- cd function && graphql-codegen",
+    "lint": "cd function && prettier --write . && eslint .",
+    "test": "cd function && jest",
+    "postinstall": "cd function && yarn install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@0no-co/graphqlsp": "^1.12.14",
-    "@eslint/js": "^9.11.1",
-    "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/schema-ast": "^4.1.0",
-    "@graphql-codegen/typed-document-node": "^5.0.9",
-    "@graphql-codegen/typescript": "^4.0.9",
-    "@graphql-codegen/typescript-operations": "^4.2.3",
     "@pulumi/gcp": "^8.2.0",
     "@pulumi/pulumi": "^3.134.0",
-    "@types/express": "^4.17.21",
-    "@types/express-serve-static-core": "^4.17.30",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^18",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
-    "eslint-plugin-promise": "^6.0.0",
-    "globals": "^15.9.0",
-    "jest": "^29.7.0",
-    "prettier": "^3.3.3",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.7.0"
-  },
-  "dependencies": {
-    "@apollo/client": "^3.11.8",
-    "@google-cloud/storage": "^7.13.0",
-    "@graphql-typed-document-node/core": "^3.2.0",
-    "@urql/core": "^5.0.6",
-    "discord.js": "^14.16.2",
-    "express": "^4.21.0",
-    "graphql": "^15.8.0"
+    "typescript": "^5.6.2"
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=9.5.0",
-    "yarn": "please-use-npm",
-    "pnpm": "please-use-npm",
-    "bun": "please-use-npm"
+    "npm": "please-use-yarn",
+    "pnpm": "please-use-yarn",
+    "bun": "please-use-yarn"
   }
 }

@@ -1,9 +1,11 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
-import * as express from "express";
-import { run } from "./src/index";
 
 const config = new pulumi.Config();
+
+/**
+ * APIs
+ */
 
 // Ensure that the required APIs are enabled
 // Requires the Compute Engine API to be manually enabled
@@ -36,7 +38,40 @@ const enabledApisCloudBuild = new gcp.projects.Service("cloud-build", {
   service: "cloudbuild.googleapis.com",
 });
 
-// Create a GCS bucket
+/**
+ * FUNCTION ASSETS
+ */
+
+// Create a GCS bucket to store the assets
+const functionBucket = new gcp.storage.Bucket(
+  `olympus-governor-discord-alerts-assets`,
+  {
+    location: "us-central1",
+  },
+  {
+    dependsOn: [enabledApisStorage],
+  },
+);
+
+// Archive the function code in the bucket
+const functionBucketObject = new gcp.storage.BucketObject(
+  "function-code",
+  {
+    bucket: functionBucket.name,
+    source: new pulumi.asset.AssetArchive({
+      ".": new pulumi.asset.FileArchive("./function"),
+    }),
+  },
+  {
+    dependsOn: [functionBucket],
+  },
+);
+
+/**
+ * STORAGE
+ */
+
+// Create a GCS bucket to be used by the Cloud Function
 const bucket = new gcp.storage.Bucket(
   `olympus-governor-discord-alerts`,
   {
@@ -47,17 +82,19 @@ const bucket = new gcp.storage.Bucket(
   },
 );
 
+/**
+ * FUNCTION
+ */
+
 // Create a Google Cloud Function
-const cloudFunction = new gcp.cloudfunctions.HttpCallbackFunction(
+const cloudFunction = new gcp.cloudfunctions.Function(
   "subgraph-fetcher",
   {
-    callback: async (req: express.Request, res: express.Response) => {
-      // Run the function
-      await run();
-
-      // Send a response
-      res.status(200).send();
-    },
+    sourceArchiveBucket: functionBucket.name,
+    sourceArchiveObject: functionBucketObject.name,
+    triggerHttp: true,
+    runtime: "nodejs18",
+    entryPoint: "run",
     availableMemoryMb: 256,
     timeout: 60,
     environmentVariables: {
@@ -72,9 +109,15 @@ const cloudFunction = new gcp.cloudfunctions.HttpCallbackFunction(
       enabledApisArtifactRegistry,
       enabledApisStorage,
       enabledApisCloudBuild,
+      functionBucketObject,
+      bucket,
     ],
   },
 );
+
+/**
+ * SCHEDULER
+ */
 
 // Create a Google Cloud Scheduler job
 const schedulerJob = new gcp.cloudscheduler.Job(
@@ -85,6 +128,9 @@ const schedulerJob = new gcp.cloudscheduler.Job(
     httpTarget: {
       httpMethod: "GET",
       uri: cloudFunction.httpsTriggerUrl,
+      oidcToken: {
+        serviceAccountEmail: cloudFunction.serviceAccountEmail,
+      },
     },
   },
   {
@@ -96,9 +142,9 @@ const schedulerJob = new gcp.cloudscheduler.Job(
 new gcp.cloudfunctions.FunctionIamMember(
   "function-invoker",
   {
-    project: cloudFunction.function.project,
-    region: cloudFunction.function.region,
-    cloudFunction: cloudFunction.function.name,
+    project: cloudFunction.project,
+    region: cloudFunction.region,
+    cloudFunction: cloudFunction.name,
     role: "roles/cloudfunctions.invoker",
     member: pulumi.interpolate`serviceAccount:${gcp.config.project}@appspot.gserviceaccount.com`,
   },

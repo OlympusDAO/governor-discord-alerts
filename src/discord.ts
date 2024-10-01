@@ -78,7 +78,9 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
 
   // Voting started
   for (const votingStartedProposal of proposalEvents.votingStarted) {
-    console.log(`Processing voting started proposal: ${votingStartedProposal.id}`);
+    console.log(
+      `Processing voting started proposal: ${votingStartedProposal.id}`,
+    );
 
     await sendDiscordAlert(
       `Proposal Voting Started: ${votingStartedProposal.id}`,

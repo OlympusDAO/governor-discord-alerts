@@ -23,10 +23,13 @@ const enabledApisStorage = new gcp.projects.Service("storage", {
   service: "storage.googleapis.com",
 });
 
-const enabledApisArtifactRegistry = new gcp.projects.Service("artifact-registry", {
-  project: gcp.config.project,
-  service: "artifactregistry.googleapis.com",
-});
+const enabledApisArtifactRegistry = new gcp.projects.Service(
+  "artifact-registry",
+  {
+    project: gcp.config.project,
+    service: "artifactregistry.googleapis.com",
+  },
+);
 
 const enabledApisCloudBuild = new gcp.projects.Service("cloud-build", {
   project: gcp.config.project,
@@ -34,13 +37,15 @@ const enabledApisCloudBuild = new gcp.projects.Service("cloud-build", {
 });
 
 // Create a GCS bucket
-const bucket = new gcp.storage.Bucket(`olympus-governor-discord-alerts`, {
-  location: "us-central1",
-}, {
-  dependsOn: [
-    enabledApisStorage,
-  ],
-});
+const bucket = new gcp.storage.Bucket(
+  `olympus-governor-discord-alerts`,
+  {
+    location: "us-central1",
+  },
+  {
+    dependsOn: [enabledApisStorage],
+  },
+);
 
 // Create a Google Cloud Function
 const cloudFunction = new gcp.cloudfunctions.HttpCallbackFunction(
@@ -67,24 +72,25 @@ const cloudFunction = new gcp.cloudfunctions.HttpCallbackFunction(
       enabledApisArtifactRegistry,
       enabledApisStorage,
       enabledApisCloudBuild,
-    ]
-  }
+    ],
+  },
 );
 
 // Create a Google Cloud Scheduler job
-const schedulerJob = new gcp.cloudscheduler.Job(`function-invoker`, {
-  schedule: "0 * * * *", // Every hour
-  timeZone: "UTC",
-  httpTarget: {
-    httpMethod: "GET",
-    uri: cloudFunction.httpsTriggerUrl,
+const schedulerJob = new gcp.cloudscheduler.Job(
+  `function-invoker`,
+  {
+    schedule: "0 * * * *", // Every hour
+    timeZone: "UTC",
+    httpTarget: {
+      httpMethod: "GET",
+      uri: cloudFunction.httpsTriggerUrl,
+    },
   },
-}, {
-  dependsOn: [
-    cloudFunction,
-    enabledApisCloudScheduler,
-  ],
-});
+  {
+    dependsOn: [cloudFunction, enabledApisCloudScheduler],
+  },
+);
 
 // Allow Cloud Scheduler to invoke the Cloud Function
 const functionInvoker = new gcp.cloudfunctions.FunctionIamMember(
@@ -94,15 +100,63 @@ const functionInvoker = new gcp.cloudfunctions.FunctionIamMember(
     region: cloudFunction.function.region,
     cloudFunction: cloudFunction.function.name,
     role: "roles/cloudfunctions.invoker",
-    member:
-      pulumi.interpolate`serviceAccount:${gcp.config.project}@appspot.gserviceaccount.com`,
+    member: pulumi.interpolate`serviceAccount:${gcp.config.project}@appspot.gserviceaccount.com`,
   },
   {
-    dependsOn: [
-      enabledApisCloudScheduler,
-      cloudFunction,
+    dependsOn: [enabledApisCloudScheduler, cloudFunction],
+  },
+);
+
+/**
+ * ALERTS
+ */
+
+// Add an email notification channel
+const emailChannel = new gcp.monitoring.NotificationChannel("email", {
+  type: "email",
+  labels: {
+    email_address: config.requireSecret("notificationEmail"),
+  },
+});
+
+// Add an alert to the function
+const alert = new gcp.monitoring.AlertPolicy(
+  "subgraph-fetcher-errors",
+  {
+    displayName: `subgraph-fetcher Errors`,
+    combiner: "OR",
+    conditions: [
+      {
+        displayName: "Cloud Function - Executions",
+        conditionThreshold: {
+          filter:
+            'resource.type = "cloud_function" AND metric.type = "cloudfunctions.googleapis.com/function/execution_count" AND metric.labels.status != "ok"',
+          aggregations: [
+            {
+              alignmentPeriod: "300s",
+              crossSeriesReducer: "REDUCE_NONE",
+              perSeriesAligner: "ALIGN_COUNT",
+            },
+          ],
+          comparison: "COMPARISON_GT",
+          duration: "0s",
+          trigger: {
+            count: 1,
+          },
+          thresholdValue: 0,
+        },
+      },
     ],
-  }
+    alertStrategy: {
+      autoClose: "1800s",
+    },
+    enabled: true,
+    notificationChannels: [emailChannel.id],
+    severity: "ERROR",
+  },
+  {
+    dependsOn: [emailChannel],
+  },
 );
 
 // Export the bucket name and Cloud Function URL

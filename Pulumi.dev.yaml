@@ -3,5 +3,7 @@ config:
   gcp:region: us-central1
   governor-discord-alerts:discordWebhookUrl:
     secure: AAABANGsMo9kV0Wmlm9eNDS1JqEjDMiBBug6tOinAG1wObob+L+UZxLCp3Z8dW/lnzc5Jmdj9qbOaS9wpEf68RaMP9X7jAKoQIE8wW/kmCytwUeJLNSvA1VDmzCpyb+7US1nWORwTdu4iqNm/zVlInYnvJPPa1FP4xR02U+ziaRwkuKln9XySwsEQNFqUfKu9lwirWktQeg/
+  governor-discord-alerts:notificationEmail:
+    secure: AAABAKi2979D9SHJlqFVQfz0gnSQqJlDcgW88e/+YUcgG2soQjRtKe/+Isgid0un9Q==
   governor-discord-alerts:subgraphApiKey:
     secure: AAABALR7qJNBENbkxhmp8WACcdqb7PlNOA8w+4NhbSfoInJARHRRcYEXpKsM2VOxtGNe5GA0YDAwQzbMQwBSaw==

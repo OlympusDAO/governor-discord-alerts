@@ -108,3 +108,4 @@ const functionInvoker = new gcp.cloudfunctions.FunctionIamMember(
 // Export the bucket name and Cloud Function URL
 export const bucketName = bucket.name;
 export const functionUrl = cloudFunction.httpsTriggerUrl;
+export const schedulerJobName = schedulerJob.name;

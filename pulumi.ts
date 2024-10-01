@@ -93,7 +93,7 @@ const schedulerJob = new gcp.cloudscheduler.Job(
 );
 
 // Allow Cloud Scheduler to invoke the Cloud Function
-const functionInvoker = new gcp.cloudfunctions.FunctionIamMember(
+new gcp.cloudfunctions.FunctionIamMember(
   "function-invoker",
   {
     project: cloudFunction.function.project,
@@ -120,7 +120,7 @@ const emailChannel = new gcp.monitoring.NotificationChannel("email", {
 });
 
 // Add an alert to the function
-const alert = new gcp.monitoring.AlertPolicy(
+new gcp.monitoring.AlertPolicy(
   "subgraph-fetcher-errors",
   {
     displayName: `subgraph-fetcher Errors`,

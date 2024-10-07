@@ -5,9 +5,9 @@
   "main": "pulumi.ts",
   "scripts": {
     "build": "cd function && yarn build",
-    "codegen": "dotenv -e .env -- cd function && graphql-codegen",
-    "lint": "cd function && prettier --write . && eslint .",
-    "test": "cd function && jest",
+    "codegen": "cd function && dotenv -e ../.env -- node_modules/.bin/graphql-codegen",
+    "lint": "cd function && yarn lint",
+    "test": "cd function && yarn test",
     "postinstall": "cd function && yarn install"
   },
   "keywords": [],

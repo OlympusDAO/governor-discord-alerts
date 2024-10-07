@@ -304,7 +304,14 @@ enum OrderDirection {
 type ProposalCanceled {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  id: Bytes!
+  """
+  Record ID.
+
+  A proposal can only be cancelled once, so the record ID can be the proposal ID and not have any clashes.
+
+  Format: `{proposalId}`
+  """
+  id: String!
   proposal: ProposalCreated!
   proposalId: BigInt!
   transactionHash: Bytes!
@@ -332,16 +339,26 @@ input ProposalCanceled_filter {
   blockTimestamp_lte: BigInt
   blockTimestamp_not: BigInt
   blockTimestamp_not_in: [BigInt!]
-  id: Bytes
-  id_contains: Bytes
-  id_gt: Bytes
-  id_gte: Bytes
-  id_in: [Bytes!]
-  id_lt: Bytes
-  id_lte: Bytes
-  id_not: Bytes
-  id_not_contains: Bytes
-  id_not_in: [Bytes!]
+  id: String
+  id_contains: String
+  id_contains_nocase: String
+  id_ends_with: String
+  id_ends_with_nocase: String
+  id_gt: String
+  id_gte: String
+  id_in: [String!]
+  id_lt: String
+  id_lte: String
+  id_not: String
+  id_not_contains: String
+  id_not_contains_nocase: String
+  id_not_ends_with: String
+  id_not_ends_with_nocase: String
+  id_not_in: [String!]
+  id_not_starts_with: String
+  id_not_starts_with_nocase: String
+  id_starts_with: String
+  id_starts_with_nocase: String
   or: [ProposalCanceled_filter]
   proposal: String
   proposalId: BigInt
@@ -408,7 +425,12 @@ type ProposalCreated {
   cancelled: ProposalCanceled
   description: String!
   executed: ProposalExecuted
-  id: Bytes!
+  """
+  Record ID.
+
+  Format: `{proposalId}`
+  """
+  id: String!
   proposalId: BigInt!
   proposer: Bytes!
   queued: ProposalQueued
@@ -418,6 +440,13 @@ type ProposalCreated {
   transactionHash: Bytes!
   values: [BigInt!]!
   vetoed: ProposalVetoed
+  votes(
+    first: Int = 100
+    orderBy: VoteCast_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: VoteCast_filter
+  ): [VoteCast!]
   votingStarted: ProposalVotingStarted
 }
 
@@ -471,16 +500,26 @@ input ProposalCreated_filter {
   description_starts_with: String
   description_starts_with_nocase: String
   executed_: ProposalExecuted_filter
-  id: Bytes
-  id_contains: Bytes
-  id_gt: Bytes
-  id_gte: Bytes
-  id_in: [Bytes!]
-  id_lt: Bytes
-  id_lte: Bytes
-  id_not: Bytes
-  id_not_contains: Bytes
-  id_not_in: [Bytes!]
+  id: String
+  id_contains: String
+  id_contains_nocase: String
+  id_ends_with: String
+  id_ends_with_nocase: String
+  id_gt: String
+  id_gte: String
+  id_in: [String!]
+  id_lt: String
+  id_lte: String
+  id_not: String
+  id_not_contains: String
+  id_not_contains_nocase: String
+  id_not_ends_with: String
+  id_not_ends_with_nocase: String
+  id_not_in: [String!]
+  id_not_starts_with: String
+  id_not_starts_with_nocase: String
+  id_starts_with: String
+  id_starts_with_nocase: String
   or: [ProposalCreated_filter]
   proposalId: BigInt
   proposalId_gt: BigInt
@@ -538,6 +577,7 @@ input ProposalCreated_filter {
   values_not_contains: [BigInt!]
   values_not_contains_nocase: [BigInt!]
   vetoed_: ProposalVetoed_filter
+  votes_: VoteCast_filter
   votingStarted_: ProposalVotingStarted_filter
 }
 
@@ -579,6 +619,7 @@ enum ProposalCreated_orderBy {
   vetoed__id
   vetoed__proposalId
   vetoed__transactionHash
+  votes
   votingStarted
   votingStarted__blockNumber
   votingStarted__blockTimestamp
@@ -590,7 +631,14 @@ enum ProposalCreated_orderBy {
 type ProposalExecuted {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  id: Bytes!
+  """
+  Record ID.
+
+  A proposal can only be executed once, so the record ID can be the proposal ID and not have any clashes.
+
+  Format: `{proposalId}`
+  """
+  id: String!
   proposal: ProposalCreated!
   proposalId: BigInt!
   transactionHash: Bytes!
@@ -618,16 +666,26 @@ input ProposalExecuted_filter {
   blockTimestamp_lte: BigInt
   blockTimestamp_not: BigInt
   blockTimestamp_not_in: [BigInt!]
-  id: Bytes
-  id_contains: Bytes
-  id_gt: Bytes
-  id_gte: Bytes
-  id_in: [Bytes!]
-  id_lt: Bytes
-  id_lte: Bytes
-  id_not: Bytes
-  id_not_contains: Bytes
-  id_not_in: [Bytes!]
+  id: String
+  id_contains: String
+  id_contains_nocase: String
+  id_ends_with: String
+  id_ends_with_nocase: String
+  id_gt: String
+  id_gte: String
+  id_in: [String!]
+  id_lt: String
+  id_lte: String
+  id_not: String
+  id_not_contains: String
+  id_not_contains_nocase: String
+  id_not_ends_with: String
+  id_not_ends_with_nocase: String
+  id_not_in: [String!]
+  id_not_starts_with: String
+  id_not_starts_with_nocase: String
+  id_starts_with: String
+  id_starts_with_nocase: String
   or: [ProposalExecuted_filter]
   proposal: String
   proposalId: BigInt
@@ -691,7 +749,14 @@ type ProposalQueued {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   eta: BigInt!
-  id: Bytes!
+  """
+  Record ID.
+
+  A proposal can only be queued once, so the record ID can be the proposal ID and not have any clashes.
+
+  Format: `{proposalId}`
+  """
+  id: String!
   proposal: ProposalCreated!
   proposalId: BigInt!
   transactionHash: Bytes!
@@ -727,16 +792,26 @@ input ProposalQueued_filter {
   eta_lte: BigInt
   eta_not: BigInt
   eta_not_in: [BigInt!]
-  id: Bytes
-  id_contains: Bytes
-  id_gt: Bytes
-  id_gte: Bytes
-  id_in: [Bytes!]
-  id_lt: Bytes
-  id_lte: Bytes
-  id_not: Bytes
-  id_not_contains: Bytes
-  id_not_in: [Bytes!]
+  id: String
+  id_contains: String
+  id_contains_nocase: String
+  id_ends_with: String
+  id_ends_with_nocase: String
+  id_gt: String
+  id_gte: String
+  id_in: [String!]
+  id_lt: String
+  id_lte: String
+  id_not: String
+  id_not_contains: String
+  id_not_contains_nocase: String
+  id_not_ends_with: String
+  id_not_ends_with_nocase: String
+  id_not_in: [String!]
+  id_not_starts_with: String
+  id_not_starts_with_nocase: String
+  id_starts_with: String
+  id_starts_with_nocase: String
   or: [ProposalQueued_filter]
   proposal: String
   proposalId: BigInt
@@ -879,7 +954,14 @@ enum ProposalThresholdSet_orderBy {
 type ProposalVetoed {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  id: Bytes!
+  """
+  Record ID.
+
+  A proposal can only be vetoed once, so the record ID can be the proposal ID and not have any clashes.
+
+  Format: `{proposalId}`
+  """
+  id: String!
   proposal: ProposalCreated!
   proposalId: BigInt!
   transactionHash: Bytes!
@@ -907,16 +989,26 @@ input ProposalVetoed_filter {
   blockTimestamp_lte: BigInt
   blockTimestamp_not: BigInt
   blockTimestamp_not_in: [BigInt!]
-  id: Bytes
-  id_contains: Bytes
-  id_gt: Bytes
-  id_gte: Bytes
-  id_in: [Bytes!]
-  id_lt: Bytes
-  id_lte: Bytes
-  id_not: Bytes
-  id_not_contains: Bytes
-  id_not_in: [Bytes!]
+  id: String
+  id_contains: String
+  id_contains_nocase: String
+  id_ends_with: String
+  id_ends_with_nocase: String
+  id_gt: String
+  id_gte: String
+  id_in: [String!]
+  id_lt: String
+  id_lte: String
+  id_not: String
+  id_not_contains: String
+  id_not_contains_nocase: String
+  id_not_ends_with: String
+  id_not_ends_with_nocase: String
+  id_not_in: [String!]
+  id_not_starts_with: String
+  id_not_starts_with_nocase: String
+  id_starts_with: String
+  id_starts_with_nocase: String
   or: [ProposalVetoed_filter]
   proposal: String
   proposalId: BigInt
@@ -979,7 +1071,14 @@ enum ProposalVetoed_orderBy {
 type ProposalVotingStarted {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  id: Bytes!
+  """
+  Record ID.
+
+  A proposal can only have voting started once, so the record ID can be the proposal ID and not have any clashes.
+
+  Format: `{proposalId}`
+  """
+  id: String!
   proposal: ProposalCreated!
   proposalId: BigInt!
   transactionHash: Bytes!
@@ -1007,16 +1106,26 @@ input ProposalVotingStarted_filter {
   blockTimestamp_lte: BigInt
   blockTimestamp_not: BigInt
   blockTimestamp_not_in: [BigInt!]
-  id: Bytes
-  id_contains: Bytes
-  id_gt: Bytes
-  id_gte: Bytes
-  id_in: [Bytes!]
-  id_lt: Bytes
-  id_lte: Bytes
-  id_not: Bytes
-  id_not_contains: Bytes
-  id_not_in: [Bytes!]
+  id: String
+  id_contains: String
+  id_contains_nocase: String
+  id_ends_with: String
+  id_ends_with_nocase: String
+  id_gt: String
+  id_gte: String
+  id_in: [String!]
+  id_lt: String
+  id_lte: String
+  id_not: String
+  id_not_contains: String
+  id_not_contains_nocase: String
+  id_not_ends_with: String
+  id_not_ends_with_nocase: String
+  id_not_in: [String!]
+  id_not_starts_with: String
+  id_not_starts_with_nocase: String
+  id_starts_with: String
+  id_starts_with_nocase: String
   or: [ProposalVotingStarted_filter]
   proposal: String
   proposalId: BigInt
@@ -2013,7 +2122,13 @@ enum VetoGuardianSet_orderBy {
 type VoteCast {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  id: Bytes!
+  """
+  Record ID.
+
+  Format: `{proposalId}-{voter}-{transactionHash}-{logIndex}`
+  """
+  id: String!
+  proposal: ProposalCreated!
   proposalId: BigInt!
   reason: String!
   support: Int!
@@ -2044,17 +2159,28 @@ input VoteCast_filter {
   blockTimestamp_lte: BigInt
   blockTimestamp_not: BigInt
   blockTimestamp_not_in: [BigInt!]
-  id: Bytes
-  id_contains: Bytes
-  id_gt: Bytes
-  id_gte: Bytes
-  id_in: [Bytes!]
-  id_lt: Bytes
-  id_lte: Bytes
-  id_not: Bytes
-  id_not_contains: Bytes
-  id_not_in: [Bytes!]
+  id: String
+  id_contains: String
+  id_contains_nocase: String
+  id_ends_with: String
+  id_ends_with_nocase: String
+  id_gt: String
+  id_gte: String
+  id_in: [String!]
+  id_lt: String
+  id_lte: String
+  id_not: String
+  id_not_contains: String
+  id_not_contains_nocase: String
+  id_not_ends_with: String
+  id_not_ends_with_nocase: String
+  id_not_in: [String!]
+  id_not_starts_with: String
+  id_not_starts_with_nocase: String
+  id_starts_with: String
+  id_starts_with_nocase: String
   or: [VoteCast_filter]
+  proposal: String
   proposalId: BigInt
   proposalId_gt: BigInt
   proposalId_gte: BigInt
@@ -2063,6 +2189,26 @@ input VoteCast_filter {
   proposalId_lte: BigInt
   proposalId_not: BigInt
   proposalId_not_in: [BigInt!]
+  proposal_: ProposalCreated_filter
+  proposal_contains: String
+  proposal_contains_nocase: String
+  proposal_ends_with: String
+  proposal_ends_with_nocase: String
+  proposal_gt: String
+  proposal_gte: String
+  proposal_in: [String!]
+  proposal_lt: String
+  proposal_lte: String
+  proposal_not: String
+  proposal_not_contains: String
+  proposal_not_contains_nocase: String
+  proposal_not_ends_with: String
+  proposal_not_ends_with_nocase: String
+  proposal_not_in: [String!]
+  proposal_not_starts_with: String
+  proposal_not_starts_with_nocase: String
+  proposal_starts_with: String
+  proposal_starts_with_nocase: String
   reason: String
   reason_contains: String
   reason_contains_nocase: String
@@ -2125,7 +2271,16 @@ enum VoteCast_orderBy {
   blockNumber
   blockTimestamp
   id
+  proposal
   proposalId
+  proposal__blockNumber
+  proposal__blockTimestamp
+  proposal__description
+  proposal__id
+  proposal__proposalId
+  proposal__proposer
+  proposal__startBlock
+  proposal__transactionHash
   reason
   support
   transactionHash

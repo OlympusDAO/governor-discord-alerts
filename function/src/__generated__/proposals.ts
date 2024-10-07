@@ -300,7 +300,15 @@ export enum OrderDirection {
 export type ProposalCanceled = {
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
-  id: Scalars["Bytes"]["output"];
+  /**
+   * Record ID.
+   *
+   * A proposal can only be cancelled once, so the record ID can be the proposal ID and not have any clashes.
+   *
+   * Format: `{proposalId}`
+   *
+   */
+  id: Scalars["String"]["output"];
   proposal: ProposalCreated;
   proposalId: Scalars["BigInt"]["output"];
   transactionHash: Scalars["Bytes"]["output"];
@@ -326,16 +334,26 @@ export type ProposalCanceled_filter = {
   blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  id?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  id_lt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_lte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
+  id?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_gt?: InputMaybe<Scalars["String"]["input"]>;
+  id_gte?: InputMaybe<Scalars["String"]["input"]>;
+  id_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_lt?: InputMaybe<Scalars["String"]["input"]>;
+  id_lte?: InputMaybe<Scalars["String"]["input"]>;
+  id_not?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   or?: InputMaybe<Array<InputMaybe<ProposalCanceled_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -402,7 +420,13 @@ export type ProposalCreated = {
   cancelled?: Maybe<ProposalCanceled>;
   description: Scalars["String"]["output"];
   executed?: Maybe<ProposalExecuted>;
-  id: Scalars["Bytes"]["output"];
+  /**
+   * Record ID.
+   *
+   * Format: `{proposalId}`
+   *
+   */
+  id: Scalars["String"]["output"];
   proposalId: Scalars["BigInt"]["output"];
   proposer: Scalars["Bytes"]["output"];
   queued?: Maybe<ProposalQueued>;
@@ -412,7 +436,16 @@ export type ProposalCreated = {
   transactionHash: Scalars["Bytes"]["output"];
   values: Array<Scalars["BigInt"]["output"]>;
   vetoed?: Maybe<ProposalVetoed>;
+  votes?: Maybe<Array<VoteCast>>;
   votingStarted?: Maybe<ProposalVotingStarted>;
+};
+
+export type ProposalCreatedvotesArgs = {
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<VoteCast_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars["Int"]["input"]>;
+  where?: InputMaybe<VoteCast_filter>;
 };
 
 export type ProposalCreated_filter = {
@@ -463,16 +496,26 @@ export type ProposalCreated_filter = {
   description_starts_with?: InputMaybe<Scalars["String"]["input"]>;
   description_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   executed_?: InputMaybe<ProposalExecuted_filter>;
-  id?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  id_lt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_lte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
+  id?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_gt?: InputMaybe<Scalars["String"]["input"]>;
+  id_gte?: InputMaybe<Scalars["String"]["input"]>;
+  id_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_lt?: InputMaybe<Scalars["String"]["input"]>;
+  id_lte?: InputMaybe<Scalars["String"]["input"]>;
+  id_not?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   or?: InputMaybe<Array<InputMaybe<ProposalCreated_filter>>>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -532,6 +575,7 @@ export type ProposalCreated_filter = {
   values_not_contains?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
   values_not_contains_nocase?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
   vetoed_?: InputMaybe<ProposalVetoed_filter>;
+  votes_?: InputMaybe<VoteCast_filter>;
   votingStarted_?: InputMaybe<ProposalVotingStarted_filter>;
 };
 
@@ -573,6 +617,7 @@ export enum ProposalCreated_orderBy {
   vetoed__id = "vetoed__id",
   vetoed__proposalId = "vetoed__proposalId",
   vetoed__transactionHash = "vetoed__transactionHash",
+  votes = "votes",
   votingStarted = "votingStarted",
   votingStarted__blockNumber = "votingStarted__blockNumber",
   votingStarted__blockTimestamp = "votingStarted__blockTimestamp",
@@ -584,7 +629,15 @@ export enum ProposalCreated_orderBy {
 export type ProposalExecuted = {
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
-  id: Scalars["Bytes"]["output"];
+  /**
+   * Record ID.
+   *
+   * A proposal can only be executed once, so the record ID can be the proposal ID and not have any clashes.
+   *
+   * Format: `{proposalId}`
+   *
+   */
+  id: Scalars["String"]["output"];
   proposal: ProposalCreated;
   proposalId: Scalars["BigInt"]["output"];
   transactionHash: Scalars["Bytes"]["output"];
@@ -610,16 +663,26 @@ export type ProposalExecuted_filter = {
   blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  id?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  id_lt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_lte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
+  id?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_gt?: InputMaybe<Scalars["String"]["input"]>;
+  id_gte?: InputMaybe<Scalars["String"]["input"]>;
+  id_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_lt?: InputMaybe<Scalars["String"]["input"]>;
+  id_lte?: InputMaybe<Scalars["String"]["input"]>;
+  id_not?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   or?: InputMaybe<Array<InputMaybe<ProposalExecuted_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -683,7 +746,15 @@ export type ProposalQueued = {
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
   eta: Scalars["BigInt"]["output"];
-  id: Scalars["Bytes"]["output"];
+  /**
+   * Record ID.
+   *
+   * A proposal can only be queued once, so the record ID can be the proposal ID and not have any clashes.
+   *
+   * Format: `{proposalId}`
+   *
+   */
+  id: Scalars["String"]["output"];
   proposal: ProposalCreated;
   proposalId: Scalars["BigInt"]["output"];
   transactionHash: Scalars["Bytes"]["output"];
@@ -717,16 +788,26 @@ export type ProposalQueued_filter = {
   eta_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   eta_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   eta_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  id?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  id_lt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_lte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
+  id?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_gt?: InputMaybe<Scalars["String"]["input"]>;
+  id_gte?: InputMaybe<Scalars["String"]["input"]>;
+  id_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_lt?: InputMaybe<Scalars["String"]["input"]>;
+  id_lte?: InputMaybe<Scalars["String"]["input"]>;
+  id_not?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   or?: InputMaybe<Array<InputMaybe<ProposalQueued_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -867,7 +948,15 @@ export enum ProposalThresholdSet_orderBy {
 export type ProposalVetoed = {
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
-  id: Scalars["Bytes"]["output"];
+  /**
+   * Record ID.
+   *
+   * A proposal can only be vetoed once, so the record ID can be the proposal ID and not have any clashes.
+   *
+   * Format: `{proposalId}`
+   *
+   */
+  id: Scalars["String"]["output"];
   proposal: ProposalCreated;
   proposalId: Scalars["BigInt"]["output"];
   transactionHash: Scalars["Bytes"]["output"];
@@ -893,16 +982,26 @@ export type ProposalVetoed_filter = {
   blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  id?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  id_lt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_lte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
+  id?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_gt?: InputMaybe<Scalars["String"]["input"]>;
+  id_gte?: InputMaybe<Scalars["String"]["input"]>;
+  id_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_lt?: InputMaybe<Scalars["String"]["input"]>;
+  id_lte?: InputMaybe<Scalars["String"]["input"]>;
+  id_not?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   or?: InputMaybe<Array<InputMaybe<ProposalVetoed_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -965,7 +1064,15 @@ export enum ProposalVetoed_orderBy {
 export type ProposalVotingStarted = {
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
-  id: Scalars["Bytes"]["output"];
+  /**
+   * Record ID.
+   *
+   * A proposal can only have voting started once, so the record ID can be the proposal ID and not have any clashes.
+   *
+   * Format: `{proposalId}`
+   *
+   */
+  id: Scalars["String"]["output"];
   proposal: ProposalCreated;
   proposalId: Scalars["BigInt"]["output"];
   transactionHash: Scalars["Bytes"]["output"];
@@ -991,16 +1098,26 @@ export type ProposalVotingStarted_filter = {
   blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  id?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  id_lt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_lte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
+  id?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_gt?: InputMaybe<Scalars["String"]["input"]>;
+  id_gte?: InputMaybe<Scalars["String"]["input"]>;
+  id_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_lt?: InputMaybe<Scalars["String"]["input"]>;
+  id_lte?: InputMaybe<Scalars["String"]["input"]>;
+  id_not?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   or?: InputMaybe<Array<InputMaybe<ProposalVotingStarted_filter>>>;
   proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1738,7 +1855,14 @@ export enum VetoGuardianSet_orderBy {
 export type VoteCast = {
   blockNumber: Scalars["BigInt"]["output"];
   blockTimestamp: Scalars["BigInt"]["output"];
-  id: Scalars["Bytes"]["output"];
+  /**
+   * Record ID.
+   *
+   * Format: `{proposalId}-{voter}-{transactionHash}-{logIndex}`
+   *
+   */
+  id: Scalars["String"]["output"];
+  proposal: ProposalCreated;
   proposalId: Scalars["BigInt"]["output"];
   reason: Scalars["String"]["output"];
   support: Scalars["Int"]["output"];
@@ -1767,17 +1891,28 @@ export type VoteCast_filter = {
   blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
-  id?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_gte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
-  id_lt?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_lte?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_contains?: InputMaybe<Scalars["Bytes"]["input"]>;
-  id_not_in?: InputMaybe<Array<Scalars["Bytes"]["input"]>>;
+  id?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_gt?: InputMaybe<Scalars["String"]["input"]>;
+  id_gte?: InputMaybe<Scalars["String"]["input"]>;
+  id_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_lt?: InputMaybe<Scalars["String"]["input"]>;
+  id_lte?: InputMaybe<Scalars["String"]["input"]>;
+  id_not?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  id_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  id_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   or?: InputMaybe<Array<InputMaybe<VoteCast_filter>>>;
+  proposal?: InputMaybe<Scalars["String"]["input"]>;
   proposalId?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -1786,6 +1921,26 @@ export type VoteCast_filter = {
   proposalId_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   proposalId_not_in?: InputMaybe<Array<Scalars["BigInt"]["input"]>>;
+  proposal_?: InputMaybe<ProposalCreated_filter>;
+  proposal_contains?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_gt?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_gte?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  proposal_lt?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_lte?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_not?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_not_contains?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_not_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_not_ends_with?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_not_ends_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_not_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  proposal_not_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_not_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_starts_with?: InputMaybe<Scalars["String"]["input"]>;
+  proposal_starts_with_nocase?: InputMaybe<Scalars["String"]["input"]>;
   reason?: InputMaybe<Scalars["String"]["input"]>;
   reason_contains?: InputMaybe<Scalars["String"]["input"]>;
   reason_contains_nocase?: InputMaybe<Scalars["String"]["input"]>;
@@ -1848,7 +2003,16 @@ export enum VoteCast_orderBy {
   blockNumber = "blockNumber",
   blockTimestamp = "blockTimestamp",
   id = "id",
+  proposal = "proposal",
   proposalId = "proposalId",
+  proposal__blockNumber = "proposal__blockNumber",
+  proposal__blockTimestamp = "proposal__blockTimestamp",
+  proposal__description = "proposal__description",
+  proposal__id = "proposal__id",
+  proposal__proposalId = "proposal__proposalId",
+  proposal__proposer = "proposal__proposer",
+  proposal__startBlock = "proposal__startBlock",
+  proposal__transactionHash = "proposal__transactionHash",
   reason = "reason",
   support = "support",
   transactionHash = "transactionHash",

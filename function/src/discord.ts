@@ -1,6 +1,7 @@
 import { ProposalEvents } from "./types";
 
 import { WebhookClient, EmbedBuilder } from "discord.js";
+import { fromBlockTimestamp } from "./utils/date";
 
 // TODOs
 // [ ] Add extra embed fields for each proposal event type
@@ -9,6 +10,7 @@ export const sendDiscordAlert = async (
   title: string,
   content: string,
   url: string,
+  timestamp: Date,
 ) => {
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
   if (!webhookUrl) {
@@ -22,6 +24,7 @@ export const sendDiscordAlert = async (
     description: content,
     color: 0x0099ff,
     url: url,
+    timestamp: timestamp,
   });
 
   await webhookClient.send({
@@ -31,11 +34,24 @@ export const sendDiscordAlert = async (
   console.log(`Sent Discord alert: ${title}`);
 };
 
+const cleanDescription = (text: string) => {
+  return text
+    .replace(/^#+\s*/, "") // Remove markdown headings
+    .replace(/[<>]/g, "") // Remove < and > characters
+    .replace(/\[.*?\]\(.*?\)/g, "") // Remove markdown links
+    .trim(); // Remove leading/trailing whitespace
+};
+
 const prepareDescription = (description: string) => {
-  return description
-    .substring(0, 20)
-    .replace(/[<>]/g, "")
-    .replace(/\[.*?\]\(.*?\)/g, "");
+  // Check if description contains newlines
+  if (description.includes("\n")) {
+    // Take first line and clean it
+    const firstLine = description.split("\n")[0];
+    return cleanDescription(firstLine);
+  }
+
+  // Otherwise take first 60 chars and clean
+  return cleanDescription(description.substring(0, 60));
 };
 
 const getProposalUrl = (proposalId: string) => {
@@ -51,6 +67,7 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       `Proposal Created: ${createdProposal.proposalId}`,
       prepareDescription(createdProposal.description),
       getProposalUrl(createdProposal.proposalId),
+      fromBlockTimestamp(createdProposal.blockTimestamp),
     );
   }
 
@@ -62,6 +79,7 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       `Proposal Cancelled: ${cancelledProposal.id}`,
       prepareDescription(cancelledProposal.proposal.description),
       getProposalUrl(cancelledProposal.proposalId),
+      fromBlockTimestamp(cancelledProposal.blockTimestamp),
     );
   }
 
@@ -73,6 +91,7 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       `Proposal Vetoed: ${vetoedProposal.id}`,
       prepareDescription(vetoedProposal.proposal.description),
       getProposalUrl(vetoedProposal.proposalId),
+      fromBlockTimestamp(vetoedProposal.blockTimestamp),
     );
   }
 
@@ -86,6 +105,7 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       `Proposal Voting Started: ${votingStartedProposal.id}`,
       prepareDescription(votingStartedProposal.proposal.description),
       getProposalUrl(votingStartedProposal.proposalId),
+      fromBlockTimestamp(votingStartedProposal.blockTimestamp),
     );
   }
 
@@ -97,6 +117,7 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       `Proposal Queued: ${queuedProposal.id}`,
       prepareDescription(queuedProposal.proposal.description),
       getProposalUrl(queuedProposal.proposalId),
+      fromBlockTimestamp(queuedProposal.blockTimestamp),
     );
   }
 
@@ -108,6 +129,7 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       `Proposal Executed: ${executedProposal.id}`,
       prepareDescription(executedProposal.proposal.description),
       getProposalUrl(executedProposal.proposalId),
+      fromBlockTimestamp(executedProposal.blockTimestamp),
     );
   }
 };

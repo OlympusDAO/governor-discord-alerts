@@ -23,6 +23,14 @@ It performs the following steps:
 
 ## Deployment
 
-```bash
-pulumi up --stack <dev|prod>
-```
+1. Build the function:
+
+   ```bash
+   yarn run build
+   ```
+
+1. Deploy the function:
+
+   ```bash
+   pulumi up --stack <dev|prod>
+   ```

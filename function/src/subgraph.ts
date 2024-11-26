@@ -1,8 +1,19 @@
-import { ProposalQueryDocument } from "./__generated__/proposals";
+import {
+  ExecutedProposalsDocument,
+  ProposalQueryDocument,
+  ProposalQueued,
+  QueuedProposalsDocument,
+} from "./__generated__/proposals";
 import { getSubgraphUrl } from "./constants";
 import { ProposalEvents } from "./types";
 import { cacheExchange, Client, fetchExchange } from "@urql/core";
 
+/**
+ * Get the proposal events from the subgraph after a given block
+ *
+ * @param block - The block number to start after
+ * @returns A tuple containing the proposal events and the latest block number
+ */
 export const getLatestProposalEvents = async (
   block: number,
 ): Promise<[ProposalEvents, number]> => {
@@ -41,4 +52,45 @@ export const getLatestProposalEvents = async (
   proposalData.votingStarted = data.proposalVotingStarteds;
 
   return [proposalData, data._meta.block.number];
+};
+
+/**
+ * Get the proposals that are currently queued
+ *
+ * @returns The queued proposals
+ */
+export const getCurrentQueuedProposals = async (): Promise<
+  [ProposalQueued[], { proposalId: string }[]]
+> => {
+  // Create a new client
+  const subgraphClient = new Client({
+    url: getSubgraphUrl(),
+    exchanges: [cacheExchange, fetchExchange],
+  });
+
+  // Fetches queued proposals that have an execution limit after now
+  const { data } = await subgraphClient.query(QueuedProposalsDocument, {
+    timestamp: Math.floor(Date.now() / 1000).toString(),
+  });
+
+  if (!data) {
+    throw new Error("No data returned from subgraph for queued proposals");
+  }
+
+  // Get any executed proposals with the same proposal IDs
+  const proposalIds = data.proposalQueueds.map(
+    (proposal) => proposal.proposalId,
+  );
+  const { data: executedProposalsData } = await subgraphClient.query(
+    ExecutedProposalsDocument,
+    {
+      proposals: proposalIds,
+    },
+  );
+
+  if (!executedProposalsData) {
+    throw new Error("No data returned from subgraph for executed proposals");
+  }
+
+  return [data.proposalQueueds, executedProposalsData.proposalExecuteds];
 };

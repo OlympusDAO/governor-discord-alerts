@@ -2,9 +2,13 @@ import { ProposalEvents } from "./types";
 
 import { WebhookClient, EmbedBuilder } from "discord.js";
 import { fromBlockTimestamp } from "./utils/date";
+import { ProposalQueued } from "./__generated__/proposals";
 
 // TODOs
 // [ ] Add extra embed fields for each proposal event type
+
+const ROLE_OGG = "1255521545686745268";
+const USER_NOTIFY = "894321349210820618";
 
 export const sendDiscordAlert = async (
   title: string,
@@ -58,14 +62,27 @@ const getProposalUrl = (proposalId: string) => {
   return `https://app.olympusdao.finance/#/governance/proposals/${proposalId}`;
 };
 
+const getDiscordTimestamp = (timestamp: number): string => {
+  // e.g. November 26, 2024 at 3:54 PM
+  return `<t:${timestamp}:f>`;
+};
+
+const getRoleMention = (roleId: string): string => {
+  return `<@&${roleId}>`;
+};
+
+const getUserMention = (userId: string): string => {
+  return `<@${userId}>`;
+};
+
 export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
   // Created first
   for (const createdProposal of proposalEvents.created) {
     console.log(`Processing created proposal: ${createdProposal.proposalId}`);
 
     await sendDiscordAlert(
-      `Proposal Created: ${createdProposal.proposalId}`,
-      prepareDescription(createdProposal.description),
+      `Proposal Created: ${prepareDescription(createdProposal.description)}`,
+      `ID: ${createdProposal.proposalId}`,
       getProposalUrl(createdProposal.proposalId),
       fromBlockTimestamp(createdProposal.blockTimestamp),
     );
@@ -76,8 +93,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing cancelled proposal: ${cancelledProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Cancelled: ${cancelledProposal.id}`,
-      prepareDescription(cancelledProposal.proposal.description),
+      `Proposal Cancelled: ${prepareDescription(cancelledProposal.proposal.description)}`,
+      `ID: ${cancelledProposal.proposalId}`,
       getProposalUrl(cancelledProposal.proposalId),
       fromBlockTimestamp(cancelledProposal.blockTimestamp),
     );
@@ -88,8 +105,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing vetoed proposal: ${vetoedProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Vetoed: ${vetoedProposal.id}`,
-      prepareDescription(vetoedProposal.proposal.description),
+      `Proposal Vetoed: ${prepareDescription(vetoedProposal.proposal.description)}`,
+      `ID: ${vetoedProposal.proposalId}`,
       getProposalUrl(vetoedProposal.proposalId),
       fromBlockTimestamp(vetoedProposal.blockTimestamp),
     );
@@ -102,8 +119,10 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     );
 
     await sendDiscordAlert(
-      `Proposal Voting Started: ${votingStartedProposal.id}`,
-      prepareDescription(votingStartedProposal.proposal.description),
+      `Proposal Voting Started: ${prepareDescription(
+        votingStartedProposal.proposal.description,
+      )}`,
+      `ID: ${votingStartedProposal.proposalId}`,
       getProposalUrl(votingStartedProposal.proposalId),
       fromBlockTimestamp(votingStartedProposal.blockTimestamp),
     );
@@ -114,8 +133,12 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing queued proposal: ${queuedProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Queued: ${queuedProposal.id}`,
-      prepareDescription(queuedProposal.proposal.description),
+      `Proposal Queued for Execution: ${prepareDescription(
+        queuedProposal.proposal.description,
+      )}`,
+      `||@everyone||\n` +
+        `ID: ${queuedProposal.proposalId}\n` +
+        `This proposal is in the timelock and can be executed on ${getDiscordTimestamp(Number(queuedProposal.eta))}`,
       getProposalUrl(queuedProposal.proposalId),
       fromBlockTimestamp(queuedProposal.blockTimestamp),
     );
@@ -126,10 +149,57 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing executed proposal: ${executedProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Executed: ${executedProposal.id}`,
-      prepareDescription(executedProposal.proposal.description),
+      `Proposal Executed: ${prepareDescription(
+        executedProposal.proposal.description,
+      )}`,
+      `ID: ${executedProposal.proposalId}`,
       getProposalUrl(executedProposal.proposalId),
       fromBlockTimestamp(executedProposal.blockTimestamp),
+    );
+  }
+};
+
+export const processQueuedProposals = async (
+  queuedProposals: ProposalQueued[],
+  executedProposals: { proposalId: string }[],
+  previousBlock: number,
+  latestBlock: number,
+) => {
+  // If 4 hours have passed since the last reminder, send a reminder
+  // 4 hours in blocks = 4 * 60 * 60 / 12 = 1200
+  const reminderBlock = previousBlock + 1200;
+  if (latestBlock < reminderBlock) {
+    return;
+  }
+
+  // Send a reminder for each queued proposal
+  for (const queuedProposal of queuedProposals) {
+    console.log(`Processing queued proposal: ${queuedProposal.id}`);
+
+    // Only if the proposal has not been executed yet
+    if (
+      executedProposals.some(
+        (executed) => executed.proposalId === queuedProposal.proposalId,
+      )
+    ) {
+      console.log(`Proposal has been executed. Skipping.`);
+      continue;
+    }
+
+    // Only if the ETA has passed
+    if (Number(queuedProposal.eta) > Math.floor(Date.now() / 1000)) {
+      console.log(`Proposal ETA has not passed. Skipping.`);
+      continue;
+    }
+
+    await sendDiscordAlert(
+      `Proposal Queued: ${prepareDescription(queuedProposal.proposal.description)}`,
+      `||@everyone ${getRoleMention(ROLE_OGG)} ${getUserMention(USER_NOTIFY)}||\n` +
+        `ID: ${queuedProposal.proposalId}\n` +
+        `This proposal is available to be executed\n` +
+        `Execution must be performed before ${getDiscordTimestamp(Number(queuedProposal.eta) + 24 * 60 * 60)}`, // ETA + 24 hours
+      getProposalUrl(queuedProposal.proposalId),
+      fromBlockTimestamp(queuedProposal.blockTimestamp),
     );
   }
 };

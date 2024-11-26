@@ -2383,6 +2383,43 @@ export type CreatedProposalFragment = {
   startBlock: string;
 };
 
+export type QueuedProposalsQueryVariables = Exact<{
+  timestamp: Scalars["BigInt"]["input"];
+}>;
+
+export type QueuedProposalsQuery = {
+  proposalQueueds: Array<{
+    id: string;
+    blockNumber: string;
+    blockTimestamp: string;
+    proposalId: string;
+    transactionHash: string;
+    eta: string;
+    proposal: {
+      id: string;
+      blockNumber: string;
+      blockTimestamp: string;
+      description: string;
+      proposalId: string;
+      proposer: string;
+      transactionHash: string;
+      calldatas: Array<string>;
+      targets: Array<string>;
+      values: Array<string>;
+      signatures: Array<string>;
+      startBlock: string;
+    };
+  }>;
+};
+
+export type ExecutedProposalsQueryVariables = Exact<{
+  proposals: Array<Scalars["String"]["input"]> | Scalars["String"]["input"];
+}>;
+
+export type ExecutedProposalsQuery = {
+  proposalExecuteds: Array<{ proposalId: string }>;
+};
+
 export type ProposalQueryQueryVariables = Exact<{
   block: Scalars["BigInt"]["input"];
 }>;
@@ -2541,6 +2578,187 @@ export const CreatedProposalFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CreatedProposalFragment, unknown>;
+export const QueuedProposalsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "QueuedProposals" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "timestamp" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "BigInt" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalQueueds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "eta_gt" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "timestamp" },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "blockTimestamp" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transactionHash" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "eta" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "proposal" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "CreatedProposal" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "CreatedProposal" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "ProposalCreated" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "blockTimestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+          { kind: "Field", name: { kind: "Name", value: "proposer" } },
+          { kind: "Field", name: { kind: "Name", value: "transactionHash" } },
+          { kind: "Field", name: { kind: "Name", value: "calldatas" } },
+          { kind: "Field", name: { kind: "Name", value: "targets" } },
+          { kind: "Field", name: { kind: "Name", value: "values" } },
+          { kind: "Field", name: { kind: "Name", value: "signatures" } },
+          { kind: "Field", name: { kind: "Name", value: "startBlock" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  QueuedProposalsQuery,
+  QueuedProposalsQueryVariables
+>;
+export const ExecutedProposalsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "ExecutedProposals" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "proposals" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "String" },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proposalExecuteds" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "id_in" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "proposals" },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "proposalId" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  ExecutedProposalsQuery,
+  ExecutedProposalsQueryVariables
+>;
 export const ProposalQueryDocument = {
   kind: "Document",
   definitions: [

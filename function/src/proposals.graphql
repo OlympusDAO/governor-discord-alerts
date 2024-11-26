@@ -14,6 +14,26 @@ fragment CreatedProposal on ProposalCreated {
   startBlock
 }
 
+query QueuedProposals($timestamp: BigInt!) {
+  proposalQueueds(where: { eta_gt: $timestamp }) {
+    id
+    blockNumber
+    blockTimestamp
+    proposalId
+    transactionHash
+    eta
+    proposal {
+      ...CreatedProposal
+    }
+  }
+}
+
+query ExecutedProposals($proposals: [String!]!) {
+  proposalExecuteds(where: { id_in: $proposals }) {
+    proposalId
+  }
+}
+
 query ProposalQuery($block: BigInt!) {
   proposalCreateds(
     where: { blockNumber_gt: $block }

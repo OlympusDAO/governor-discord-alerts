@@ -1,6 +1,6 @@
 import { getLatestProcessedBlock, updateLatestProcessedBlock } from "./storage";
-import { getLatestProposalEvents } from "./subgraph";
-import { processProposalEvents } from "./discord";
+import { getCurrentQueuedProposals, getLatestProposalEvents } from "./subgraph";
+import { processProposalEvents, processQueuedProposals } from "./discord";
 import * as express from "express";
 
 export const run = async (req: express.Request, res: express.Response) => {
@@ -15,6 +15,18 @@ export const run = async (req: express.Request, res: express.Response) => {
 
   // Send alerts
   await processProposalEvents(proposalData);
+
+  // Get the current queued proposals
+  const [queuedProposals, executedProposals] =
+    await getCurrentQueuedProposals();
+
+  // Send alerts
+  await processQueuedProposals(
+    queuedProposals,
+    executedProposals,
+    previousBlock,
+    latestBlock,
+  );
 
   // Update the latest processed block
   await updateLatestProcessedBlock(latestBlock);

@@ -28,7 +28,8 @@ export const sendDiscordAlert = async (
   const webhookClient = new WebhookClient({ url: webhookUrl });
 
   const embed = new EmbedBuilder({
-    title: title,
+    // Discord has a 256 character limit for the title
+    title: title.length > 256 ? title.slice(0, 253) + "..." : title,
     description: content,
     color: 0x0099ff,
     url: url,
@@ -47,6 +48,7 @@ const cleanDescription = (text: string) => {
     .replace(/^#+\s*/, "") // Remove markdown headings
     .replace(/[<>]/g, "") // Remove < and > characters
     .replace(/\[.*?\]\(.*?\)/g, "") // Remove markdown links
+    .replace(/^Summary:\s*/i, "") // Remove leading "Summary: " text (case insensitive)
     .trim(); // Remove leading/trailing whitespace
 };
 
@@ -85,8 +87,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing created proposal: ${createdProposal.proposalId}`);
 
     await sendDiscordAlert(
-      `Proposal Created: ${prepareDescription(createdProposal.description)}`,
-      `ID: ${createdProposal.proposalId}`,
+      prepareDescription(createdProposal.description),
+      `Proposal Created`,
       getProposalUrl(createdProposal.proposalId),
       fromBlockTimestamp(createdProposal.blockTimestamp),
     );
@@ -97,8 +99,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing cancelled proposal: ${cancelledProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Cancelled: ${prepareDescription(cancelledProposal.proposal.description)}`,
-      `ID: ${cancelledProposal.proposalId}`,
+      prepareDescription(cancelledProposal.proposal.description),
+      `Proposal Cancelled`,
       getProposalUrl(cancelledProposal.proposalId),
       fromBlockTimestamp(cancelledProposal.blockTimestamp),
     );
@@ -109,8 +111,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing vetoed proposal: ${vetoedProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Vetoed: ${prepareDescription(vetoedProposal.proposal.description)}`,
-      `ID: ${vetoedProposal.proposalId}`,
+      prepareDescription(vetoedProposal.proposal.description),
+      `Proposal Vetoed`,
       getProposalUrl(vetoedProposal.proposalId),
       fromBlockTimestamp(vetoedProposal.blockTimestamp),
     );
@@ -123,10 +125,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     );
 
     await sendDiscordAlert(
-      `Proposal Voting Started: ${prepareDescription(
-        votingStartedProposal.proposal.description,
-      )}`,
-      `ID: ${votingStartedProposal.proposalId}\n` +
+      prepareDescription(votingStartedProposal.proposal.description),
+      `Proposal Voting Started\n` +
         `Voting will end at ${getDiscordTimestamp(
           Number(votingStartedProposal.blockTimestamp) +
             VOTING_PERIOD_BLOCKS * 12,
@@ -143,12 +143,10 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing queued proposal: ${queuedProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Queued for Execution: ${prepareDescription(
-        queuedProposal.proposal.description,
-      )}`,
-      `||@everyone||\n` +
-        `ID: ${queuedProposal.proposalId}\n` +
-        `This proposal is in the timelock and can be executed on ${getDiscordTimestamp(Number(queuedProposal.eta))}`,
+      prepareDescription(queuedProposal.proposal.description),
+      `Proposal Queued\n` +
+        `This proposal is in the timelock and can be executed on ${getDiscordTimestamp(Number(queuedProposal.eta))}\n` +
+        `||@everyone||`,
       getProposalUrl(queuedProposal.proposalId),
       fromBlockTimestamp(queuedProposal.blockTimestamp),
     );
@@ -159,10 +157,8 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
     console.log(`Processing executed proposal: ${executedProposal.id}`);
 
     await sendDiscordAlert(
-      `Proposal Executed: ${prepareDescription(
-        executedProposal.proposal.description,
-      )}`,
-      `ID: ${executedProposal.proposalId}`,
+      prepareDescription(executedProposal.proposal.description),
+      `Proposal Executed`,
       getProposalUrl(executedProposal.proposalId),
       fromBlockTimestamp(executedProposal.blockTimestamp),
     );
@@ -191,13 +187,13 @@ export const processQueuedProposals = async (
     }
 
     await sendDiscordAlert(
-      `Proposal Queued: ${prepareDescription(queuedProposal.proposal.description)}`,
-      `||@everyone ${getRoleMention(ROLE_OGG)} ${getUserMention(USER_NOTIFY)}||\n` +
-        `ID: ${queuedProposal.proposalId}\n` +
+      prepareDescription(queuedProposal.proposal.description),
+      `Proposal Queued\n` +
         `This proposal is available to be executed\n` +
         `Execution must be performed before ${getDiscordTimestamp(
           Number(queuedProposal.eta) + EXECUTION_LIMIT,
-        )}`,
+        )}\n` +
+        `||@everyone ${getRoleMention(ROLE_OGG)} ${getUserMention(USER_NOTIFY)}||`,
       getProposalUrl(queuedProposal.proposalId),
       fromBlockTimestamp(queuedProposal.blockTimestamp),
     );

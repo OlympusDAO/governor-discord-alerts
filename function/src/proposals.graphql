@@ -15,7 +15,7 @@ fragment CreatedProposal on ProposalCreated {
 }
 
 query QueuedProposals($timestamp: BigInt!) {
-  proposalQueueds(where: { eta_gt: $timestamp }) {
+  proposalQueueds(where: { eta_gte: $timestamp }) {
     id
     blockNumber
     blockTimestamp

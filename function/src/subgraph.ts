@@ -7,6 +7,7 @@ import {
 import { getSubgraphUrl } from "./constants";
 import { ProposalEvents } from "./types";
 import { cacheExchange, Client, fetchExchange } from "@urql/core";
+import { toBlockTimestamp } from "./utils/date";
 
 /**
  * Get the proposal events from the subgraph after a given block
@@ -68,9 +69,9 @@ export const getCurrentQueuedProposals = async (): Promise<
     exchanges: [cacheExchange, fetchExchange],
   });
 
-  // Fetches queued proposals that have an execution limit after now
+  // Fetches queued proposals that have an execution date >= now
   const { data } = await subgraphClient.query(QueuedProposalsDocument, {
-    timestamp: Math.floor(Date.now() / 1000).toString(),
+    timestamp: toBlockTimestamp(new Date()).toString(),
   });
 
   if (!data) {

@@ -2616,7 +2616,7 @@ export const QueuedProposalsDocument = {
                   fields: [
                     {
                       kind: "ObjectField",
-                      name: { kind: "Name", value: "eta_gt" },
+                      name: { kind: "Name", value: "eta_gte" },
                       value: {
                         kind: "Variable",
                         name: { kind: "Name", value: "timestamp" },

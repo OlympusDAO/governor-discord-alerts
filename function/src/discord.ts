@@ -1,7 +1,7 @@
 import { ProposalEvents } from "./types";
 
 import { WebhookClient, EmbedBuilder } from "discord.js";
-import { fromBlockTimestamp } from "./utils/date";
+import { fromBlockTimestamp, toBlockTimestamp } from "./utils/date";
 import { ProposalQueued } from "./__generated__/proposals";
 
 // TODOs
@@ -173,15 +173,18 @@ export const processQueuedProposals = async (
   // If 4 hours have passed since the last reminder, send a reminder
   const reminderBlock = previousBlock + EXECUTION_REMINDER_FREQUENCY;
   if (latestBlock < reminderBlock) {
+    console.log(`No reminder needed.`);
     return;
   }
+
+  console.log(`Sending reminder for queued proposals`);
 
   // Send a reminder for each queued proposal
   for (const queuedProposal of queuedProposals) {
     console.log(`Processing queued proposal: ${queuedProposal.id}`);
 
-    // Only if the ETA has passed
-    if (Number(queuedProposal.eta) > Math.floor(Date.now() / 1000)) {
+    // Only if the execution date has passed
+    if (Number(queuedProposal.eta) >= toBlockTimestamp(new Date())) {
       console.log(`Proposal ETA has not passed. Skipping.`);
       continue;
     }

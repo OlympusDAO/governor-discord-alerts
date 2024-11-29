@@ -16,17 +16,13 @@ export const run = async (req: express.Request, res: express.Response) => {
   // Send alerts
   await processProposalEvents(proposalData);
 
+  // TODO send alerts for proposals with voting started
+
   // Get the current queued proposals
-  const [queuedProposals, executedProposals] =
-    await getCurrentQueuedProposals();
+  const queuedProposals = await getCurrentQueuedProposals();
 
   // Send alerts
-  await processQueuedProposals(
-    queuedProposals,
-    executedProposals,
-    previousBlock,
-    latestBlock,
-  );
+  await processQueuedProposals(queuedProposals, previousBlock, latestBlock);
 
   // Update the latest processed block
   await updateLatestProcessedBlock(latestBlock);

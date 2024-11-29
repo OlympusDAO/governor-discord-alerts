@@ -10,6 +10,10 @@ import { ProposalQueued } from "./__generated__/proposals";
 const ROLE_OGG = "1255521545686745268";
 const USER_NOTIFY = "894321349210820618";
 
+const VOTING_PERIOD_BLOCKS = 50400;
+const EXECUTION_LIMIT = 24 * 60 * 60; // 24 hours
+const EXECUTION_REMINDER_FREQUENCY = 4 * 60 * 60; // 4 hours
+
 export const sendDiscordAlert = async (
   title: string,
   content: string,
@@ -122,11 +126,17 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       `Proposal Voting Started: ${prepareDescription(
         votingStartedProposal.proposal.description,
       )}`,
-      `ID: ${votingStartedProposal.proposalId}`,
+      `ID: ${votingStartedProposal.proposalId}\n` +
+        `Voting will end at ${getDiscordTimestamp(
+          Number(votingStartedProposal.blockTimestamp) +
+            VOTING_PERIOD_BLOCKS * 12,
+        )}`,
       getProposalUrl(votingStartedProposal.proposalId),
       fromBlockTimestamp(votingStartedProposal.blockTimestamp),
     );
   }
+
+  // No event fired for voting ended
 
   // Queued
   for (const queuedProposal of proposalEvents.queued) {
@@ -161,13 +171,11 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
 
 export const processQueuedProposals = async (
   queuedProposals: ProposalQueued[],
-  executedProposals: { proposalId: string }[],
   previousBlock: number,
   latestBlock: number,
 ) => {
   // If 4 hours have passed since the last reminder, send a reminder
-  // 4 hours in blocks = 4 * 60 * 60 / 12 = 1200
-  const reminderBlock = previousBlock + 1200;
+  const reminderBlock = previousBlock + EXECUTION_REMINDER_FREQUENCY;
   if (latestBlock < reminderBlock) {
     return;
   }
@@ -175,16 +183,6 @@ export const processQueuedProposals = async (
   // Send a reminder for each queued proposal
   for (const queuedProposal of queuedProposals) {
     console.log(`Processing queued proposal: ${queuedProposal.id}`);
-
-    // Only if the proposal has not been executed yet
-    if (
-      executedProposals.some(
-        (executed) => executed.proposalId === queuedProposal.proposalId,
-      )
-    ) {
-      console.log(`Proposal has been executed. Skipping.`);
-      continue;
-    }
 
     // Only if the ETA has passed
     if (Number(queuedProposal.eta) > Math.floor(Date.now() / 1000)) {
@@ -197,7 +195,9 @@ export const processQueuedProposals = async (
       `||@everyone ${getRoleMention(ROLE_OGG)} ${getUserMention(USER_NOTIFY)}||\n` +
         `ID: ${queuedProposal.proposalId}\n` +
         `This proposal is available to be executed\n` +
-        `Execution must be performed before ${getDiscordTimestamp(Number(queuedProposal.eta) + 24 * 60 * 60)}`, // ETA + 24 hours
+        `Execution must be performed before ${getDiscordTimestamp(
+          Number(queuedProposal.eta) + EXECUTION_LIMIT,
+        )}`,
       getProposalUrl(queuedProposal.proposalId),
       fromBlockTimestamp(queuedProposal.blockTimestamp),
     );

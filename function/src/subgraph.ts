@@ -60,7 +60,7 @@ export const getLatestProposalEvents = async (
  * @returns The queued proposals
  */
 export const getCurrentQueuedProposals = async (): Promise<
-  [ProposalQueued[], { proposalId: string }[]]
+  ProposalQueued[]
 > => {
   // Create a new client
   const subgraphClient = new Client({
@@ -92,5 +92,13 @@ export const getCurrentQueuedProposals = async (): Promise<
     throw new Error("No data returned from subgraph for executed proposals");
   }
 
-  return [data.proposalQueueds, executedProposalsData.proposalExecuteds];
+  // Remove any proposals that have been executed
+  const executedProposalIds = executedProposalsData.proposalExecuteds.map(
+    (executed) => executed.proposalId,
+  );
+  const queuedProposals = data.proposalQueueds.filter(
+    (queued) => !executedProposalIds.includes(queued.proposalId),
+  );
+
+  return queuedProposals;
 };

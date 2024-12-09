@@ -146,7 +146,7 @@ export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
       prepareDescription(queuedProposal.proposal.description),
       `Proposal Queued\n` +
         `This proposal is in the timelock and can be executed on ${getDiscordTimestamp(Number(queuedProposal.eta))}\n` +
-        `||@everyone||`,
+        `||@everyone ${getRoleMention(ROLE_OGG)} ${getUserMention(USER_NOTIFY)}||`,
       getProposalUrl(queuedProposal.proposalId),
       fromBlockTimestamp(queuedProposal.blockTimestamp),
     );

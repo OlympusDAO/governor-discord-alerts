@@ -8,7 +8,8 @@
     "codegen": "cd function && dotenv -e ../.env -- node_modules/.bin/graphql-codegen",
     "lint": "cd function && yarn lint",
     "test": "cd function && yarn test",
-    "postinstall": "cd function && yarn install"
+    "postinstall": "cd function && yarn install",
+    "preinstall": "npx only-allow pnpm"
   },
   "keywords": [],
   "author": "",
@@ -22,8 +23,10 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": "please-use-yarn",
-    "pnpm": "please-use-yarn",
-    "bun": "please-use-yarn"
-  }
+    "npm": "use-pnpm",
+    "pnpm": "10.33.0",
+    "bun": "please-use-yarn",
+    "yarn": "use-pnpm"
+  },
+  "packageManager": "pnpm@10.33.0"
 }

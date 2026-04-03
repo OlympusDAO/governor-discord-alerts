@@ -47,8 +47,10 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": "please-use-yarn",
-    "pnpm": "please-use-yarn",
-    "bun": "please-use-yarn"
-  }
+    "npm": "use-pnpm",
+    "pnpm": "10.33.0",
+    "bun": "use-pnpm",
+    "yarn": "use-pnpm"
+  },
+  "packageManager": "pnpm@10.33.0"
 }

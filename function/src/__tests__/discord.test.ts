@@ -1,4 +1,4 @@
-import { processProposalEvents } from "../discord";
+import * as discord from "../discord";
 import { ProposalEvents } from "../types";
 import { config as dotenvConfig } from "dotenv";
 
@@ -19,29 +19,31 @@ describe("processProposalEvents", () => {
     proposalEvents.created.push({
       proposalId: "1",
       description: "Test proposal",
-      blockNumber: 1111,
-      blockTimestamp: Date.now() / 1000,
+      blockNumber: "1111",
+      blockTimestamp: Math.floor(Date.now() / 1000).toString(),
       calldatas: [],
       id: "1",
       proposer: "0x123",
       signatures: [],
-      startBlock: 1111,
+      startBlock: "1111",
       targets: [],
       transactionHash: "0x123",
       values: [],
     });
 
-    // Mock console.log to capture output
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    const sendDiscordAlertSpy = jest
+      .spyOn(discord, "sendDiscordAlert")
+      .mockResolvedValue();
 
-    await processProposalEvents(proposalEvents);
+    await discord.processProposalEvents(proposalEvents);
 
-    // Check if console.log was called with the expected message
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Sent Discord alert: Proposal Created: 1",
+    expect(sendDiscordAlertSpy).toHaveBeenCalledWith(
+      "Test proposal",
+      "Proposal Created",
+      "https://app.olympusdao.finance/#/governance/proposals/1",
+      expect.any(Date),
     );
 
-    // Restore the original console.log
-    consoleSpy.mockRestore();
+    sendDiscordAlertSpy.mockRestore();
   });
 });

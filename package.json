@@ -10,7 +10,7 @@
     "lint:check": "cd function && pnpm run lint:check",
     "test": "cd function && pnpm run test",
     "postinstall": "pnpm --dir function --config.engine-strict=false install",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow@1.2.2 pnpm"
   },
   "keywords": [],
   "author": "",

@@ -7,6 +7,7 @@
     "build": "cd function && pnpm run build",
     "codegen": "cd function && dotenv -e ../.env -- node_modules/.bin/graphql-codegen",
     "lint": "cd function && pnpm run lint",
+    "lint:check": "cd function && pnpm run lint:check",
     "test": "cd function && pnpm run test",
     "postinstall": "pnpm --dir function --config.engine-strict=false install",
     "preinstall": "npx only-allow pnpm"

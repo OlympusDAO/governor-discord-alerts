@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "codegen": "dotenv -e .env -- graphql-codegen",
-    "lint": "prettier --write . && eslint .",
+    "lint": "prettier --write . && eslint . --fix",
+    "lint:check": "eslint . --max-warnings 0",
     "test": "jest"
   },
   "keywords": [],
@@ -52,5 +53,11 @@
     "bun": "use-pnpm",
     "yarn": "use-pnpm"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "overrides": {
+      "ajv": "6.14.0",
+      "ajv@<6.14.0": "6.14.0"
+    }
+  }
 }

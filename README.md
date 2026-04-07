@@ -26,7 +26,7 @@ It performs the following steps:
 1. Build the function:
 
    ```bash
-   yarn run build
+   pnpm run build
    ```
 
 1. Deploy the function:
@@ -34,3 +34,5 @@ It performs the following steps:
    ```bash
    pulumi up --stack <dev|prod>
    ```
+
+Pulumi may require pnpm's hoisted linker layout to avoid `.pnpm/...` closure-loading or export-path errors, so this repo sets `node-linker=hoisted` in `.npmrc`.

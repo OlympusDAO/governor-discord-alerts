@@ -4,26 +4,60 @@
   "description": "",
   "main": "pulumi.ts",
   "scripts": {
-    "build": "cd function && yarn build",
+    "build": "cd function && pnpm run build",
     "codegen": "cd function && dotenv -e ../.env -- node_modules/.bin/graphql-codegen",
-    "lint": "cd function && yarn lint",
-    "test": "cd function && yarn test",
-    "postinstall": "cd function && yarn install"
+    "lint": "cd function && pnpm run lint",
+    "lint:check": "cd function && pnpm run lint:check",
+    "test": "cd function && pnpm run test",
+    "postinstall": "pnpm --dir function --config.engine-strict=false install",
+    "preinstall": "npx only-allow@1.2.2 pnpm"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@pulumi/gcp": "^8.2.0",
-    "@pulumi/pulumi": "^3.134.0",
+    "@pulumi/gcp": "^9.18.0",
+    "@pulumi/pulumi": "^3.229.0",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "typescript": "^5.6.2"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": "please-use-yarn",
-    "pnpm": "please-use-yarn",
-    "bun": "please-use-yarn"
+    "node": ">=22.0.0",
+    "npm": "use-pnpm",
+    "pnpm": "10.33.0",
+    "bun": "please-use-yarn",
+    "yarn": "use-pnpm"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "overrides": {
+      "brace-expansion": ">=2.0.3",
+      "cross-spawn": ">=7.0.5",
+      "glob": ">=10.5.0",
+      "js-yaml": ">=3.14.2",
+      "minimatch": ">=9.0.7",
+      "picomatch": ">=3.0.2",
+      "tar": ">=7.5.11",
+      "brace-expansion@<1.1.13": ">=1.1.13",
+      "brace-expansion@>=1.0.0 <=1.1.11": ">=1.1.12",
+      "brace-expansion@>=2.0.0 <2.0.3": ">=2.0.3",
+      "brace-expansion@>=2.0.0 <=2.0.1": ">=2.0.2",
+      "cross-spawn@>=7.0.0 <7.0.5": ">=7.0.5",
+      "glob@>=10.2.0 <10.5.0": ">=10.5.0",
+      "js-yaml@<3.14.2": ">=3.14.2",
+      "minimatch@<3.1.3": ">=3.1.3",
+      "minimatch@<3.1.4": ">=3.1.4",
+      "minimatch@>=9.0.0 <9.0.6": ">=9.0.6",
+      "minimatch@>=9.0.0 <9.0.7": ">=9.0.7",
+      "picomatch@>=3.0.0 <3.0.2": ">=3.0.2",
+      "tar@<7.5.7": ">=7.5.7",
+      "tar@<7.5.8": ">=7.5.8",
+      "tar@<=7.5.10": ">=7.5.11",
+      "tar@<=7.5.2": ">=7.5.3",
+      "tar@<=7.5.3": ">=7.5.4",
+      "tar@<=7.5.9": ">=7.5.10",
+      "tmp@<=0.2.3": ">=0.2.4"
+    }
   }
 }

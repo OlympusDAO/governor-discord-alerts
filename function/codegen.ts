@@ -29,7 +29,7 @@ const config: CodegenConfig = {
     },
   },
   hooks: {
-    afterAllFileWrite: ["yarn run lint"],
+    afterAllFileWrite: ["pnpm run lint"],
   },
   overwrite: true,
 };

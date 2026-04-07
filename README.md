@@ -26,7 +26,7 @@ It performs the following steps:
 1. Build the function:
 
    ```bash
-   yarn run build
+   pnpm run build
    ```
 
 1. Deploy the function:

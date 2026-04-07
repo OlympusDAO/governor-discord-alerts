@@ -39,6 +39,7 @@
     "typescript-eslint": "^8.7.0"
   },
   "dependencies": {
+    "@google-cloud/functions-framework": "5.0.2",
     "@google-cloud/storage": "^7.13.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@urql/core": "^5.0.6",

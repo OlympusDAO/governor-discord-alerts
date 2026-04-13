@@ -35,4 +35,7 @@ It performs the following steps:
    pulumi up --stack <dev|prod>
    ```
 
+   Note: the project uses `gcp.cloudfunctions.Function` (Cloud Functions v1), which currently does not support Node.js 24 runtimes.
+   The function runtime is therefore pinned to `nodejs22`.
+
 Pulumi may require pnpm's hoisted linker layout to avoid `.pnpm/...` closure-loading or export-path errors, so this repo sets `node-linker=hoisted` in `.npmrc`.

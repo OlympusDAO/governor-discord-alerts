@@ -93,7 +93,9 @@ const cloudFunction = new gcp.cloudfunctions.Function(
     sourceArchiveBucket: functionBucket.name,
     sourceArchiveObject: functionBucketObject.name,
     triggerHttp: true,
-    runtime: "nodejs24",
+    // Cloud Functions v1 (`gcp.cloudfunctions.Function`) does not support Node.js 24 runtimes yet.
+    // Keep the runtime pinned to nodejs22.
+    runtime: "nodejs22",
     entryPoint: "run",
     availableMemoryMb: 256,
     timeout: 60,

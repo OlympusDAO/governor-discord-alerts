@@ -93,7 +93,7 @@ const cloudFunction = new gcp.cloudfunctions.Function(
     sourceArchiveBucket: functionBucket.name,
     sourceArchiveObject: functionBucketObject.name,
     triggerHttp: true,
-    runtime: "nodejs22",
+    runtime: "nodejs24",
     entryPoint: "run",
     availableMemoryMb: 256,
     timeout: 60,

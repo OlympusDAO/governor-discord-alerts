@@ -25,7 +25,7 @@
     "node": ">=22",
     "npm": "use-pnpm",
     "pnpm": ">=10.33.0",
-    "bun": "please-use-yarn",
+    "bun": "use-pnpm",
     "yarn": "use-pnpm"
   },
   "packageManager": "pnpm@10.33.0"

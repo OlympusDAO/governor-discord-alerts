@@ -8,7 +8,7 @@
     "audit:function": "pnpm audit --dir function --audit-level moderate --json",
     "build": "cd function && pnpm run build",
     "codegen": "cd function && dotenv -e ../.env -- node_modules/.bin/graphql-codegen",
-    "install:function:check": "pnpm install --dir function --frozen-lockfile",
+    "install:function:check": "pnpm install --dir function --frozen-lockfile --lockfile-only",
     "lint": "cd function && pnpm run lint",
     "lint:check": "cd function && pnpm run lint:check",
     "test": "cd function && pnpm run test",

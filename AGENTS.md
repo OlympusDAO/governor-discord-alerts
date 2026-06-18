@@ -23,7 +23,7 @@ This repository monitors governor and voting events and forwards alert notificat
 - `pnpm test`: run Jest tests in `function/`
 - `pnpm run codegen`: regenerate GraphQL types from the function GraphQL documents
 - `pnpm run validate:pnpm`: validate root and Cloud Function pnpm installs and audits
-- `pnpm install --dir function --frozen-lockfile`: verify the exact frozen install GCP Cloud Build performs for the Cloud Function archive
+- `pnpm install --dir function --frozen-lockfile --lockfile-only`: verify the exact frozen lockfile/config GCP Cloud Build uses without creating `function/node_modules`
 - `pnpm audit --dir function --audit-level moderate --json`: audit the deploy archive dependency graph, not only the root workspace
 
 ## Deployment

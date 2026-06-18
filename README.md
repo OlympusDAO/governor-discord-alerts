@@ -13,29 +13,67 @@ It performs the following steps:
 
 ## Setup
 
+1. Use Node.js 22:
+
+   ```bash
+   nvm use
+   ```
+
 1. Install dependencies:
 
    ```bash
    pnpm install
    ```
 
+   If `pnpm` is not on your PATH after `nvm use`, use Corepack directly:
+
+   ```bash
+   corepack pnpm install
+   ```
+
 1. Copy `.env.example` to `.env` and set the variables.
+
+## Common Tasks
+
+- `pnpm install`: install dependencies using the lockfile policy from `pnpm-workspace.yaml`.
+- `pnpm run build`: build the Cloud Function TypeScript.
+- `pnpm run lint`: run Prettier and ESLint fixes in `function/`.
+- `pnpm run lint:check`: run the non-mutating ESLint check in `function/`.
+- `pnpm test`: run the Jest test suite in `function/`.
+- `pnpm run codegen`: regenerate GraphQL types from `function/src/proposals.graphql`.
 
 ## Deployment
 
-1. Build the function:
+Deployments are managed with Pulumi stacks:
+
+- `dev`: GCP project `governor-discord-alerts-dev`
+- `prod`: GCP project `governor-discord-alerts`
+
+1. Build and test the function:
 
    ```bash
    pnpm run build
+   pnpm test
    ```
 
-1. Deploy the function:
+1. Preview the deployment:
+
+   ```bash
+   pulumi preview --stack <dev|prod>
+   ```
+
+1. Apply the deployment:
 
    ```bash
    pulumi up --stack <dev|prod>
    ```
 
-   Note: the project uses `gcp.cloudfunctions.Function` (Cloud Functions v1), which currently does not support Node.js 24 runtimes.
-   The function runtime is therefore pinned to `nodejs22`.
+The Pulumi program creates the GCS buckets, Cloud Function, Cloud Scheduler job, invoker IAM binding, and monitoring alert policy. Stack secrets provide `discordWebhookUrl`, `notificationEmail`, and `subgraphApiKey`.
 
-Pulumi may require pnpm's hoisted linker layout to avoid `.pnpm/...` closure-loading or export-path errors, so this repo sets `node-linker=hoisted` in `.npmrc`.
+Note: the project uses `gcp.cloudfunctions.Function` (Cloud Functions v1), which currently does not support Node.js 24 runtimes. The function runtime is therefore pinned to `nodejs22`.
+
+Pulumi may require pnpm's hoisted linker layout to avoid `.pnpm/...` closure-loading or export-path errors, so this repo sets `nodeLinker: hoisted` in `pnpm-workspace.yaml`.
+
+## pnpm Policy
+
+This repo stores pnpm policy in `pnpm-workspace.yaml`, including dependency overrides, `minimumReleaseAge`, `preferFrozenLockfile`, and the hoisted linker layout. The repository intentionally does not use `.npmrc` for these pnpm-only settings.

@@ -8,8 +8,7 @@
     "codegen": "cd function && dotenv -e ../.env -- node_modules/.bin/graphql-codegen",
     "lint": "cd function && pnpm run lint",
     "lint:check": "cd function && pnpm run lint:check",
-    "test": "cd function && pnpm run test",
-    "preinstall": "npx only-allow@1.2.2 pnpm"
+    "test": "cd function && pnpm run test"
   },
   "keywords": [],
   "author": "",

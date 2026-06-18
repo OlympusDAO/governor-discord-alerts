@@ -11,6 +11,8 @@ This repository monitors governor and voting events and forwards alert notificat
 - Run `pnpm install` before dependency-dependent work.
 - If `pnpm` is unavailable after `nvm use`, use `corepack pnpm ...`.
 - pnpm policy lives in `pnpm-workspace.yaml`, not `.npmrc`. Keep dependency overrides, `minimumReleaseAge`, `preferFrozenLockfile`, and `nodeLinker: hoisted` there unless a tool specifically requires another location.
+- The Cloud Function deployment archive is `./function`, so GCP installs dependencies from that directory rather than the repo root. When changing pnpm policy, dependency versions, or lockfiles, validate both the root workspace and the `function/` deployment context.
+- Keep `function/pnpm-workspace.yaml` aligned with `function/pnpm-lock.yaml` for policy that must be visible inside the Cloud Function archive. A root-only `pnpm-workspace.yaml` is not included in `new pulumi.asset.FileArchive("./function")`.
 
 ## Common Commands
 
@@ -20,6 +22,9 @@ This repository monitors governor and voting events and forwards alert notificat
 - `pnpm run lint:check`: run the non-mutating ESLint check in `function/`
 - `pnpm test`: run Jest tests in `function/`
 - `pnpm run codegen`: regenerate GraphQL types from the function GraphQL documents
+- `pnpm run validate:pnpm`: validate root and Cloud Function pnpm installs and audits
+- `pnpm install --dir function --frozen-lockfile`: verify the exact frozen install GCP Cloud Build performs for the Cloud Function archive
+- `pnpm audit --dir function --audit-level moderate --json`: audit the deploy archive dependency graph, not only the root workspace
 
 ## Deployment
 

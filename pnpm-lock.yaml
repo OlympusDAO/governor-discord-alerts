@@ -6,6 +6,7 @@ settings:
 
 overrides:
   '@grpc/grpc-js@>=1.11.0 <1.11.4': ^1.14.4
+  '@discordjs/rest>undici@<6.27.0': ^6.27.0
   '@graphql-codegen/cli>shell-quote@>=1.1.0 <=1.8.3': ^1.8.4
   ws@>=8.0.0 <8.21.0: ^8.21.0
   body-parser>qs@>=6.11.1 <=6.15.1: ^6.15.2
@@ -30,6 +31,7 @@ overrides:
   qs@>=6.11.1 <=6.15.1: ^6.15.2
   tar@<=7.5.15: ^7.5.16
   tmp@<0.2.6: ^0.2.6
+  discord.js>undici@<6.27.0: ^6.27.0
 
 importers:
 
@@ -4316,8 +4318,8 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici@6.24.1:
-    resolution: {integrity: sha512-sC+b0tB1whOCzbtlx20fx3WgCXwkW627p4EA9uM+/tNNPkSS+eSEld6pAs9nDv7WbY1UUljBMYPtu9BCOrCWKA==}
+  undici@6.27.0:
+    resolution: {integrity: sha512-YmfV3YnEDzXRC5lZ2jWtWWHKGUm1zIt8AhesR1tens+HTNv+YZlN/dp6G727LOvMJ8xjP9Be7Y2Sdr96LDm+pg==}
     engines: {node: '>=18.17'}
 
   unicorn-magic@0.1.0:
@@ -4764,7 +4766,7 @@ snapshots:
       discord-api-types: 0.38.47
       magic-bytes.js: 1.13.0
       tslib: 2.8.1
-      undici: 6.24.1
+      undici: 6.27.0
 
   '@discordjs/util@1.2.0':
     dependencies:
@@ -6995,7 +6997,7 @@ snapshots:
       lodash.snakecase: 4.1.1
       magic-bytes.js: 1.13.0
       tslib: 2.8.1
-      undici: 6.24.1
+      undici: 6.27.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -9864,7 +9866,7 @@ snapshots:
 
   undici-types@5.26.5: {}
 
-  undici@6.24.1: {}
+  undici@6.27.0: {}
 
   unicorn-magic@0.1.0: {}
 

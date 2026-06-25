@@ -1,4 +1,4 @@
-import {
+import type {
   ProposalCanceled,
   ProposalCreated,
   ProposalExecuted,

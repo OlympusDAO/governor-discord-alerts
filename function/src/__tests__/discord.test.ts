@@ -1,6 +1,6 @@
-import * as discord from "../discord";
-import { ProposalEvents } from "../types";
 import { config as dotenvConfig } from "dotenv";
+import * as discord from "../discord";
+import type { ProposalEvents } from "../types";
 
 // Required for the Discord webhook URL
 dotenvConfig();

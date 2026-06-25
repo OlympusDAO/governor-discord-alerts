@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
+  pull-requests: read
 
 jobs:
   audit:
@@ -18,11 +18,7 @@ jobs:
 
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
-      - name: Audit pnpm dependencies (fail on moderate+)
-        uses: JamesRobertWiseman/pnpm-audit@ef62519bd4eb8b0b063989599c2ebbf5dd5f5f28 # v3
-        with:
-          package_json_path: ./
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          level: moderate
-          fails: true
-          single_comment: true
+      - name: Audit root workspace dependencies (fail on moderate+)
+        run: pnpm run audit
+      - name: Audit function archive dependencies (fail on moderate+)
+        run: pnpm run audit:function

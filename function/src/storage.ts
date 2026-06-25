@@ -21,7 +21,7 @@ export const getLatestProcessedBlock = async (): Promise<number> => {
 
   const [contents] = await file.download();
   console.log(`Latest processed block: ${contents.toString()}`);
-  return parseInt(contents.toString());
+  return parseInt(contents.toString(), 10);
 };
 
 export const updateLatestProcessedBlock = async (

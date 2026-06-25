@@ -18,8 +18,8 @@ This repository monitors governor and voting events and forwards alert notificat
 
 - `pnpm install`: install dependencies using the lockfile policy from `pnpm-workspace.yaml`
 - `pnpm run build`: build the Cloud Function TypeScript
-- `pnpm run lint`: run Prettier and ESLint fixes in `function/`
-- `pnpm run lint:check`: run the non-mutating ESLint check in `function/`
+- `pnpm run lint`: run Biome fixes in `function/`
+- `pnpm run lint:check`: run the non-mutating Biome check in `function/`
 - `pnpm test`: run Jest tests in `function/`
 - `pnpm run codegen`: regenerate GraphQL types from the function GraphQL documents
 - `pnpm run validate:pnpm`: validate root and Cloud Function pnpm installs and audits

@@ -15,6 +15,8 @@ onlyBuiltDependencies:
   - "protobufjs@7.6.3"
 overrides:
   "@discordjs/rest>undici@<6.27.0": "^6.27.0"
+  "@babel/core@<=7.29.0": "^7.29.6"
+  "@tootallnate/once@<2.0.1": "^2.0.1"
   "ws@>=8.0.0 <8.21.0": "^8.21.0"
   "cloudevents>uuid@<11.1.1": "^11.1.1"
   "gaxios>uuid@<11.1.1": "^11.1.1"

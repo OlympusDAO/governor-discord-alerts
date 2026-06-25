@@ -1,9 +1,9 @@
+import type * as express from "express";
+import { processProposalEvents, processQueuedProposals } from "./discord";
 import { getLatestProcessedBlock, updateLatestProcessedBlock } from "./storage";
 import { getCurrentQueuedProposals, getLatestProposalEvents } from "./subgraph";
-import { processProposalEvents, processQueuedProposals } from "./discord";
-import * as express from "express";
 
-export const run = async (req: express.Request, res: express.Response) => {
+export const run = async (_req: express.Request, res: express.Response) => {
   console.log("Starting function");
 
   // Fetch the latest processed block

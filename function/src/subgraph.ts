@@ -1,12 +1,12 @@
+import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import {
   ExecutedProposalsDocument,
   ProposalQueryDocument,
-  ProposalQueued,
+  type ProposalQueued,
   QueuedProposalsDocument,
 } from "./__generated__/proposals";
 import { getSubgraphUrl } from "./constants";
-import { ProposalEvents } from "./types";
-import { cacheExchange, Client, fetchExchange } from "@urql/core";
+import type { ProposalEvents } from "./types";
 import { toBlockTimestamp } from "./utils/date";
 
 /**

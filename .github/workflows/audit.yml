@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   audit:
@@ -17,7 +18,7 @@ jobs:
 
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
-      - name: Audit workspace dependencies (fail on moderate+)
+      - name: Audit root workspace dependencies (fail on moderate+)
         run: pnpm run audit
-      - name: Audit Cloud Function dependencies (fail on moderate+)
+      - name: Audit function archive dependencies (fail on moderate+)
         run: pnpm run audit:function

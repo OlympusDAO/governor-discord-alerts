@@ -1,8 +1,7 @@
-import { ProposalEvents } from "./types";
-
-import { WebhookClient, EmbedBuilder } from "discord.js";
+import { EmbedBuilder, WebhookClient } from "discord.js";
+import type { ProposalQueued } from "./__generated__/proposals";
+import type { ProposalEvents } from "./types";
 import { fromBlockTimestamp, toBlockTimestamp } from "./utils/date";
-import { ProposalQueued } from "./__generated__/proposals";
 
 // TODOs
 // [ ] Add extra embed fields for each proposal event type
@@ -29,7 +28,7 @@ export const sendDiscordAlert = async (
 
   const embed = new EmbedBuilder({
     // Discord has a 256 character limit for the title
-    title: title.length > 256 ? title.slice(0, 253) + "..." : title,
+    title: title.length > 256 ? `${title.slice(0, 253)}...` : title,
     description: content,
     color: 0x0099ff,
     url: url,

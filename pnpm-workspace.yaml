@@ -1,7 +1,7 @@
 auditConfig:
-  ignoreCves:
+  ignoreGhsas:
     # Pulumi currently pins the OpenTelemetry 1.x stack; forcing core 2.x can break `pulumi up`.
-    - CVE-2026-54285
+    - GHSA-8988-4f7v-96qf
 blockExoticSubdeps: true
 engineStrict: true
 minimumReleaseAge: 10080
@@ -11,10 +11,12 @@ minimumReleaseAgeExclude:
   # Reviewed CVE fix for discord.js transitive HTTP/WebSocket client.
   - "undici@6.27.0"
 nodeLinker: hoisted
-onlyBuiltDependencies:
-  - "protobufjs@7.6.3"
+allowBuilds:
+  "protobufjs@7.6.3": true
 overrides:
   "@discordjs/rest>undici@<6.27.0": "^6.27.0"
+  "@sigstore/core@<=3.2.0": "^3.2.1"
+  "@sigstore/verify@3.1.0": "^3.1.1"
   "@babel/core@<=7.29.0": "^7.29.6"
   "@tootallnate/once@<2.0.1": "^2.0.1"
   "ws@>=8.0.0 <8.21.0": "^8.21.0"
@@ -31,6 +33,7 @@ overrides:
   "minimatch@<9.0.7": "^9.0.7"
   "picomatch@<3.0.2": "^3.0.2"
   "qs@>=6.11.1 <=6.15.1": "^6.15.2"
+  "sigstore@<=4.1.0": "^4.1.1"
   "discord.js>undici@<6.27.0": "^6.27.0"
 packages:
   - "function"

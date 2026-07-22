@@ -1,31 +1,33 @@
-auditConfig:
-  ignoreGhsas:
-    # Pulumi currently pins the OpenTelemetry 1.x stack; forcing core 2.x can break `pulumi up`.
-    - GHSA-8988-4f7v-96qf
 blockExoticSubdeps: true
 engineStrict: true
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
+  # Reviewed security patch for fast-uri authority canonicalization.
+  - "fast-uri@3.1.4"
   # Reviewed security patch needed for @google-cloud/storage retry-request path.
   - "form-data@2.5.6"
   # Reviewed CVE fix for discord.js transitive HTTP/WebSocket client.
   - "undici@6.27.0"
 nodeLinker: hoisted
-allowBuilds:
-  "protobufjs@7.6.3": true
+allowBuilds: {}
 overrides:
   "@discordjs/rest>undici@<6.27.0": "^6.27.0"
   "@babel/core@<=7.29.0": "^7.29.6"
-  "@istanbuljs/load-nyc-config>js-yaml@<=4.1.1": "^4.2.0"
   "@tootallnate/once@<2.0.1": "^2.0.1"
+  "brace-expansion@>=2.0.0 <2.1.2": "^2.1.2"
+  "brace-expansion@>=3.0.0 <5.0.7": "^5.0.7"
   "cloudevents>uuid@<11.1.1": "^11.1.1"
+  "fast-uri@>=3.0.0 <=3.1.3": "^3.1.4"
   "gaxios>uuid@<11.1.1": "^11.1.1"
   "glob@<10.5.0": "^10.5.0"
   "ip-address@<10.1.1": "^10.1.1"
+  "immutable@>=5.0.0-beta.1 <5.1.8": "^5.1.8"
+  "js-yaml@>=4.0.0 <4.3.0": "^4.3.0"
   "lodash@<4.18.0": "^4.18.0"
   "minimatch@<9.0.7": "^9.0.7"
   "picomatch@<3.0.2": "^3.0.2"
   "qs@>=6.11.1 <=6.15.1": "^6.15.2"
+  "shell-quote@<=1.8.4": "^1.9.0"
   "teeny-request>uuid@<11.1.1": "^11.1.1"
   "tinyglobby@0.2.15>picomatch@>=4.0.0": "^3.0.2"
   "ws@>=8.0.0 <8.21.0": "^8.21.0"

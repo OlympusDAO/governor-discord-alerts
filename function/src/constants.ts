@@ -1,12 +1,7 @@
-const SUBGRAPH_URL =
-  "https://gateway.thegraph.com/api/{api-key}/subgraphs/id/AQoLCXebY1Ga7DrqVaVQ85KMwS7iFof73tv9XMVGRtyJ";
+// The consolidated Olympus protocol indexer's REST API. Replaces the Governor
+// subgraph on The Graph's gateway, which needed an API key; the indexer is
+// public, so there is no credential here.
+const DEFAULT_INDEXER_API = "https://api-production-ca6c.up.railway.app";
 
-export const getSubgraphUrl = (): string => {
-  // Get the API key
-  const apiKey = process.env.SUBGRAPH_API_KEY;
-  if (!apiKey) {
-    throw new Error("SUBGRAPH_API_KEY is not set");
-  }
-
-  return SUBGRAPH_URL.replace("{api-key}", apiKey);
-};
+export const getIndexerUrl = (): string =>
+  (process.env.INDEXER_API_URL || DEFAULT_INDEXER_API).replace(/\/+$/, "");

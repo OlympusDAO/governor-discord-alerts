@@ -1,6 +1,5 @@
 import { EmbedBuilder, WebhookClient } from "discord.js";
-import type { ProposalQueued } from "./__generated__/proposals";
-import type { ProposalEvents } from "./types";
+import type { ProposalEvents, ProposalQueued } from "./types";
 import { fromBlockTimestamp, toBlockTimestamp } from "./utils/date";
 
 // TODOs

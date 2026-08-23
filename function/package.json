@@ -5,7 +5,6 @@
   "main": "bin/index.js",
   "scripts": {
     "build": "tsc",
-    "codegen": "dotenv -e .env -- graphql-codegen",
     "lint": "biome check --write .",
     "lint:check": "biome check .",
     "test": "jest --watchman=false"
@@ -14,13 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@0no-co/graphqlsp": "^1.12.14",
     "@biomejs/biome": "^2.5.0",
-    "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/schema-ast": "^4.1.0",
-    "@graphql-codegen/typed-document-node": "^5.0.9",
-    "@graphql-codegen/typescript": "^4.0.9",
-    "@graphql-codegen/typescript-operations": "^4.2.3",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/node": "^18",
@@ -33,10 +26,7 @@
   "dependencies": {
     "@google-cloud/functions-framework": "5.0.2",
     "@google-cloud/storage": "^7.21.0",
-    "@graphql-typed-document-node/core": "^3.2.0",
-    "@urql/core": "^5.0.6",
-    "discord.js": "^14.16.2",
-    "graphql": "^15.8.0"
+    "discord.js": "^14.16.2"
   },
   "engines": {
     "node": ">=22.0.0",

@@ -4,6 +4,8 @@
 
 This repository monitors governor and voting events and forwards alert notifications to Discord channels for governance operations.
 
+Data comes from the [Olympus protocol indexer](https://github.com/OlympusDAO/olympus-protocol-indexer)'s REST API (`/v1/governor/...`), which replaced the Governor subgraph on The Graph. There is no GraphQL client or codegen step any more; `function/src/types.ts` describes the response shapes and `function/src/__tests__/indexer.contract.test.ts` checks them against the deployed API (`INDEXER_API_URL=<host> pnpm test`).
+
 ## Node and Tooling
 
 - Node.js must use version 22+.
@@ -21,7 +23,6 @@ This repository monitors governor and voting events and forwards alert notificat
 - `pnpm run lint`: run Biome fixes in `function/`
 - `pnpm run lint:check`: run the non-mutating Biome check in `function/`
 - `pnpm test`: run Jest tests in `function/`
-- `pnpm run codegen`: regenerate GraphQL types from the function GraphQL documents
 - `pnpm run validate:pnpm`: validate root and Cloud Function pnpm installs and audits
 - `pnpm install --dir function --frozen-lockfile --lockfile-only`: verify the exact frozen lockfile/config GCP Cloud Build uses without creating `function/node_modules`
 - `pnpm audit --dir function --audit-level moderate --json`: audit the deploy archive dependency graph, not only the root workspace
@@ -31,5 +32,5 @@ This repository monitors governor and voting events and forwards alert notificat
 - Use Pulumi for deployments: `pulumi preview --stack <dev|prod>` before `pulumi up --stack <dev|prod>`.
 - The `dev` stack targets GCP project `governor-discord-alerts-dev`; the `prod` stack targets `governor-discord-alerts`.
 - The Pulumi program provisions the GCS buckets, Cloud Function, Cloud Scheduler job, invoker IAM binding, and monitoring alert policy.
-- Required Pulumi stack secrets are `discordWebhookUrl`, `notificationEmail`, and `subgraphApiKey`.
+- Required Pulumi stack secrets are `discordWebhookUrl` and `notificationEmail`. `indexerApiUrl` is an optional plain config value; unset, the function uses the deployed protocol indexer.
 - The Cloud Function uses `gcp.cloudfunctions.Function` v1 and must stay pinned to runtime `nodejs22` until that resource supports a newer runtime.

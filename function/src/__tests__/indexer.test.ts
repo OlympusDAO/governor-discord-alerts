@@ -53,6 +53,7 @@ const respondWith = (byPath: Record<string, unknown>, block = 12345) => {
 
 afterEach(() => {
   global.fetch = originalFetch;
+  jest.useRealTimers();
 });
 
 describe("getLatestProposalEvents", () => {
@@ -113,6 +114,34 @@ describe("getLatestProposalEvents", () => {
 });
 
 describe("getCurrentQueuedProposals", () => {
+  it("includes executable proposals while excluding expired execution windows", async () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-09-30T12:00:00Z"));
+    const now = Math.floor(Date.now() / 1000);
+    const queued = [
+      { ...marker("10"), eta: String(now - 60) },
+      { ...marker("11"), eta: String(now - 24 * 60 * 60 - 1) },
+      { ...marker("12"), eta: String(now - 24 * 60 * 60 + 1) },
+    ];
+    global.fetch = jest.fn(async (url: string) => {
+      const request = new URL(url);
+      const data = request.pathname.endsWith("/queued")
+        ? queued.filter(
+            (row) =>
+              Number(row.eta) >= Number(request.searchParams.get("etaAfter")),
+          )
+        : [];
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ data, meta: { block: 1 } }),
+      };
+    }) as unknown as typeof global.fetch;
+
+    expect(
+      (await getCurrentQueuedProposals()).map((p) => p.proposalId),
+    ).toEqual(["10", "12"]);
+  });
+
   it("drops queued proposals that have already executed", async () => {
     respondWith({
       "/v1/governor/proposals/queued": [

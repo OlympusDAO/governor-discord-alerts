@@ -8,7 +8,7 @@ It performs the following steps:
 
 1. Fetch the proposal events that occurred after the last processed block, from `GET /v1/governor/proposal-events?sinceBlock=`. The response envelope carries `meta.block`, the indexed head, which becomes the next cursor.
 1. For each proposal event, send a Discord alert.
-1. Update the latest block number to the current block number.
+1. Store the response's `meta.block` (the indexed head) as the next cursor.
 
 ## Setup
 

@@ -1,4 +1,4 @@
-import { getIndexerUrl } from "./constants";
+import { EXECUTION_LIMIT, getIndexerUrl } from "./constants";
 import type { ProposalEvents, ProposalExecuted, ProposalQueued } from "./types";
 import { toBlockTimestamp } from "./utils/date";
 
@@ -76,7 +76,7 @@ export const getCurrentQueuedProposals = async (): Promise<
 > => {
   // Queued proposals whose execution window is still open.
   const { data: queued } = await get<ProposalQueued[]>(
-    `/v1/governor/proposals/queued?etaAfter=${toBlockTimestamp(new Date())}`,
+    `/v1/governor/proposals/queued?etaAfter=${toBlockTimestamp(new Date()) - EXECUTION_LIMIT}`,
   );
 
   if (queued.length === 0) {

@@ -1,15 +1,14 @@
 # Governor Discord Alerts
 
-This is a simple Google Cloud Function that watches for events in the [olympus-governor subgraph](https://github.com/OlympusDAO/governor-subgraph/) and sends alerts to a Discord channel.
+This is a simple Google Cloud Function that watches for governor events in the [Olympus protocol indexer](https://github.com/OlympusDAO/olympus-protocol-indexer) and sends alerts to a Discord channel.
 
 ## Process
 
 It performs the following steps:
 
-1. Fetch the latest block from the subgraph.
-1. Fetch the proposal events from the subgraph that occurred after the latest block.
+1. Fetch the proposal events that occurred after the last processed block, from `GET /v1/governor/proposal-events?sinceBlock=`. The response envelope carries `meta.block`, the indexed head, which becomes the next cursor.
 1. For each proposal event, send a Discord alert.
-1. Update the latest block number to the current block number.
+1. Store the response's `meta.block` (the indexed head) as the next cursor.
 
 ## Setup
 
@@ -40,7 +39,6 @@ It performs the following steps:
 - `pnpm run lint`: run Biome fixes in `function/`.
 - `pnpm run lint:check`: run the non-mutating Biome check in `function/`.
 - `pnpm test`: run the Jest test suite in `function/`.
-- `pnpm run codegen`: regenerate GraphQL types from `function/src/proposals.graphql`.
 
 ## Deployment
 
@@ -68,7 +66,7 @@ Deployments are managed with Pulumi stacks:
    pulumi up --stack <dev|prod>
    ```
 
-The Pulumi program creates the GCS buckets, Cloud Function, Cloud Scheduler job, invoker IAM binding, and monitoring alert policy. Stack secrets provide `discordWebhookUrl`, `notificationEmail`, and `subgraphApiKey`.
+The Pulumi program creates the GCS buckets, Cloud Function, Cloud Scheduler job, invoker IAM binding, and monitoring alert policy. Stack secrets provide `discordWebhookUrl` and `notificationEmail`. `indexerApiUrl` is optional plain config; unset, the function uses the deployed indexer.
 
 Note: the project uses `gcp.cloudfunctions.Function` (Cloud Functions v1), which currently does not support Node.js 24 runtimes. The function runtime is therefore pinned to `nodejs22`.
 

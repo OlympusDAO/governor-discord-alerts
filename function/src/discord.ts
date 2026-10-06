@@ -1,6 +1,6 @@
 import { EmbedBuilder, WebhookClient } from "discord.js";
-import type { ProposalQueued } from "./__generated__/proposals";
-import type { ProposalEvents } from "./types";
+import { EXECUTION_LIMIT } from "./constants";
+import type { ProposalEvents, ProposalQueued } from "./types";
 import { fromBlockTimestamp, toBlockTimestamp } from "./utils/date";
 
 // TODOs
@@ -10,7 +10,6 @@ const ROLE_OGG = "1255521545686745268";
 const USER_NOTIFY = "894321349210820618";
 
 const VOTING_PERIOD_BLOCKS = 50400;
-const EXECUTION_LIMIT = 24 * 60 * 60; // 24 hours
 const EXECUTION_REMINDER_FREQUENCY = 4 * 60 * 60; // 4 hours
 
 export const sendDiscordAlert = async (

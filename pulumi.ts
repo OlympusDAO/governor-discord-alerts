@@ -101,7 +101,12 @@ const cloudFunction = new gcp.cloudfunctions.Function(
     timeout: 60,
     environmentVariables: {
       BUCKET_NAME: bucket.name,
-      SUBGRAPH_API_KEY: config.requireSecret("subgraphApiKey"),
+      // The protocol indexer is public, so this is a plain config value, not a
+      // secret — it replaces the Graph gateway URL that needed an API key.
+      // Optional: the function falls back to the deployed API when unset.
+      ...(config.get("indexerApiUrl")
+        ? { INDEXER_API_URL: config.get("indexerApiUrl") as string }
+        : {}),
       DISCORD_WEBHOOK_URL: config.requireSecret("discordWebhookUrl"),
     },
   },

@@ -1,7 +1,7 @@
 import type * as express from "express";
 import { processProposalEvents, processQueuedProposals } from "./discord";
+import { getCurrentQueuedProposals, getLatestProposalEvents } from "./indexer";
 import { getLatestProcessedBlock, updateLatestProcessedBlock } from "./storage";
-import { getCurrentQueuedProposals, getLatestProposalEvents } from "./subgraph";
 
 export const run = async (_req: express.Request, res: express.Response) => {
   console.log("Starting function");

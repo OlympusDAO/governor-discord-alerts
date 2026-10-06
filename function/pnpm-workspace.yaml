@@ -9,6 +9,7 @@ minimumReleaseAgeExclude:
 nodeLinker: hoisted
 allowBuilds: {}
 overrides:
+  "proxy-addr@>=2.0.0 <2.0.8": "2.0.8"
   "body-parser@>=2.0.0 <2.3.0": "^2.3.0"
   "@discordjs/rest>undici@<6.28.1": "^6.28.1"
   "@babel/core@<=7.29.0": "^7.29.6"

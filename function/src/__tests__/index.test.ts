@@ -226,8 +226,8 @@ it("reopens monitoring and announces a new queue transaction when an expired eme
   expect(send.mock.calls[send.mock.calls.length - 1][1]).toContain(
     "Proposal Executable",
   );
-  expect(send.mock.calls[send.mock.calls.length - 1][1]).toContain(
-    `Execution deadline: <t:${executableAt + 86400}:F>`,
+  expect(send.mock.calls[send.mock.calls.length - 1][3].deadline).toBe(
+    executableAt + 86400,
   );
 });
 

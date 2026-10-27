@@ -13,8 +13,13 @@ It performs the following steps:
 1. Announce executability and expiry. Remind operators about outstanding queue and execution actions every four hours.
 1. Store the cursor and notification history together in GCS as `notification_state.json`.
 
-Each alert includes the proposal ID, proposer address, frontend link, and up to three description lines, capped at 800 characters.
-Deadlines include an absolute date and Discord's relative timestamp, which updates in the client.
+Each alert starts with its status below the linked proposal title.
+The **Description** section contains up to three description lines, capped at 600 characters, including the ellipsis.
+The **Deadline** section shows the countdown, then the absolute date on a separate line.
+Discord updates the countdown and shows dates in the reader's time zone.
+Each alert also includes the proposal ID and proposer address.
+Event alerts include their Etherscan transaction link.
+See [notification examples and field rules](docs/notifications.md).
 Voting deadlines are estimates based on the stored end block and 12-second blocks.
 Execution deadlines use the proposal ETA and the live timelock grace period.
 Successful proposals have no deadline to be queued.

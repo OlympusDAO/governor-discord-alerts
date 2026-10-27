@@ -13,11 +13,19 @@ const USER_NOTIFY = "894321349210820618";
 
 export const EXECUTION_MENTIONS = `||@everyone <@&${ROLE_OGG}> <@${USER_NOTIFY}>||`;
 
+type AlertOptions = {
+  transactionHash?: string;
+  deadline?: number;
+  deadlineNote?: string;
+  executableFrom?: number;
+  details?: string;
+};
+
 export const sendDiscordAlert = async (
   proposal: ProposalCreated,
   content: string,
   timestamp: Date,
-  transactionHash?: string,
+  options: AlertOptions = {},
 ) => {
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
   if (!webhookUrl) {
@@ -35,22 +43,48 @@ export const sendDiscordAlert = async (
   const embed = new EmbedBuilder({
     // Discord has a 256 character limit for the title
     title: title.length > 256 ? `${title.slice(0, 253)}...` : title,
-    description:
-      `${content}\n\n${summary.length > 800 ? `${summary.slice(0, 797)}...` : summary}`.trim(),
+    description: content,
     color: 0x0099ff,
     url: getProposalUrl(proposal.proposalId),
     timestamp: timestamp,
     fields: [
+      {
+        name: "Description",
+        value:
+          summary.length > 600
+            ? `${summary
+                .slice(0, 597)
+                .replace(/\s+\S*$/, "")
+                .trimEnd()}...`
+            : summary || "No description provided.",
+      },
+      ...(options.deadline !== undefined
+        ? [
+            {
+              name: "Deadline",
+              value: `${getDiscordTimestamp(options.deadline)}${options.deadlineNote ? `\n${options.deadlineNote}` : ""}`,
+            },
+          ]
+        : []),
+      ...(options.executableFrom !== undefined
+        ? [
+            {
+              name: "Executable From",
+              value: getDiscordTimestamp(options.executableFrom),
+            },
+          ]
+        : []),
+      ...(options.details ? [{ name: "Details", value: options.details }] : []),
       { name: "Proposal ID", value: proposal.proposalId, inline: true },
       {
         name: "Proposer",
         value: `[${proposal.proposer}](https://etherscan.io/address/${proposal.proposer})`,
       },
-      ...(transactionHash
+      ...(options.transactionHash
         ? [
             {
               name: "Transaction",
-              value: `[View on Etherscan](https://etherscan.io/tx/${transactionHash})`,
+              value: `[View on Etherscan](https://etherscan.io/tx/${options.transactionHash})`,
             },
           ]
         : []),
@@ -78,7 +112,7 @@ const getProposalUrl = (proposalId: string) => {
 };
 
 export const getDiscordTimestamp = (timestamp: number): string =>
-  `<t:${timestamp}:F> (<t:${timestamp}:R>)`;
+  `<t:${timestamp}:R>\n<t:${timestamp}:F>`;
 
 export const processProposalEvents = async (
   proposalEvents: ProposalEvents,
@@ -128,7 +162,7 @@ export const processProposalEvents = async (
     state.proposals[event.proposalId] ??= { events: {} };
     const sent = state.proposals[event.proposalId];
     if (sent.events[kind] === event.transactionHash) continue;
-    let content = titles[kind];
+    const options: AlertOptions = { transactionHash: event.transactionHash };
     if (kind === "votingStarted") {
       const row = snapshot.proposals.find(
         (p) => p.proposal.proposalId === event.proposalId,
@@ -139,18 +173,19 @@ export const processProposalEvents = async (
         );
       const estimatedEnd =
         snapshot.timestamp + (row.endBlock - snapshot.blockNumber) * 12;
-      content += `\nVoting ends after block ${row.endBlock}.\nEstimated voting deadline: ${getDiscordTimestamp(estimatedEnd)}`;
+      options.deadline = estimatedEnd;
+      options.deadlineNote = `Estimated. Voting ends after block ${row.endBlock}.`;
     } else if (kind === "queued") {
       const eta = Number((event as { eta: string }).eta);
-      content +=
-        `\nExecutable from: ${getDiscordTimestamp(eta)}\n` +
-        `Execution deadline: ${getDiscordTimestamp(eta + snapshot.executionGracePeriod)}\n${EXECUTION_MENTIONS}`;
+      options.executableFrom = eta;
+      options.deadline = eta + snapshot.executionGracePeriod;
+      options.details = `Execute this proposal within the execution window.\n${EXECUTION_MENTIONS}`;
     }
     await sendDiscordAlert(
       event.proposal,
-      content,
+      titles[kind],
       fromBlockTimestamp(event.blockTimestamp),
-      event.transactionHash,
+      options,
     );
     sent.events[kind] = event.transactionHash;
     if (kind === "queued") {

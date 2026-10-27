@@ -66,6 +66,8 @@ const emptyEvents = (): ProposalEvents => ({
   votingStarted: [],
 });
 const embed = () => send.mock.calls[0][0].embeds[0].toJSON();
+const field = (name: string) =>
+  embed().fields.find((field: { name: string }) => field.name === name);
 
 beforeEach(() => {
   send.mockClear();
@@ -100,7 +102,7 @@ it.each([
   expect(embed()).toMatchObject({
     title: "#19 · CCIP Bridge Activation",
     url: "https://app.olympusdao.finance/#/governance/proposals/19",
-    description: expect.stringContaining(status),
+    description: status,
     fields: expect.arrayContaining([
       expect.objectContaining({ name: "Proposal ID", value: "19" }),
       expect.objectContaining({
@@ -117,21 +119,36 @@ it.each([
       }),
     ]),
   });
-  expect(embed().description).toContain(
+  expect(embed().fields[0].name).toBe("Description");
+  expect(field("Description").value).toContain(
     "Restore OHM bridging to five EVM chains.",
   );
-  expect(embed().description).toContain(
+  expect(field("Description").value).toContain(
     "Move pool administration under governance.",
   );
+  if (key === "votingStarted" || key === "queued") {
+    expect(embed().fields[1].name).toBe("Deadline");
+    expect(field("Deadline").value).toMatch(/^<t:\d+:R>\n<t:\d+:F>/);
+  } else expect(field("Deadline")).toBeUndefined();
 });
 
 it("shows absolute and live relative timestamps for queued execution deadlines", async () => {
   const events = emptyEvents();
   events.queued.push(marker);
   await processEvents(events);
-  expect(embed().description).toContain("<t:1793119319:F> (<t:1793119319:R>)");
-  expect(embed().description).toContain("Execution deadline");
-  expect(embed().description).toContain("<t:1793205719:F> (<t:1793205719:R>)");
+  expect(field("Executable From").value).toBe(
+    "<t:1793119319:R>\n<t:1793119319:F>",
+  );
+  expect(field("Deadline").value).toBe("<t:1793205719:R>\n<t:1793205719:F>");
+});
+
+it("labels the voting deadline as an estimate and keeps its end block", async () => {
+  const events = emptyEvents();
+  events.votingStarted.push(marker);
+  await processEvents(events);
+  expect(field("Deadline").value).toBe(
+    "<t:1793637719:R>\n<t:1793637719:F>\nEstimated. Voting ends after block 50600.",
+  );
 });
 
 it("keeps long proposal text within Discord embed limits", async () => {
@@ -142,8 +159,8 @@ it("keeps long proposal text within Discord embed limits", async () => {
   });
   await processEvents(events);
   expect(embed().title.length).toBeLessThanOrEqual(256);
-  expect(embed().description.length).toBeLessThanOrEqual(4096);
-  expect(embed().description).toContain("...");
+  expect(field("Description").value).toHaveLength(600);
+  expect(field("Description").value).toMatch(/\.\.\.$/);
 });
 
 it("handles descriptions with no separate heading or summary", async () => {
@@ -151,7 +168,14 @@ it("handles descriptions with no separate heading or summary", async () => {
   events.created.push({ ...proposal, description: "Emergency Proposal" });
   await processEvents(events);
   expect(embed().title).toBe("#19 · Emergency Proposal");
-  expect(embed().description).toContain("Emergency Proposal");
+  expect(field("Description").value).toBe("Emergency Proposal");
+});
+
+it("shows a fallback when the proposal has only a title", async () => {
+  const events = emptyEvents();
+  events.created.push({ ...proposal, description: "# Title only" });
+  await processEvents(events);
+  expect(field("Description").value).toBe("No description provided.");
 });
 
 it("deduplicates delivered event alerts after a partial run is retried", async () => {

@@ -128,6 +128,10 @@ it("reminds unqueued successful proposals every four hours without inventing an 
   expect(send).toHaveBeenCalledTimes(1);
   expect(send.mock.calls[0][1]).toContain("Awaiting Queue");
   expect(send.mock.calls[0][1]).not.toMatch(/expir|deadline/i);
+  expect(send.mock.calls[0][3].deadline).toBeUndefined();
+  expect(send.mock.calls[0][3].details).toContain(
+    "There is no queue deadline.",
+  );
 });
 
 it("announces executability at ETA and uses wall-clock reminder intervals and an explicit deadline", async () => {
@@ -141,9 +145,7 @@ it("announces executability at ETA and uses wall-clock reminder intervals and an
   );
   expect(send).toHaveBeenCalledTimes(1);
   expect(send.mock.calls[0][1]).toContain("Executable");
-  expect(send.mock.calls[0][1]).toContain(
-    `<t:${now + 86400}:F> (<t:${now + 86400}:R>)`,
-  );
+  expect(send.mock.calls[0][3].deadline).toBe(now + 86400);
   await processLifecycleReminders(
     { ...s, timestamp: now + 14400 },
     saved,
@@ -191,7 +193,7 @@ it.each([
   await processLifecycleReminders(s, saved, persist);
   await processLifecycleReminders(s, saved, persist);
   expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain(
+  expect(send.mock.calls[0][3].details).toContain(
     activated ? "without being executed" : "without being activated",
   );
   expect(saved.proposals["19"].terminal).toBe(true);
@@ -260,7 +262,7 @@ it.each([
   await processVotingEnded(snapshot(status), saved, persist);
   expect(send).toHaveBeenCalledTimes(1);
   expect(send.mock.calls[0][1]).toContain("Voting Ended — Passed");
-  expect(send.mock.calls[0][1]).not.toContain("ready to be queued");
+  expect(send.mock.calls[0][3].details).not.toContain("ready to be queued");
 });
 
 it("announces an execution expiry crossed after the migration cursor", async () => {
@@ -282,7 +284,7 @@ it("announces an activation expiry crossed after the migration cursor", async ()
   });
   await processLifecycleReminders(s, saved, persist);
   expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain("without being activated");
+  expect(send.mock.calls[0][3].details).toContain("without being activated");
 });
 
 it.each([

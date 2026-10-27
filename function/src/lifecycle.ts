@@ -1,8 +1,4 @@
-import {
-  EXECUTION_MENTIONS,
-  getDiscordTimestamp,
-  sendDiscordAlert,
-} from "./discord";
+import { EXECUTION_MENTIONS, sendDiscordAlert } from "./discord";
 import {
   getCompletedVoteOutcome,
   isEmergencyQueueCancelled,
@@ -83,13 +79,15 @@ export const processVotingEnded = async (
     const awaitingQueue = passed && row.state === ProposalState.Succeeded;
     await sendDiscordAlert(
       row.proposal,
-      `Proposal Voting Ended — ${passed ? "Passed" : "Defeated"}\n` +
-        (awaitingQueue
+      `Proposal Voting Ended — ${passed ? "Passed" : "Defeated"}`,
+      fromBlockTimestamp(snapshot.timestamp),
+      {
+        details: awaitingQueue
           ? "This proposal is ready to be queued."
           : passed
             ? "This proposal passed the vote."
-            : "This proposal did not pass the vote."),
-      fromBlockTimestamp(snapshot.timestamp),
+            : "This proposal did not pass the vote.",
+      },
     );
     sent.votingEnded = true;
     if (awaitingQueue) sent.lastQueueReminder = snapshot.timestamp;
@@ -107,13 +105,14 @@ export const processLifecycleReminders = async (
     if (sent.terminal) continue;
     const at = fromBlockTimestamp(snapshot.timestamp);
     if (isExpired(row, snapshot)) {
-      await sendDiscordAlert(
-        row.proposal,
-        row.eta > 0
-          ? `Proposal Expired\nThe execution deadline passed without being executed.\nExecution deadline: ${getDiscordTimestamp(row.eta + snapshot.executionGracePeriod)}`
-          : "Proposal Expired\nThis proposal expired without being activated.",
-        at,
-      );
+      await sendDiscordAlert(row.proposal, "Proposal Expired", at, {
+        deadline:
+          row.eta > 0 ? row.eta + snapshot.executionGracePeriod : undefined,
+        details:
+          row.eta > 0
+            ? "The execution deadline passed without being executed."
+            : "This proposal expired without being activated.",
+      });
       sent.terminal = true;
       await persist();
     } else if (
@@ -131,11 +130,10 @@ export const processLifecycleReminders = async (
         snapshot.timestamp - sent.lastQueueReminder < REMINDER_INTERVAL
       )
         continue;
-      await sendDiscordAlert(
-        row.proposal,
-        "Proposal Awaiting Queue\nVoting passed. Queue this proposal to start the execution timelock.",
-        at,
-      );
+      await sendDiscordAlert(row.proposal, "Proposal Awaiting Queue", at, {
+        details:
+          "Voting passed. Queue this proposal to start the execution timelock. There is no queue deadline.",
+      });
       sent.lastQueueReminder = snapshot.timestamp;
       await persist();
     } else if (
@@ -153,9 +151,14 @@ export const processLifecycleReminders = async (
         continue;
       await sendDiscordAlert(
         row.proposal,
-        `${sent.lastExecutionReminder === undefined ? "Proposal Executable" : "Proposal Execution Reminder"}\n` +
-          `This proposal is available to be executed.\nExecution deadline: ${getDiscordTimestamp(deadline)}\n${EXECUTION_MENTIONS}`,
+        sent.lastExecutionReminder === undefined
+          ? "Proposal Executable"
+          : "Proposal Execution Reminder",
         at,
+        {
+          deadline,
+          details: `This proposal is available to be executed.\n${EXECUTION_MENTIONS}`,
+        },
       );
       sent.lastExecutionReminder = snapshot.timestamp;
       await persist();

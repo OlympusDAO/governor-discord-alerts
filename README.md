@@ -14,7 +14,7 @@ It performs the following steps:
 1. Store the cursor and notification history together in GCS as `notification_state.json`.
 
 Each alert starts with its status below the linked proposal title.
-The **Description** section contains up to three description lines, capped at 600 characters, including the ellipsis.
+The **Description** section contains one paragraph, capped at 240 characters, including the ellipsis.
 The **Deadline** section shows the countdown, then the absolute date on a separate line.
 Discord updates the countdown and shows dates in the reader's time zone.
 Each alert also includes the proposal ID and proposer address.

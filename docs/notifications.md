@@ -17,9 +17,9 @@ Notifications derived from time or proposal state have no event transaction link
 
 ## Description limit
 
-The summary uses the first three nonempty lines after the title.
+The summary joins the first three nonempty lines after the title into one paragraph.
 It excludes Markdown headings.
-The summary contains at most 600 characters, including the trailing `...` when shortened.
+The summary contains at most 240 characters, including the trailing `...` when shortened.
 Shortening stops at a word boundary when possible.
 If the proposal has no summary, the field says `No description provided.`
 

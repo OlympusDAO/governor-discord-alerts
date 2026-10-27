@@ -39,7 +39,9 @@ export const sendDiscordAlert = async (
   const summary = (lines[0]?.startsWith("#") ? lines.slice(1) : lines)
     .filter((line) => line.trim() && !/^\s*#{1,6}\s/.test(line))
     .slice(0, 3)
-    .join("\n");
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
   const embed = new EmbedBuilder({
     // Discord has a 256 character limit for the title
     title: title.length > 256 ? `${title.slice(0, 253)}...` : title,
@@ -51,9 +53,9 @@ export const sendDiscordAlert = async (
       {
         name: "Description",
         value:
-          summary.length > 600
+          summary.length > 240
             ? `${summary
-                .slice(0, 597)
+                .slice(0, 237)
                 .replace(/\s+\S*$/, "")
                 .trimEnd()}...`
             : summary || "No description provided.",

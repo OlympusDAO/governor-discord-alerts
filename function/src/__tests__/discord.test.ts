@@ -120,11 +120,8 @@ it.each([
     ]),
   });
   expect(embed().fields[0].name).toBe("Description");
-  expect(field("Description").value).toContain(
-    "Restore OHM bridging to five EVM chains.",
-  );
-  expect(field("Description").value).toContain(
-    "Move pool administration under governance.",
+  expect(field("Description").value).toBe(
+    "Restore OHM bridging to five EVM chains. Move pool administration under governance.",
   );
   if (key === "votingStarted" || key === "queued") {
     expect(embed().fields[key === "queued" ? 2 : 1].name).toBe("Deadline");
@@ -160,7 +157,7 @@ it("keeps long proposal text within Discord embed limits", async () => {
   });
   await processEvents(events);
   expect(embed().title.length).toBeLessThanOrEqual(256);
-  expect(field("Description").value).toHaveLength(600);
+  expect(field("Description").value).toHaveLength(240);
   expect(field("Description").value).toMatch(/\.\.\.$/);
 });
 

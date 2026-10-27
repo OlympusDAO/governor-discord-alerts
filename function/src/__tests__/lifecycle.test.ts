@@ -51,6 +51,7 @@ const persist = jest.fn().mockResolvedValue(undefined);
 let send: jest.SpyInstance;
 
 beforeEach(() => {
+  jest.useFakeTimers().setSystemTime(new Date(now * 1000));
   persist.mockClear();
   send = jest.spyOn(discord, "sendDiscordAlert").mockResolvedValue();
   jest.mocked(getCompletedVoteOutcome).mockResolvedValue(true);
@@ -79,7 +80,10 @@ it("baselines a previously cancelled emergency queue without executable or expir
     s.blockNumber,
   );
 });
-afterEach(() => jest.restoreAllMocks());
+afterEach(() => {
+  jest.useRealTimers();
+  jest.restoreAllMocks();
+});
 
 it.each([
   ProposalState.Succeeded,
@@ -155,6 +159,23 @@ it("waits until ETA before reminding", async () => {
     persist,
   );
   expect(send).not.toHaveBeenCalled();
+});
+
+it("suppresses executable reminders after the real deadline while waiting for indexed expiry", async () => {
+  const saved = state();
+  const s = snapshot(ProposalState.Queued, { eta: now - 84600 });
+  jest.setSystemTime(new Date((now + 3600) * 1000));
+  await processLifecycleReminders(s, saved, persist);
+  expect(send).not.toHaveBeenCalled();
+  expect(saved.proposals["19"].terminal).not.toBe(true);
+  await processLifecycleReminders(
+    { ...s, timestamp: now + 3600 },
+    saved,
+    persist,
+  );
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(send.mock.calls[0][1]).toContain("Proposal Expired");
+  expect(saved.proposals["19"].terminal).toBe(true);
 });
 
 it.each([

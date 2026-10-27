@@ -145,6 +145,7 @@ export const processLifecycleReminders = async (
       snapshot.timestamp >= row.eta
     ) {
       const deadline = row.eta + snapshot.executionGracePeriod;
+      if (Date.now() / 1000 > deadline) continue;
       if (
         sent.lastExecutionReminder !== undefined &&
         snapshot.timestamp - sent.lastExecutionReminder < REMINDER_INTERVAL

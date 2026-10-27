@@ -27,6 +27,7 @@ Successful proposals have no deadline to be queued.
 The first run preserves the cursor from `latest_processed_block.txt`.
 It suppresses old voting-completion and expiry notifications while still reminding operators about current actionable proposals.
 Each delivered alert is recorded before the next alert is sent.
+The storage SDK retries temporary checkpoint write errors with exponential backoff.
 Event notifications use transaction hashes to distinguish a fresh emergency queue from a retried delivery.
 A crash between Discord accepting a message and GCS recording it can still cause a duplicate on retry.
 

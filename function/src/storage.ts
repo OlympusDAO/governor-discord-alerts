@@ -1,10 +1,15 @@
-import { Storage } from "@google-cloud/storage";
+import { IdempotencyStrategy, Storage } from "@google-cloud/storage";
 import type { AlertState } from "./types";
 
 const bucket = () => {
   const name = process.env.BUCKET_NAME;
   if (!name) throw new Error("BUCKET_NAME environment variable is not set");
-  return new Storage().bucket(name);
+  return new Storage({
+    retryOptions: {
+      autoRetry: true,
+      idempotencyStrategy: IdempotencyStrategy.RetryAlways,
+    },
+  }).bucket(name);
 };
 
 export const getAlertState = async (): Promise<AlertState> => {
@@ -26,7 +31,8 @@ export const getAlertState = async (): Promise<AlertState> => {
 };
 
 export const saveAlertState = async (state: AlertState): Promise<void> => {
-  await bucket()
-    .file("notification_state.json")
-    .save(JSON.stringify(state), { contentType: "application/json" });
+  await bucket().file("notification_state.json").save(JSON.stringify(state), {
+    contentType: "application/json",
+    resumable: false,
+  });
 };

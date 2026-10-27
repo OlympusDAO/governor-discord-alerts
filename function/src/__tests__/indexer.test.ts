@@ -1,16 +1,5 @@
-import { getCurrentQueuedProposals, getLatestProposalEvents } from "../indexer";
+import { getLatestProposalEvents, getProposals } from "../indexer";
 import type { ProposalCreated } from "../types";
-
-// The two things this module does beyond issuing a request, both of which are
-// silent when wrong:
-//
-//   * `canceled` on the wire becomes `cancelled` in ProposalEvents. A missed
-//     rename means cancellation alerts stop and nothing errors.
-//   * queued proposals are de-duplicated against executed ones, which is what
-//     stops an execution reminder firing for a proposal that already executed.
-//
-// The requests themselves are covered against a deployed API by
-// indexer.contract.test.ts; this covers the mapping on top of them.
 
 const originalFetch = global.fetch;
 
@@ -113,78 +102,15 @@ describe("getLatestProposalEvents", () => {
   });
 });
 
-describe("getCurrentQueuedProposals", () => {
-  it("includes executable proposals while excluding expired execution windows", async () => {
-    jest.useFakeTimers().setSystemTime(new Date("2026-09-30T12:00:00Z"));
-    const now = Math.floor(Date.now() / 1000);
-    const queued = [
-      { ...marker("10"), eta: String(now - 60) },
-      { ...marker("11"), eta: String(now - 24 * 60 * 60 - 1) },
-      { ...marker("12"), eta: String(now - 24 * 60 * 60 + 1) },
-    ];
-    global.fetch = jest.fn(async (url: string) => {
-      const request = new URL(url);
-      const data = request.pathname.endsWith("/queued")
-        ? queued.filter(
-            (row) =>
-              Number(row.eta) >= Number(request.searchParams.get("etaAfter")),
-          )
-        : [];
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({ data, meta: { block: 1 } }),
-      };
-    }) as unknown as typeof global.fetch;
-
-    expect(
-      (await getCurrentQueuedProposals()).map((p) => p.proposalId),
-    ).toEqual(["10", "12"]);
+describe("getProposals", () => {
+  it("loads proposal details for lifecycle polling", async () => {
+    respondWith({ "/v1/governor/proposals": [proposal("19")] });
+    expect((await getProposals()).map((p) => p.proposalId)).toEqual(["19"]);
   });
 
-  it("drops queued proposals that have already executed", async () => {
-    respondWith({
-      "/v1/governor/proposals/queued": [
-        { ...marker("10"), eta: "1700009999" },
-        { ...marker("11"), eta: "1700009999" },
-        { ...marker("12"), eta: "1700009999" },
-      ],
-      // ProposalExecuted is keyed by proposal id, which is what makes
-      // addressing it with the queued ids correct.
-      "/v1/governor/proposals/executed": [marker("11")],
-    });
-
-    const queued = await getCurrentQueuedProposals();
-
-    expect(queued.map((p) => p.proposalId)).toEqual(["10", "12"]);
-  });
-
-  it("keeps every queued proposal when none has executed", async () => {
-    respondWith({
-      "/v1/governor/proposals/queued": [{ ...marker("10"), eta: "1700009999" }],
-      "/v1/governor/proposals/executed": [],
-    });
-
-    expect(
-      (await getCurrentQueuedProposals()).map((p) => p.proposalId),
-    ).toEqual(["10"]);
-  });
-
-  it("does not ask about executed proposals when nothing is queued", async () => {
-    const seen: string[] = [];
-    global.fetch = jest.fn(async (url: string) => {
-      seen.push(new URL(url).pathname);
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({ data: [], meta: { block: 1 } }),
-      };
-    }) as unknown as typeof global.fetch;
-
-    expect(await getCurrentQueuedProposals()).toEqual([]);
-    // A second request with an empty `ids` list would return every executed
-    // proposal, not none of them.
-    expect(seen).toEqual(["/v1/governor/proposals/queued"]);
+  it("fails loudly rather than silently dropping proposals when the page fills", async () => {
+    respondWith({ "/v1/governor/proposals": Array(1000).fill(proposal("19")) });
+    await expect(getProposals()).rejects.toThrow("pagination is required");
   });
 });
 

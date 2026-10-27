@@ -7,3 +7,5 @@ config:
     secure: AAABADfGKUCpB4Ge7RGKColrfocx0MNwV8v+sCXHxjkC16tND3MR713ksB6Slt+jOQ==
   governor-discord-alerts:subgraphApiKey:
     secure: AAABAMYueJCMNeYtx88dTf7UW78XeRViezAuTqOOQtLfHMt8Zs/tWMYNXkE/b8uCzsQVjMkzvKwJtQ4eXJyieQ==
+  governor-discord-alerts:governorRpcUrl:
+    secure: AAABAH5Okm9NE/oqDWVIyeW/ch4KjpTaMCRWR7j+Q/+BPVs9zzprIm5Z2a4daP039oP/EQQ84NQWFjPmAewsAWYGBr6q8uNHTf2EOQ3oT+ODOY1ycEttOTSBNYOs7B8=

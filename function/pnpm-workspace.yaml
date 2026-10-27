@@ -2,6 +2,8 @@ blockExoticSubdeps: true
 engineStrict: true
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
+  # Reviewed patch for compressed-request denial of service (GHSA-27r3-jxmh-p828).
+  - "body-parser@2.4.0"
   # Reviewed security patch needed for @google-cloud/storage retry-request path.
   - "form-data@2.5.6"
   # Reviewed security patch for query-string parsing denial of service.
@@ -9,29 +11,30 @@ minimumReleaseAgeExclude:
 nodeLinker: hoisted
 allowBuilds: {}
 overrides:
-  "body-parser@>=2.0.0 <2.3.0": "^2.3.0"
-  "@discordjs/rest>undici@<6.28.1": "^6.28.1"
   "@babel/core@<=7.29.0": "^7.29.6"
-  "browserslist@<=4.28.6": "^4.28.7"
   "@tootallnate/once@<2.0.1": "^2.0.1"
+  "body-parser@>=2.0.0 <2.4.0": "^2.4.0"
   "brace-expansion@<5.0.12": "5.0.12"
+  "browserslist@<=4.28.6": "^4.28.7"
   "cloudevents>uuid@<11.1.1": "^11.1.1"
-  "fast-uri@>=3.0.0 <3.1.8": "^3.1.8"
+  "fast-uri@>=3.0.0 <3.1.9": "^3.1.9"
   "gaxios>uuid@<11.1.1": "^11.1.1"
   "glob@<10.5.0": "^10.5.0"
-  "ip-address@<10.7.1": "^10.7.1"
+  "handlebars@>=4.0.0 <4.7.10": "^4.7.10"
   "immutable@>=5.0.0-beta.1 <5.1.8": "^5.1.8"
-  "js-yaml@>=4.0.0 <4.3.2": "^4.3.2"
+  "ip-address@>=10.0.0 <10.7.4": "^10.7.4"
   "js-yaml@>=3.0.0 <3.15.2": "^3.15.2"
+  "js-yaml@>=4.0.0 <4.3.2": "^4.3.2"
   "lodash@<4.18.0": "^4.18.0"
   "minimatch@<9.0.7": "^9.0.7"
   "picomatch@<3.0.2": "^3.0.2"
+  "proxy-addr@>=2.0.0 <2.0.8": "^2.0.8"
   "qs@>=6.11.1 <6.16.0": "6.16.0"
   "shell-quote@<=1.8.4": "^1.9.0"
   "teeny-request>uuid@<11.1.1": "^11.1.1"
   "tinyglobby@0.2.15>picomatch@>=4.0.0": "^3.0.2"
+  "undici@>=6.0.0 <6.29.1": "^6.29.1"
   "ws@>=8.0.0 <8.21.0": "^8.21.0"
-  "discord.js>undici@<6.28.1": "^6.28.1"
 packages:
   - "."
 preferFrozenLockfile: true

@@ -24,7 +24,7 @@ Data comes from the [Olympus protocol indexer](https://github.com/OlympusDAO/oly
 - `pnpm run lint:check`: run the non-mutating Biome check in `function/`
 - `pnpm test`: run Jest tests in `function/`
 - `pnpm run validate:pnpm`: validate root and Cloud Function pnpm installs and audits
-- `pnpm install --dir function --frozen-lockfile --lockfile-only`: verify the exact frozen lockfile/config GCP Cloud Build uses without creating `function/node_modules`
+- `pnpm run install:function:check`: verify the exact frozen lockfile/config GCP Cloud Build uses in a temporary standalone directory without creating `function/node_modules`
 - `pnpm audit --dir function --audit-level moderate --json`: audit the deploy archive dependency graph, not only the root workspace
 
 ## Deployment
@@ -32,5 +32,5 @@ Data comes from the [Olympus protocol indexer](https://github.com/OlympusDAO/oly
 - Use Pulumi for deployments: `pulumi preview --stack <dev|prod>` before `pulumi up --stack <dev|prod>`.
 - The `dev` stack targets GCP project `governor-discord-alerts-dev`; the `prod` stack targets `governor-discord-alerts`.
 - The Pulumi program provisions the GCS buckets, Cloud Function, Cloud Scheduler job, invoker IAM binding, and monitoring alert policy.
-- Required Pulumi stack secrets are `discordWebhookUrl` and `notificationEmail`. `indexerApiUrl` is an optional plain config value; unset, the function uses the deployed protocol indexer.
+- Required Pulumi stack secrets are `discordWebhookUrl`, `notificationEmail`, and the archive-capable Ethereum RPC URL `governorRpcUrl`. `indexerApiUrl` is an optional plain config value; unset, the function uses the deployed protocol indexer.
 - The Cloud Function uses `gcp.cloudfunctions.Function` v1 and must stay pinned to runtime `nodejs22` until that resource supports a newer runtime.

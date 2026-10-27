@@ -29,11 +29,11 @@
     "discord.js": "^14.16.2"
   },
   "engines": {
-    "node": ">=22.0.0",
+    "node": ">=22.13.0",
     "npm": "use-pnpm",
-    "pnpm": ">=11.13.0",
+    "pnpm": ">=11.28.9 <12",
     "bun": "use-pnpm",
     "yarn": "use-pnpm"
   },
-  "packageManager": "pnpm@11.13.0"
+  "packageManager": "pnpm@11.28.9"
 }

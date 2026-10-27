@@ -2,6 +2,8 @@ blockExoticSubdeps: true
 engineStrict: true
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
+  # Reviewed patch for compressed-request denial of service (GHSA-27r3-jxmh-p828).
+  - "body-parser@2.4.0"
   # Reviewed security patch needed for @google-cloud/storage retry-request path.
   - "form-data@2.5.6"
   # Reviewed security patch for query-string parsing denial of service.
@@ -12,37 +14,40 @@ nodeLinker: hoisted
 allowBuilds:
   "protobufjs@7.6.5": true
 overrides:
-  "postcss-selector-parser@>=7.1.0 <7.1.3": "^7.1.3"
-  "body-parser@>=2.0.0 <2.3.0": "^2.3.0"
+  "@babel/core@<=7.29.0": "^7.29.6"
   "@grpc/grpc-js@>=1.14.0 <1.14.5": "^1.14.5"
-  "@discordjs/rest>undici@<6.28.1": "^6.28.1"
   "@sigstore/core@<=3.2.0": "^3.2.1"
   "@sigstore/verify@3.1.0": "^3.1.1"
-  "@babel/core@<=7.29.0": "^7.29.6"
-  "browserslist@<=4.28.6": "^4.28.7"
   "@tootallnate/once@<2.0.1": "^2.0.1"
-  "ws@>=8.0.0 <8.21.0": "^8.21.0"
-  "cloudevents>uuid@<11.1.1": "^11.1.1"
-  "gaxios>uuid@<11.1.1": "^11.1.1"
-  "teeny-request>uuid@<11.1.1": "^11.1.1"
+  "body-parser@>=2.0.0 <2.4.0": "^2.4.0"
   "brace-expansion@<5.0.12": "5.0.12"
-  "fast-uri@>=3.0.0 <3.1.8": "^3.1.8"
-  "immutable@>=5.0.0-beta.1 <5.1.8": "^5.1.8"
-  "js-yaml@>=4.0.0 <4.3.2": "^4.3.2"
-  "js-yaml@>=3.0.0 <3.15.2": "^3.15.2"
-  "protobufjs@>=7.5.0 <=7.6.4": "^7.6.5"
-  "shell-quote@<=1.8.4": "^1.9.0"
-  "tar@<=7.5.20": "7.5.21"
-  "tinyglobby@0.2.15>picomatch@>=4.0.0": "^3.0.2"
+  "browserslist@<=4.28.6": "^4.28.7"
+  "cloudevents>uuid@<11.1.1": "^11.1.1"
+  "fast-uri@>=3.0.0 <3.1.9": "^3.1.9"
+  "gaxios>uuid@<11.1.1": "^11.1.1"
   "glob@<10.5.0": "^10.5.0"
-  "ip-address@<10.7.1": "^10.7.1"
+  "handlebars@>=4.0.0 <4.7.10": "^4.7.10"
+  "http-cache-semantics@>=4.0.0 <4.3.0": "^4.3.0"
+  "immutable@>=5.0.0-beta.1 <5.1.8": "^5.1.8"
+  "ip-address@>=10.0.0 <10.7.4": "^10.7.4"
+  "js-yaml@>=3.0.0 <3.15.2": "^3.15.2"
+  "js-yaml@>=4.0.0 <4.3.2": "^4.3.2"
   "lodash@<4.18.0": "^4.18.0"
   "minimatch@<9.0.7": "^9.0.7"
   "pacote@>=11.2.7 <21.5.1": "^21.5.1"
   "picomatch@<3.0.2": "^3.0.2"
+  "postcss-selector-parser@>=7.1.0 <7.1.3": "^7.1.3"
+  "protobufjs@>=7.5.0 <=7.6.4": "^7.6.5"
+  "proxy-addr@>=2.0.0 <2.0.8": "^2.0.8"
   "qs@>=6.11.1 <6.16.0": "6.16.0"
+  "shell-quote@<=1.8.4": "^1.9.0"
   "sigstore@<=4.1.0": "^4.1.1"
-  "discord.js>undici@<6.28.1": "^6.28.1"
+  "socks@>=2.0.0 <2.8.7": "^2.8.7"
+  "tar@<=7.5.20": "7.5.21"
+  "teeny-request>uuid@<11.1.1": "^11.1.1"
+  "tinyglobby@0.2.15>picomatch@>=4.0.0": "^3.0.2"
+  "undici@>=6.0.0 <6.29.1": "^6.29.1"
+  "ws@>=8.0.0 <8.21.0": "^8.21.0"
 packages:
   - "function"
 preferFrozenLockfile: true

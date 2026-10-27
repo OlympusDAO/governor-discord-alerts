@@ -1,6 +1,5 @@
-import { EXECUTION_LIMIT, getIndexerUrl } from "./constants";
-import type { ProposalEvents, ProposalExecuted, ProposalQueued } from "./types";
-import { toBlockTimestamp } from "./utils/date";
+import { getIndexerUrl } from "./constants";
+import type { ProposalCreated, ProposalEvents } from "./types";
 
 // Every route answers `{ data, meta: { block } }`, where `meta.block` is the
 // indexed head — the same freshness signal the subgraph's `_meta { block }`
@@ -51,7 +50,13 @@ export const getLatestProposalEvents = async (
     queued: ProposalEvents["queued"];
     vetoed: ProposalEvents["vetoed"];
     votingStarted: ProposalEvents["votingStarted"];
-  }>(`/v1/governor/proposal-events?sinceBlock=${block}`);
+  }>(`/v1/governor/proposal-events?sinceBlock=${block}&limit=1000`);
+
+  if (Object.values(data).some((rows) => rows.length >= 1000)) {
+    throw new Error(
+      "Proposal event page is full; refusing to advance past unprocessed events",
+    );
+  }
 
   const proposalData: ProposalEvents = {
     // `canceled` on the wire, `cancelled` in this codebase.
@@ -66,30 +71,12 @@ export const getLatestProposalEvents = async (
   return [proposalData, meta.block];
 };
 
-/**
- * Get the proposals that are currently queued
- *
- * @returns The queued proposals
- */
-export const getCurrentQueuedProposals = async (): Promise<
-  ProposalQueued[]
-> => {
-  // Queued proposals whose execution window is still open.
-  const { data: queued } = await get<ProposalQueued[]>(
-    `/v1/governor/proposals/queued?etaAfter=${toBlockTimestamp(new Date()) - EXECUTION_LIMIT}`,
+export const getProposals = async (): Promise<ProposalCreated[]> => {
+  // ponytail: all proposals fit one page today; paginate before reaching 1000.
+  const { data } = await get<ProposalCreated[]>(
+    "/v1/governor/proposals?limit=1000",
   );
-
-  if (queued.length === 0) {
-    return [];
-  }
-
-  // Drop the ones already executed. Both entities are keyed by proposal id, so
-  // the queued ids address the executed rows directly.
-  const ids = queued.map((proposal) => proposal.proposalId);
-  const { data: executed } = await get<ProposalExecuted[]>(
-    `/v1/governor/proposals/executed?ids=${encodeURIComponent(ids.join(","))}`,
-  );
-
-  const executedIds = new Set(executed.map((row) => row.proposalId));
-  return queued.filter((proposal) => !executedIds.has(proposal.proposalId));
+  if (data.length >= 1000)
+    throw new Error("Proposal page is full; pagination is required");
+  return data;
 };

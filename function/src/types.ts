@@ -48,3 +48,48 @@ export type ProposalEvents = {
   vetoed: ProposalVetoed[];
   votingStarted: ProposalVotingStarted[];
 };
+
+// Matches GovernorBravo's ProposalState enum. Executable is a timed phase of Queued.
+export enum ProposalState {
+  Pending,
+  Active,
+  Canceled,
+  Defeated,
+  Succeeded,
+  Queued,
+  Expired,
+  Executed,
+  Vetoed,
+  Emergency,
+}
+
+export type GovernorProposal = {
+  proposal: ProposalCreated;
+  state: ProposalState;
+  endBlock: number;
+  eta: number;
+  votingStarted: boolean;
+};
+
+export type GovernanceSnapshot = {
+  blockNumber: number;
+  timestamp: number;
+  executionDelay: number;
+  executionGracePeriod: number;
+  proposals: GovernorProposal[];
+};
+
+export type ProposalNotifications = {
+  events: Partial<Record<keyof ProposalEvents, string>>;
+  votingEnded?: boolean;
+  executable?: boolean;
+  expired?: boolean;
+  terminal?: boolean;
+  lastQueueReminder?: number;
+  lastExecutionReminder?: number;
+};
+
+export type AlertState = {
+  lastProcessedBlock: number;
+  proposals: Record<string, ProposalNotifications>;
+};

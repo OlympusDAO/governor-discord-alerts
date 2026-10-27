@@ -1,0 +1,143 @@
+import {
+  EXECUTION_MENTIONS,
+  getDiscordTimestamp,
+  sendDiscordAlert,
+} from "./discord";
+import {
+  type AlertState,
+  type GovernanceSnapshot,
+  type GovernorProposal,
+  ProposalState,
+} from "./types";
+import { fromBlockTimestamp } from "./utils/date";
+
+const REMINDER_INTERVAL = 4 * 60 * 60;
+const isExpired = (row: GovernorProposal, snapshot: GovernanceSnapshot) =>
+  row.state === ProposalState.Expired ||
+  (row.eta > 0 &&
+    (row.state === ProposalState.Queued ||
+      row.state === ProposalState.Emergency) &&
+    snapshot.timestamp > row.eta + snapshot.executionGracePeriod);
+
+const notificationsFor = (
+  row: GovernorProposal,
+  state: AlertState,
+  snapshot: GovernanceSnapshot,
+) => {
+  const id = row.proposal.proposalId;
+  if (!state.proposals[id]) {
+    const historical =
+      Number(row.proposal.blockNumber) <= state.lastProcessedBlock;
+    state.proposals[id] = {
+      events: {},
+      votingEnded:
+        historical &&
+        row.endBlock > 0 &&
+        row.endBlock < state.lastProcessedBlock,
+      expired: historical && isExpired(row, snapshot),
+    };
+  }
+  return state.proposals[id];
+};
+
+export const processVotingEnded = async (
+  snapshot: GovernanceSnapshot,
+  state: AlertState,
+  persist: () => Promise<void>,
+) => {
+  for (const row of snapshot.proposals) {
+    const sent = notificationsFor(row, state, snapshot);
+    if (
+      sent.votingEnded ||
+      !row.votingStarted ||
+      row.endBlock >= snapshot.blockNumber ||
+      row.state === ProposalState.Canceled ||
+      row.state === ProposalState.Vetoed
+    )
+      continue;
+    const passed = row.state !== ProposalState.Defeated;
+    await sendDiscordAlert(
+      row.proposal,
+      `Proposal Voting Ended — ${passed ? "Passed" : "Defeated"}\n` +
+        (passed && row.eta === 0
+          ? "This proposal is ready to be queued."
+          : passed
+            ? "This proposal passed the vote."
+            : "This proposal did not pass the vote."),
+      fromBlockTimestamp(snapshot.timestamp),
+    );
+    sent.votingEnded = true;
+    if (passed && row.eta === 0) sent.lastQueueReminder = snapshot.timestamp;
+    await persist();
+  }
+};
+
+export const processLifecycleReminders = async (
+  snapshot: GovernanceSnapshot,
+  state: AlertState,
+  persist: () => Promise<void>,
+) => {
+  for (const row of snapshot.proposals) {
+    const sent = notificationsFor(row, state, snapshot);
+    if (sent.terminal) continue;
+    const at = fromBlockTimestamp(snapshot.timestamp);
+    if (isExpired(row, snapshot)) {
+      if (!sent.expired) {
+        await sendDiscordAlert(
+          row.proposal,
+          row.eta > 0
+            ? `Proposal Expired\nThe execution deadline passed without being executed.\nExecution deadline: ${getDiscordTimestamp(row.eta + snapshot.executionGracePeriod)}`
+            : "Proposal Expired\nThis proposal expired without being activated.",
+          at,
+        );
+        sent.expired = true;
+        await persist();
+      }
+      sent.terminal = true;
+    } else if (
+      [
+        ProposalState.Executed,
+        ProposalState.Canceled,
+        ProposalState.Vetoed,
+        ProposalState.Defeated,
+      ].includes(row.state)
+    ) {
+      sent.terminal = true;
+    } else if (row.state === ProposalState.Succeeded) {
+      if (
+        sent.lastQueueReminder !== undefined &&
+        snapshot.timestamp - sent.lastQueueReminder < REMINDER_INTERVAL
+      )
+        continue;
+      await sendDiscordAlert(
+        row.proposal,
+        "Proposal Awaiting Queue\nVoting passed. Queue this proposal to start the execution timelock.",
+        at,
+      );
+      sent.lastQueueReminder = snapshot.timestamp;
+      await persist();
+    } else if (
+      row.eta > 0 &&
+      (row.state === ProposalState.Queued ||
+        row.state === ProposalState.Emergency) &&
+      snapshot.timestamp >= row.eta
+    ) {
+      const deadline = row.eta + snapshot.executionGracePeriod;
+      if (
+        sent.executable &&
+        sent.lastExecutionReminder !== undefined &&
+        snapshot.timestamp - sent.lastExecutionReminder < REMINDER_INTERVAL
+      )
+        continue;
+      await sendDiscordAlert(
+        row.proposal,
+        `${sent.executable ? "Proposal Execution Reminder" : "Proposal Executable"}\n` +
+          `This proposal is available to be executed.\nExecution deadline: ${getDiscordTimestamp(deadline)}\n${EXECUTION_MENTIONS}`,
+        at,
+      );
+      sent.executable = true;
+      sent.lastExecutionReminder = snapshot.timestamp;
+      await persist();
+    }
+  }
+};

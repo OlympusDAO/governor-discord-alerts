@@ -7,8 +7,27 @@ This is a simple Google Cloud Function that watches for governor events in the [
 It performs the following steps:
 
 1. Fetch the proposal events that occurred after the last processed block, from `GET /v1/governor/proposal-events?sinceBlock=`. The response envelope carries `meta.block`, the indexed head, which becomes the next cursor.
-1. For each proposal event, send a Discord alert.
-1. Store the response's `meta.block` (the indexed head) as the next cursor.
+1. Read proposal state and timelock settings from Ethereum at the same indexed block.
+1. Send voting-completion alerts before queue or execution events from the same polling interval.
+1. Send alerts for proposal events, including their Etherscan transaction links.
+1. Announce executability and expiry. Remind operators about outstanding queue and execution actions every four hours.
+1. Store the cursor and notification history together in GCS as `notification_state.json`.
+
+Each alert includes the proposal ID, proposer address, frontend link, and up to three description lines, capped at 800 characters.
+Deadlines include an absolute date and Discord's relative timestamp, which updates in the client.
+Voting deadlines are estimates based on the stored end block and 12-second blocks.
+Execution deadlines use the proposal ETA and the live timelock grace period.
+Successful proposals have no deadline to be queued.
+
+The first run preserves the cursor from `latest_processed_block.txt`.
+It suppresses old voting-completion and expiry notifications while still reminding operators about current actionable proposals.
+Each delivered alert is recorded before the next alert is sent.
+Event notifications use transaction hashes to distinguish a fresh emergency queue from a retried delivery.
+A crash between Discord accepting a message and GCS recording it can still cause a duplicate on retry.
+
+The scheduler runs hourly, so transition alerts can arrive up to an hour after the transition, plus indexing delay.
+Indexed data more than two hours old causes an error, allowing the existing monitoring policy to detect a stalled indexer.
+Polling currently supports fewer than 1,000 proposals. It fails explicitly when a page fills, rather than silently skipping proposals.
 
 ## Setup
 
@@ -67,6 +86,8 @@ Deployments are managed with Pulumi stacks:
    ```
 
 The Pulumi program creates the GCS buckets, Cloud Function, Cloud Scheduler job, invoker IAM binding, and monitoring alert policy. Stack secrets provide `discordWebhookUrl` and `notificationEmail`. `indexerApiUrl` is optional plain config; unset, the function uses the deployed indexer.
+
+The optional `governorRpcUrl` stack secret sets `GOVERNOR_RPC_URL`. The default Ethereum RPC is `https://ethereum-rpc.publicnode.com`.
 
 Note: the project uses `gcp.cloudfunctions.Function` (Cloud Functions v1), which currently does not support Node.js 24 runtimes. The function runtime is therefore pinned to `nodejs22`.
 

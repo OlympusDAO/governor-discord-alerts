@@ -1,22 +1,22 @@
 import { EmbedBuilder, WebhookClient } from "discord.js";
-import { EXECUTION_LIMIT } from "./constants";
-import type { ProposalEvents, ProposalQueued } from "./types";
-import { fromBlockTimestamp, toBlockTimestamp } from "./utils/date";
-
-// TODOs
-// [ ] Add extra embed fields for each proposal event type
+import type {
+  AlertState,
+  GovernanceSnapshot,
+  ProposalCreated,
+  ProposalEvents,
+} from "./types";
+import { fromBlockTimestamp } from "./utils/date";
 
 const ROLE_OGG = "1255521545686745268";
 const USER_NOTIFY = "894321349210820618";
 
-const VOTING_PERIOD_BLOCKS = 50400;
-const EXECUTION_REMINDER_FREQUENCY = 4 * 60 * 60; // 4 hours
+export const EXECUTION_MENTIONS = `||@everyone <@&${ROLE_OGG}> <@${USER_NOTIFY}>||`;
 
 export const sendDiscordAlert = async (
-  title: string,
+  proposal: ProposalCreated,
   content: string,
-  url: string,
   timestamp: Date,
+  transactionHash?: string,
 ) => {
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
   if (!webhookUrl) {
@@ -25,13 +25,35 @@ export const sendDiscordAlert = async (
 
   const webhookClient = new WebhookClient({ url: webhookUrl });
 
+  const lines = proposal.description.trim().split(/\r?\n/);
+  const title = `#${proposal.proposalId} · ${cleanDescription(lines[0] || "Proposal")}`;
+  const summary = (lines[0]?.startsWith("#") ? lines.slice(1) : lines)
+    .filter((line) => line.trim() && !/^\s*#{1,6}\s/.test(line))
+    .slice(0, 3)
+    .join("\n");
   const embed = new EmbedBuilder({
     // Discord has a 256 character limit for the title
     title: title.length > 256 ? `${title.slice(0, 253)}...` : title,
-    description: content,
+    description:
+      `${content}\n\n${summary.length > 800 ? `${summary.slice(0, 797)}...` : summary}`.trim(),
     color: 0x0099ff,
-    url: url,
+    url: getProposalUrl(proposal.proposalId),
     timestamp: timestamp,
+    fields: [
+      { name: "Proposal ID", value: proposal.proposalId, inline: true },
+      {
+        name: "Proposer",
+        value: `[${proposal.proposer}](https://etherscan.io/address/${proposal.proposer})`,
+      },
+      ...(transactionHash
+        ? [
+            {
+              name: "Transaction",
+              value: `[View on Etherscan](https://etherscan.io/tx/${transactionHash})`,
+            },
+          ]
+        : []),
+    ],
   });
 
   await webhookClient.send({
@@ -45,158 +67,79 @@ const cleanDescription = (text: string) => {
   return text
     .replace(/^#+\s*/, "") // Remove markdown headings
     .replace(/[<>]/g, "") // Remove < and > characters
-    .replace(/\[.*?\]\(.*?\)/g, "") // Remove markdown links
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1")
     .replace(/^Summary:\s*/i, "") // Remove leading "Summary: " text (case insensitive)
     .trim(); // Remove leading/trailing whitespace
-};
-
-const prepareDescription = (description: string) => {
-  // Check if description contains newlines
-  if (description.includes("\n")) {
-    // Take first line and clean it
-    const firstLine = description.split("\n")[0];
-    return cleanDescription(firstLine);
-  }
-
-  // Otherwise take first 60 chars and clean
-  return cleanDescription(description.substring(0, 60));
 };
 
 const getProposalUrl = (proposalId: string) => {
   return `https://app.olympusdao.finance/#/governance/proposals/${proposalId}`;
 };
 
-const getDiscordTimestamp = (timestamp: number): string => {
-  // e.g. November 26, 2024 at 3:54 PM
-  return `<t:${timestamp}:f>`;
-};
+export const getDiscordTimestamp = (timestamp: number): string =>
+  `<t:${timestamp}:F> (<t:${timestamp}:R>)`;
 
-const getRoleMention = (roleId: string): string => {
-  return `<@&${roleId}>`;
-};
-
-const getUserMention = (userId: string): string => {
-  return `<@${userId}>`;
-};
-
-export const processProposalEvents = async (proposalEvents: ProposalEvents) => {
-  // Created first
-  for (const createdProposal of proposalEvents.created) {
-    console.log(`Processing created proposal: ${createdProposal.proposalId}`);
-
-    await sendDiscordAlert(
-      prepareDescription(createdProposal.description),
-      `Proposal Created`,
-      getProposalUrl(createdProposal.proposalId),
-      fromBlockTimestamp(createdProposal.blockTimestamp),
-    );
-  }
-
-  // Cancelled
-  for (const cancelledProposal of proposalEvents.cancelled) {
-    console.log(`Processing cancelled proposal: ${cancelledProposal.id}`);
-
-    await sendDiscordAlert(
-      prepareDescription(cancelledProposal.proposal.description),
-      `Proposal Cancelled`,
-      getProposalUrl(cancelledProposal.proposalId),
-      fromBlockTimestamp(cancelledProposal.blockTimestamp),
-    );
-  }
-
-  // Vetoed
-  for (const vetoedProposal of proposalEvents.vetoed) {
-    console.log(`Processing vetoed proposal: ${vetoedProposal.id}`);
-
-    await sendDiscordAlert(
-      prepareDescription(vetoedProposal.proposal.description),
-      `Proposal Vetoed`,
-      getProposalUrl(vetoedProposal.proposalId),
-      fromBlockTimestamp(vetoedProposal.blockTimestamp),
-    );
-  }
-
-  // Voting started
-  for (const votingStartedProposal of proposalEvents.votingStarted) {
-    console.log(
-      `Processing voting started proposal: ${votingStartedProposal.id}`,
-    );
-
-    await sendDiscordAlert(
-      prepareDescription(votingStartedProposal.proposal.description),
-      `Proposal Voting Started\n` +
-        `Voting will end at ${getDiscordTimestamp(
-          Number(votingStartedProposal.blockTimestamp) +
-            VOTING_PERIOD_BLOCKS * 12,
-        )}`,
-      getProposalUrl(votingStartedProposal.proposalId),
-      fromBlockTimestamp(votingStartedProposal.blockTimestamp),
-    );
-  }
-
-  // No event fired for voting ended
-
-  // Queued
-  for (const queuedProposal of proposalEvents.queued) {
-    console.log(`Processing queued proposal: ${queuedProposal.id}`);
-
-    await sendDiscordAlert(
-      prepareDescription(queuedProposal.proposal.description),
-      `Proposal Queued\n` +
-        `This proposal is in the timelock and can be executed on ${getDiscordTimestamp(Number(queuedProposal.eta))}\n` +
-        `||@everyone ${getRoleMention(ROLE_OGG)} ${getUserMention(USER_NOTIFY)}||`,
-      getProposalUrl(queuedProposal.proposalId),
-      fromBlockTimestamp(queuedProposal.blockTimestamp),
-    );
-  }
-
-  // Executed
-  for (const executedProposal of proposalEvents.executed) {
-    console.log(`Processing executed proposal: ${executedProposal.id}`);
-
-    await sendDiscordAlert(
-      prepareDescription(executedProposal.proposal.description),
-      `Proposal Executed`,
-      getProposalUrl(executedProposal.proposalId),
-      fromBlockTimestamp(executedProposal.blockTimestamp),
-    );
-  }
-};
-
-export const processQueuedProposals = async (
-  queuedProposals: ProposalQueued[],
-  previousBlock: number,
-  latestBlock: number,
+export const processProposalEvents = async (
+  proposalEvents: ProposalEvents,
+  snapshot: GovernanceSnapshot,
+  state: AlertState,
+  persist: () => Promise<void>,
 ) => {
-  // If 4 hours have passed since the last reminder, send a reminder
-  const reminderBlock = previousBlock + EXECUTION_REMINDER_FREQUENCY;
-  if (latestBlock < reminderBlock) {
-    console.log(`No reminder needed.`);
-    return;
-  }
-
-  console.log(`Sending reminder for queued proposals`);
-
-  // Send a reminder for each queued proposal
-  for (const queuedProposal of queuedProposals) {
-    console.log(`Processing queued proposal: ${queuedProposal.id}`);
-
-    // Only if the execution date has passed
-    if (Number(queuedProposal.eta) >= toBlockTimestamp(new Date())) {
-      console.log(`Proposal ETA has not passed. Skipping.`);
-      continue;
+  const titles: Record<keyof ProposalEvents, string> = {
+    created: "Proposal Created",
+    cancelled: "Proposal Cancelled",
+    vetoed: "Proposal Vetoed",
+    votingStarted: "Proposal Voting Started",
+    queued: "Proposal Queued",
+    executed: "Proposal Executed",
+  };
+  const groups = {
+    ...proposalEvents,
+    created: proposalEvents.created.map((proposal) => ({
+      ...proposal,
+      proposal,
+    })),
+  };
+  const events = Object.entries(groups)
+    .flatMap(([kind, rows]) =>
+      rows.map((event) => ({ kind: kind as keyof ProposalEvents, event })),
+    )
+    .sort((a, b) => Number(a.event.blockNumber) - Number(b.event.blockNumber));
+  for (const { kind, event } of events) {
+    state.proposals[event.proposalId] ??= { events: {} };
+    const sent = state.proposals[event.proposalId];
+    if (sent.events[kind] === event.transactionHash) continue;
+    let content = titles[kind];
+    if (kind === "votingStarted") {
+      const row = snapshot.proposals.find(
+        (p) => p.proposal.proposalId === event.proposalId,
+      );
+      if (!row)
+        throw new Error(
+          `Missing governor state for proposal ${event.proposalId}`,
+        );
+      const estimatedEnd =
+        snapshot.timestamp + (row.endBlock - snapshot.blockNumber) * 12;
+      content += `\nVoting ends after block ${row.endBlock}.\nEstimated voting deadline: ${getDiscordTimestamp(estimatedEnd)}`;
+    } else if (kind === "queued") {
+      const eta = Number((event as { eta: string }).eta);
+      content +=
+        `\nExecutable from: ${getDiscordTimestamp(eta)}\n` +
+        `Execution deadline: ${getDiscordTimestamp(eta + snapshot.executionGracePeriod)}\n${EXECUTION_MENTIONS}`;
     }
-
     await sendDiscordAlert(
-      prepareDescription(queuedProposal.proposal.description),
-      `Proposal Queued\n` +
-        `This proposal is available to be executed\n` +
-        `Execution must be performed before ${getDiscordTimestamp(
-          Number(queuedProposal.eta) + EXECUTION_LIMIT,
-        )}\n` +
-        `||@everyone ${getRoleMention(ROLE_OGG)} ${getUserMention(USER_NOTIFY)}||`,
-      getProposalUrl(queuedProposal.proposalId),
-      fromBlockTimestamp(queuedProposal.blockTimestamp),
+      event.proposal,
+      content,
+      fromBlockTimestamp(event.blockTimestamp),
+      event.transactionHash,
     );
+    sent.events[kind] = event.transactionHash;
+    if (kind === "queued") {
+      sent.executable = false;
+      sent.expired = false;
+      sent.terminal = false;
+      delete sent.lastExecutionReminder;
+    }
+    await persist();
   }
 };

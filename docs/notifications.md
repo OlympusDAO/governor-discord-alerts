@@ -5,8 +5,8 @@ Each notification uses the same Discord embed layout:
 1. The linked proposal title, with its proposal ID.
 2. The notification status on the first line below the title.
 3. **Description**, with a brief proposal summary.
-4. **Deadline**, when the notification has a voting or execution deadline.
-5. **Executable From**, for a queue event.
+4. **Executable From**, for a queue event.
+5. **Deadline**, when the notification has a voting or execution deadline.
 6. **Details**, when there is an action or outcome to explain.
 7. **Proposal ID**, **Proposer**, and the event **Transaction**, when applicable.
 
@@ -56,7 +56,7 @@ All rows include the title, status, description, proposal ID, and proposer addre
 | Proposal Voting Ended — Passed | None | Vote outcome or queue action | None |
 | Proposal Voting Ended — Defeated | None | Vote outcome | None |
 | Proposal Awaiting Queue | None | Queue action and no queue deadline | None |
-| Proposal Queued | Deadline, Executable From | Execution action and existing notification mentions | Queue |
+| Proposal Queued | Executable From, Deadline | Execution action and existing notification mentions | Queue |
 | Proposal Executable | Deadline | Execution action and existing notification mentions | None |
 | Proposal Execution Reminder | Deadline | Execution action and existing notification mentions | None |
 | Proposal Executed | None | None | Execution |
@@ -113,15 +113,15 @@ Event examples also contain their own linked transaction.
 >
 > This proposal re-activates OHM bridging through Chainlink CCIP. It opens the mainnet routes to five EVM chains.
 >
-> **Deadline**
->
-> `<t:1793851200:R>`  
-> `<t:1793851200:F>`
->
 > **Executable From**
 >
 > `<t:1793764800:R>`  
 > `<t:1793764800:F>`
+>
+> **Deadline**
+>
+> `<t:1793851200:R>`\
+> `<t:1793851200:F>`
 >
 > **Details**
 >

@@ -127,7 +127,7 @@ it.each([
     "Move pool administration under governance.",
   );
   if (key === "votingStarted" || key === "queued") {
-    expect(embed().fields[1].name).toBe("Deadline");
+    expect(embed().fields[key === "queued" ? 2 : 1].name).toBe("Deadline");
     expect(field("Deadline").value).toMatch(/^<t:\d+:R>\n<t:\d+:F>/);
   } else expect(field("Deadline")).toBeUndefined();
 });
@@ -136,6 +136,7 @@ it("shows absolute and live relative timestamps for queued execution deadlines",
   const events = emptyEvents();
   events.queued.push(marker);
   await processEvents(events);
+  expect(embed().fields[1].name).toBe("Executable From");
   expect(field("Executable From").value).toBe(
     "<t:1793119319:R>\n<t:1793119319:F>",
   );

@@ -58,19 +58,19 @@ export const sendDiscordAlert = async (
                 .trimEnd()}...`
             : summary || "No description provided.",
       },
-      ...(options.deadline !== undefined
-        ? [
-            {
-              name: "Deadline",
-              value: `${getDiscordTimestamp(options.deadline)}${options.deadlineNote ? `\n${options.deadlineNote}` : ""}`,
-            },
-          ]
-        : []),
       ...(options.executableFrom !== undefined
         ? [
             {
               name: "Executable From",
               value: getDiscordTimestamp(options.executableFrom),
+            },
+          ]
+        : []),
+      ...(options.deadline !== undefined
+        ? [
+            {
+              name: "Deadline",
+              value: `${getDiscordTimestamp(options.deadline)}${options.deadlineNote ? `\n${options.deadlineNote}` : ""}`,
             },
           ]
         : []),

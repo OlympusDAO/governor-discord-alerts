@@ -94,7 +94,7 @@ it("reports voting completion before queueing and persists both milestones acros
 });
 
 it("includes proposals visible at the event head while excluding later creations", async () => {
-  const created = { ...proposal, blockNumber: "200" };
+  const created = { ...proposal, blockNumber: "199", startBlock: "199" };
   const later = { ...proposal, proposalId: "20", id: "20", blockNumber: "201" };
   const [baseEvents] = await getLatestProposalEvents(150);
   const events = {

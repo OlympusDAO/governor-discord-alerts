@@ -1,5 +1,9 @@
 import * as discord from "../discord";
-import { getCompletedVoteOutcome, wasExpiredAtCursor } from "../governor";
+import {
+  getCompletedVoteOutcome,
+  isEmergencyQueueCancelled,
+  wasExpiredAtCursor,
+} from "../governor";
 import { processLifecycleReminders, processVotingEnded } from "../lifecycle";
 import {
   type AlertState,
@@ -51,6 +55,29 @@ beforeEach(() => {
   send = jest.spyOn(discord, "sendDiscordAlert").mockResolvedValue();
   jest.mocked(getCompletedVoteOutcome).mockResolvedValue(true);
   jest.mocked(wasExpiredAtCursor).mockResolvedValue(true);
+  jest.mocked(isEmergencyQueueCancelled).mockResolvedValue(false);
+});
+
+it("baselines a previously cancelled emergency queue without executable or expiry alerts", async () => {
+  jest.mocked(isEmergencyQueueCancelled).mockResolvedValue(true);
+  const saved = state();
+  const s = snapshot(ProposalState.Emergency, {
+    eta: now - 1,
+    votingStarted: false,
+    endBlock: 0,
+  });
+  await processLifecycleReminders(s, saved, persist);
+  await processLifecycleReminders(
+    { ...s, timestamp: now + 86400 },
+    saved,
+    persist,
+  );
+  expect(send).not.toHaveBeenCalled();
+  expect(saved.proposals["19"].terminal).toBe(true);
+  expect(isEmergencyQueueCancelled).toHaveBeenCalledWith(
+    s.proposals[0],
+    s.blockNumber,
+  );
 });
 afterEach(() => jest.restoreAllMocks());
 

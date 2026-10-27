@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
 
 const config = new pulumi.Config();
-const governorRpcUrl = config.getSecret("governorRpcUrl");
+const governorRpcUrl = config.requireSecret("governorRpcUrl");
 
 /**
  * APIs
@@ -108,7 +108,7 @@ const cloudFunction = new gcp.cloudfunctions.Function(
       ...(config.get("indexerApiUrl")
         ? { INDEXER_API_URL: config.get("indexerApiUrl") as string }
         : {}),
-      ...(governorRpcUrl ? { GOVERNOR_RPC_URL: governorRpcUrl } : {}),
+      GOVERNOR_RPC_URL: governorRpcUrl,
       DISCORD_WEBHOOK_URL: config.requireSecret("discordWebhookUrl"),
     },
   },

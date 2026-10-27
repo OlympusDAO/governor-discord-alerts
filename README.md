@@ -87,7 +87,10 @@ Deployments are managed with Pulumi stacks:
 
 The Pulumi program creates the GCS buckets, Cloud Function, Cloud Scheduler job, invoker IAM binding, and monitoring alert policy. Stack secrets provide `discordWebhookUrl` and `notificationEmail`. `indexerApiUrl` is optional plain config; unset, the function uses the deployed indexer.
 
-The optional `governorRpcUrl` stack secret sets `GOVERNOR_RPC_URL`. The default Ethereum RPC is `https://ethereum-rpc.publicnode.com`.
+The required `governorRpcUrl` stack secret sets `GOVERNOR_RPC_URL`.
+Use an archive-capable Ethereum RPC: migration and late cancellation/veto handling need historical contract state.
+The function checks historical access at proposal creation before sending alerts.
+Public endpoints that restrict historical reads to recent blocks cannot support this workflow.
 
 Note: the project uses `gcp.cloudfunctions.Function` (Cloud Functions v1), which currently does not support Node.js 24 runtimes. The function runtime is therefore pinned to `nodejs22`.
 

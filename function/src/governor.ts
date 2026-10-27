@@ -1,3 +1,4 @@
+import { getLatestProposalEvents } from "./indexer";
 import {
   type GovernanceSnapshot,
   type GovernorProposal,
@@ -7,12 +8,16 @@ import {
 } from "./types";
 
 const GOVERNOR = "0x0941233c964e7d7efeb05d253176e5e634ceffcd";
-const DEFAULT_RPC = "https://ethereum-rpc.publicnode.com";
 type RpcCall = { method: string; params: unknown[] };
 type RpcResult = { id: number; result?: unknown; error?: { code: number } };
 
 const rpc = async (calls: RpcCall[]): Promise<unknown[]> => {
-  const response = await fetch(process.env.GOVERNOR_RPC_URL || DEFAULT_RPC, {
+  const url = process.env.GOVERNOR_RPC_URL;
+  if (!url)
+    throw new Error(
+      "GOVERNOR_RPC_URL must be set to an archive-capable Ethereum RPC",
+    );
+  const response = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(
@@ -97,6 +102,36 @@ export const getCompletedVoteOutcome = async (
   return words(outcome, 1)[0] === 1n;
 };
 
+export const isEmergencyQueueCancelled = async (
+  row: GovernorProposal,
+  blockNumber: number,
+): Promise<boolean> => {
+  // Emergency state ignores cancellation; its cancelled flag also stays set
+  // after a valid requeue. Compare the latest queue and cancel transactions.
+  const [history, head] = await getLatestProposalEvents(0);
+  const id = row.proposal.proposalId;
+  const queued = history.queued.find((event) => event.proposalId === id);
+  const cancelled = history.cancelled.find((event) => event.proposalId === id);
+  if (
+    head < blockNumber ||
+    !queued ||
+    Number(queued.eta) !== row.eta ||
+    Number(queued.blockNumber) > blockNumber ||
+    (cancelled && Number(cancelled.blockNumber) > blockNumber)
+  )
+    throw new Error(
+      `Queue history does not match proposal ${id} at the indexed block`,
+    );
+  if (!cancelled) return false;
+  const difference = Number(cancelled.blockNumber) - Number(queued.blockNumber);
+  if (difference !== 0) return difference > 0;
+  const [cancelIndex, queueIndex] = await Promise.all([
+    getEventLogIndex("cancelled", cancelled),
+    getEventLogIndex("queued", queued),
+  ]);
+  return cancelIndex > queueIndex;
+};
+
 export const wasExpiredAtCursor = async (
   row: GovernorProposal,
   cursor: number,
@@ -164,9 +199,28 @@ export const getGovernanceSnapshot = async (
       ];
     }),
   ];
+  if (proposals.length) {
+    const oldest = proposals.reduce((a, b) =>
+      Number(a.blockNumber) < Number(b.blockNumber) ? a : b,
+    );
+    // Validate historical state access before sending any alerts. Later terminal
+    // transitions and migration need reads as far back as proposal creation.
+    calls.push({
+      method: "eth_call",
+      params: [
+        {
+          to: GOVERNOR,
+          data: `0x3e4f49e6${BigInt(oldest.proposalId).toString(16).padStart(64, "0")}`,
+        },
+        `0x${BigInt(oldest.blockNumber).toString(16)}`,
+      ],
+    });
+  }
   const results: unknown[] = [];
   for (let i = 0; i < calls.length; i += 10)
     results.push(...(await rpc(calls.slice(i, i + 10))));
+  if (proposals.length && words(results[results.length - 1], 1)[0] > 9n)
+    throw new Error("Unexpected historical governor state");
   const header = results[0] as { number?: string; timestamp?: string };
   if (header.number !== block || !header.timestamp)
     throw new Error("Governor block is unavailable");

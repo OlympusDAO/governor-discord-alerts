@@ -3,7 +3,11 @@ import {
   getDiscordTimestamp,
   sendDiscordAlert,
 } from "./discord";
-import { getCompletedVoteOutcome, wasExpiredAtCursor } from "./governor";
+import {
+  getCompletedVoteOutcome,
+  isEmergencyQueueCancelled,
+  wasExpiredAtCursor,
+} from "./governor";
 import {
   type AlertState,
   type GovernanceSnapshot,
@@ -37,12 +41,15 @@ const notificationsFor = async (
         row.endBlock < state.lastProcessedBlock,
       terminal:
         historical &&
-        isExpired(row, snapshot) &&
-        (await wasExpiredAtCursor(
-          row,
-          state.lastProcessedBlock,
-          snapshot.executionGracePeriod,
-        )),
+        ((row.state === ProposalState.Emergency &&
+          row.eta > 0 &&
+          (await isEmergencyQueueCancelled(row, snapshot.blockNumber))) ||
+          (isExpired(row, snapshot) &&
+            (await wasExpiredAtCursor(
+              row,
+              state.lastProcessedBlock,
+              snapshot.executionGracePeriod,
+            )))),
     };
   }
   return state.proposals[id];

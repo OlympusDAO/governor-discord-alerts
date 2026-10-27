@@ -63,7 +63,6 @@ beforeEach(() => {
   jest.mocked(getGovernanceSnapshot).mockResolvedValue({
     blockNumber: 200,
     timestamp: now,
-    executionDelay: 86400,
     executionGracePeriod: 86400,
     proposals: [
       {
@@ -211,7 +210,7 @@ it("reopens monitoring and announces a new queue transaction when an expired eme
     proposal,
   ]);
   expect(state.proposals["19"].terminal).not.toBe(true);
-  expect(state.proposals["19"].expired).not.toBe(true);
+  expect(state.proposals["19"].lastExecutionReminder).toBeUndefined();
   const executableAt = expiredAt + 86400;
   jest.setSystemTime(new Date(executableAt * 1000));
   jest

@@ -135,8 +135,6 @@ export const processProposalEvents = async (
     );
     sent.events[kind] = event.transactionHash;
     if (kind === "queued") {
-      sent.executable = false;
-      sent.expired = false;
       sent.terminal = false;
       delete sent.lastExecutionReminder;
     }

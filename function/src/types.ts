@@ -74,7 +74,6 @@ export type GovernorProposal = {
 export type GovernanceSnapshot = {
   blockNumber: number;
   timestamp: number;
-  executionDelay: number;
   executionGracePeriod: number;
   proposals: GovernorProposal[];
 };
@@ -82,8 +81,6 @@ export type GovernanceSnapshot = {
 export type ProposalNotifications = {
   events: Partial<Record<keyof ProposalEvents, string>>;
   votingEnded?: boolean;
-  executable?: boolean;
-  expired?: boolean;
   terminal?: boolean;
   lastQueueReminder?: number;
   lastExecutionReminder?: number;

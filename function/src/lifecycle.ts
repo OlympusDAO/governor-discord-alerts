@@ -34,7 +34,7 @@ const notificationsFor = (
         historical &&
         row.endBlock > 0 &&
         row.endBlock < state.lastProcessedBlock,
-      expired: historical && isExpired(row, snapshot),
+      terminal: historical && isExpired(row, snapshot),
     };
   }
   return state.proposals[id];
@@ -82,18 +82,15 @@ export const processLifecycleReminders = async (
     if (sent.terminal) continue;
     const at = fromBlockTimestamp(snapshot.timestamp);
     if (isExpired(row, snapshot)) {
-      if (!sent.expired) {
-        await sendDiscordAlert(
-          row.proposal,
-          row.eta > 0
-            ? `Proposal Expired\nThe execution deadline passed without being executed.\nExecution deadline: ${getDiscordTimestamp(row.eta + snapshot.executionGracePeriod)}`
-            : "Proposal Expired\nThis proposal expired without being activated.",
-          at,
-        );
-        sent.expired = true;
-        await persist();
-      }
+      await sendDiscordAlert(
+        row.proposal,
+        row.eta > 0
+          ? `Proposal Expired\nThe execution deadline passed without being executed.\nExecution deadline: ${getDiscordTimestamp(row.eta + snapshot.executionGracePeriod)}`
+          : "Proposal Expired\nThis proposal expired without being activated.",
+        at,
+      );
       sent.terminal = true;
+      await persist();
     } else if (
       [
         ProposalState.Executed,
@@ -124,18 +121,16 @@ export const processLifecycleReminders = async (
     ) {
       const deadline = row.eta + snapshot.executionGracePeriod;
       if (
-        sent.executable &&
         sent.lastExecutionReminder !== undefined &&
         snapshot.timestamp - sent.lastExecutionReminder < REMINDER_INTERVAL
       )
         continue;
       await sendDiscordAlert(
         row.proposal,
-        `${sent.executable ? "Proposal Execution Reminder" : "Proposal Executable"}\n` +
+        `${sent.lastExecutionReminder === undefined ? "Proposal Executable" : "Proposal Execution Reminder"}\n` +
           `This proposal is available to be executed.\nExecution deadline: ${getDiscordTimestamp(deadline)}\n${EXECUTION_MENTIONS}`,
         at,
       );
-      sent.executable = true;
       sent.lastExecutionReminder = snapshot.timestamp;
       await persist();
     }

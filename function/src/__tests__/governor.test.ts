@@ -46,7 +46,6 @@ it("decodes live proposal getter fields and reads every value at the indexed blo
   const snapshot = await getGovernanceSnapshot([proposal], 26278125);
   expect(snapshot).toMatchObject({
     blockNumber: 26278125,
-    executionDelay: 86400,
     executionGracePeriod: 86400,
     proposals: [
       { proposal, state: 1, eta: 0, endBlock: 26328525, votingStarted: true },
@@ -71,7 +70,7 @@ it("fails on missing/error RPC results instead of making up a proposal state", a
   global.fetch = jest.fn(async () => ({
     ok: true,
     json: async () => [{ id: 0, error: { code: -32000 } }],
-  })) as unknown as unknown as typeof fetch;
+  })) as unknown as typeof fetch;
   await expect(getGovernanceSnapshot([proposal], 26278125)).rejects.toThrow(
     "Governor RPC call 0 failed",
   );

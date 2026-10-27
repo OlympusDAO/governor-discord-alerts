@@ -43,7 +43,6 @@ it("persists cursor and notification history together and prefers them over the 
     proposals: {
       "19": {
         events: { votingStarted: "0xactivation" },
-        executable: true,
         lastExecutionReminder: 1793032919,
       },
     },

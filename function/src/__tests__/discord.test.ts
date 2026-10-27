@@ -42,7 +42,6 @@ const marker = {
 const snapshot: GovernanceSnapshot = {
   blockNumber: 200,
   timestamp: 1793032919,
-  executionDelay: 86400,
   executionGracePeriod: 86400,
   proposals: [
     {

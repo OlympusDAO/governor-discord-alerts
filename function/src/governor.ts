@@ -83,14 +83,12 @@ export const getGovernanceSnapshot = async (
     throw new Error("Governor block is unavailable");
   const timelockWord = words(results[1], 1)[0];
   const timelock = `0x${timelockWord.toString(16).padStart(40, "0")}`;
-  const [delay, grace] = await rpc([
-    call(timelock, "0x6a42b8f8"), // delay()
+  const [grace] = await rpc([
     call(timelock, "0xc1a287e2"), // GRACE_PERIOD()
   ]);
   return {
     blockNumber,
     timestamp: number(BigInt(header.timestamp)),
-    executionDelay: number(words(delay, 1)[0]),
     executionGracePeriod: number(words(grace, 1)[0]),
     proposals: proposals.map((proposal, i) => {
       const data = words(results[2 + i * 2], 14);

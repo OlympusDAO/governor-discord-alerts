@@ -27,7 +27,6 @@ const snapshot = (
 ): GovernanceSnapshot => ({
   blockNumber: 200,
   timestamp: now,
-  executionDelay: 86400,
   executionGracePeriod: 86400,
   proposals: [
     {
@@ -196,6 +195,6 @@ it("leaves failed notifications unsent for retry", async () => {
       persist,
     ),
   ).rejects.toThrow("Discord unavailable");
-  expect(saved.proposals["19"].executable).not.toBe(true);
+  expect(saved.proposals["19"].lastExecutionReminder).toBeUndefined();
   expect(persist).not.toHaveBeenCalled();
 });

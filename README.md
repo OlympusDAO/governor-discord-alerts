@@ -31,7 +31,7 @@ Polling currently supports fewer than 1,000 proposals. It fails explicitly when 
 
 ## Setup
 
-1. Use Node.js 22:
+1. Use Node.js 22 (22.13.0 or newer) and pnpm 11.28.9:
 
    ```bash
    nvm use
@@ -96,3 +96,8 @@ Pulumi may require pnpm's hoisted linker layout to avoid `.pnpm/...` closure-loa
 ## pnpm Policy
 
 This repo stores pnpm policy in `pnpm-workspace.yaml`, including dependency overrides, `minimumReleaseAge`, `preferFrozenLockfile`, and the hoisted linker layout. The repository intentionally does not use `.npmrc` for these pnpm-only settings.
+
+Both package manifests pin pnpm 11.28.9. CI reads the root manifest through `pnpm/action-setup`.
+The function archive has its own policy and lockfile because GCP installs it separately.
+`pnpm run install:function:check` copies the deployment manifests into a temporary directory and checks its frozen lockfile.
+This preserves the function policy while excluding the parent workspace.

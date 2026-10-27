@@ -7,8 +7,7 @@
     "audit": "pnpm audit --audit-level moderate --json",
     "audit:function": "pnpm audit --dir function --audit-level moderate --json",
     "build": "cd function && pnpm run build",
-    "codegen": "cd function && dotenv -e ../.env -- node_modules/.bin/graphql-codegen",
-    "install:function:check": "pnpm install --dir function --frozen-lockfile --lockfile-only",
+    "install:function:check": "node scripts/check-function-install.mjs",
     "lint": "cd function && pnpm run lint",
     "lint:check": "cd function && pnpm run lint:check",
     "test": "cd function && pnpm run test",
@@ -24,11 +23,11 @@
     "typescript": "^5.6.2"
   },
   "engines": {
-    "node": ">=22",
+    "node": ">=22.13.0",
     "npm": "use-pnpm",
-    "pnpm": ">=11.13.0",
+    "pnpm": ">=11.28.9 <12",
     "bun": "use-pnpm",
     "yarn": "use-pnpm"
   },
-  "packageManager": "pnpm@11.13.0"
+  "packageManager": "pnpm@11.28.9"
 }

@@ -24,7 +24,7 @@ Data comes from the [Olympus protocol indexer](https://github.com/OlympusDAO/oly
 - `pnpm run lint:check`: run the non-mutating Biome check in `function/`
 - `pnpm test`: run Jest tests in `function/`
 - `pnpm run validate:pnpm`: validate root and Cloud Function pnpm installs and audits
-- `pnpm install --dir function --frozen-lockfile --lockfile-only`: verify the exact frozen lockfile/config GCP Cloud Build uses without creating `function/node_modules`
+- `pnpm run install:function:check`: verify the exact frozen lockfile/config GCP Cloud Build uses in a temporary standalone directory without creating `function/node_modules`
 - `pnpm audit --dir function --audit-level moderate --json`: audit the deploy archive dependency graph, not only the root workspace
 
 ## Deployment

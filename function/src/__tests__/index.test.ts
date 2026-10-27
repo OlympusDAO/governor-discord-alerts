@@ -93,6 +93,52 @@ it("reports voting completion before queueing and persists both milestones acros
   expect(res.status).toHaveBeenCalledWith(200);
 });
 
+it("includes proposals visible at the event head while excluding later creations", async () => {
+  const created = { ...proposal, blockNumber: "200" };
+  const later = { ...proposal, proposalId: "20", id: "20", blockNumber: "201" };
+  const [baseEvents] = await getLatestProposalEvents(150);
+  const events = {
+    ...baseEvents,
+    queued: [],
+    created: [created],
+    votingStarted: [{ ...baseEvents.queued[0], proposal: created }],
+  };
+  let headKnown = false;
+  jest.mocked(getLatestProposalEvents).mockImplementation(async () => {
+    await Promise.resolve();
+    headKnown = true;
+    return [events, 200];
+  });
+  // An earlier list can omit a proposal that the event response already includes.
+  jest
+    .mocked(getProposals)
+    .mockImplementation(async () => (headKnown ? [created, later] : []));
+  jest
+    .mocked(getGovernanceSnapshot)
+    .mockImplementation(async (proposals, blockNumber) => ({
+      blockNumber,
+      timestamp: now,
+      executionGracePeriod: 86400,
+      proposals: proposals.map((proposal) => ({
+        proposal,
+        state: ProposalState.Active,
+        endBlock: 300,
+        eta: 0,
+        votingStarted: true,
+      })),
+    }));
+  jest
+    .mocked(getEventLogIndex)
+    .mockImplementation(async (kind) => (kind === "created" ? 0 : 1));
+  await run(req, res);
+  expect(getGovernanceSnapshot).toHaveBeenCalledWith([created], 200);
+  expect(send.mock.calls.map((call) => call[1])).toEqual([
+    "Proposal Created",
+    "Proposal Voting Started",
+  ]);
+  expect(state.lastProcessedBlock).toBe(200);
+});
+
 it("fails without advancing the cursor when indexed data is stale", async () => {
   jest.setSystemTime(new Date((now + 7201) * 1000));
   await expect(run(req, res)).rejects.toThrow("more than two hours behind");

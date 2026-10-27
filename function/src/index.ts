@@ -8,10 +8,11 @@ import { getAlertState, saveAlertState } from "./storage";
 export const run = async (_req: express.Request, res: express.Response) => {
   console.log("Starting function");
   const state = await getAlertState();
-  const [[events, latestBlock], allProposals] = await Promise.all([
-    getLatestProposalEvents(state.lastProcessedBlock),
-    getProposals(),
-  ]);
+  const [events, latestBlock] = await getLatestProposalEvents(
+    state.lastProcessedBlock,
+  );
+  // Read the list after the event head so it includes newly indexed proposals.
+  const allProposals = await getProposals();
   if (latestBlock < state.lastProcessedBlock)
     throw new Error("Indexer head moved behind the saved cursor");
   const queuedIds = new Set(events.queued.map((p) => p.proposalId));

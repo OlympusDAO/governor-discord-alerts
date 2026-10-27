@@ -3,6 +3,7 @@ import {
   getDiscordTimestamp,
   sendDiscordAlert,
 } from "./discord";
+import { getCompletedVoteOutcome, wasExpiredAtCursor } from "./governor";
 import {
   type AlertState,
   type GovernanceSnapshot,
@@ -19,7 +20,7 @@ const isExpired = (row: GovernorProposal, snapshot: GovernanceSnapshot) =>
       row.state === ProposalState.Emergency) &&
     snapshot.timestamp > row.eta + snapshot.executionGracePeriod);
 
-const notificationsFor = (
+const notificationsFor = async (
   row: GovernorProposal,
   state: AlertState,
   snapshot: GovernanceSnapshot,
@@ -34,7 +35,14 @@ const notificationsFor = (
         historical &&
         row.endBlock > 0 &&
         row.endBlock < state.lastProcessedBlock,
-      terminal: historical && isExpired(row, snapshot),
+      terminal:
+        historical &&
+        isExpired(row, snapshot) &&
+        (await wasExpiredAtCursor(
+          row,
+          state.lastProcessedBlock,
+          snapshot.executionGracePeriod,
+        )),
     };
   }
   return state.proposals[id];
@@ -46,20 +54,30 @@ export const processVotingEnded = async (
   persist: () => Promise<void>,
 ) => {
   for (const row of snapshot.proposals) {
-    const sent = notificationsFor(row, state, snapshot);
+    const sent = await notificationsFor(row, state, snapshot);
     if (
       sent.votingEnded ||
       !row.votingStarted ||
-      row.endBlock >= snapshot.blockNumber ||
-      row.state === ProposalState.Canceled ||
-      row.state === ProposalState.Vetoed
+      row.endBlock >= snapshot.blockNumber
     )
       continue;
-    const passed = row.state !== ProposalState.Defeated;
+    let passed = row.state !== ProposalState.Defeated;
+    if (
+      row.state === ProposalState.Canceled ||
+      row.state === ProposalState.Vetoed
+    ) {
+      const outcome = await getCompletedVoteOutcome(
+        row.proposal.proposalId,
+        row.endBlock,
+      );
+      if (outcome === undefined) continue;
+      passed = outcome;
+    }
+    const awaitingQueue = passed && row.state === ProposalState.Succeeded;
     await sendDiscordAlert(
       row.proposal,
       `Proposal Voting Ended — ${passed ? "Passed" : "Defeated"}\n` +
-        (passed && row.eta === 0
+        (awaitingQueue
           ? "This proposal is ready to be queued."
           : passed
             ? "This proposal passed the vote."
@@ -67,7 +85,7 @@ export const processVotingEnded = async (
       fromBlockTimestamp(snapshot.timestamp),
     );
     sent.votingEnded = true;
-    if (passed && row.eta === 0) sent.lastQueueReminder = snapshot.timestamp;
+    if (awaitingQueue) sent.lastQueueReminder = snapshot.timestamp;
     await persist();
   }
 };
@@ -78,7 +96,7 @@ export const processLifecycleReminders = async (
   persist: () => Promise<void>,
 ) => {
   for (const row of snapshot.proposals) {
-    const sent = notificationsFor(row, state, snapshot);
+    const sent = await notificationsFor(row, state, snapshot);
     if (sent.terminal) continue;
     const at = fromBlockTimestamp(snapshot.timestamp);
     if (isExpired(row, snapshot)) {

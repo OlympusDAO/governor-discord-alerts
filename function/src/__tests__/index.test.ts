@@ -1,6 +1,6 @@
 import type * as express from "express";
 import * as discord from "../discord";
-import { getGovernanceSnapshot } from "../governor";
+import { getEventLogIndex, getGovernanceSnapshot } from "../governor";
 import { run } from "../index";
 import { getLatestProposalEvents, getProposals } from "../indexer";
 import { getAlertState, saveAlertState } from "../storage";
@@ -240,4 +240,57 @@ it("stops before later alerts if recording a delivered milestone fails", async (
     "Proposal Voting Ended — Passed",
   ]);
   expect(state.lastProcessedBlock).toBe(150);
+});
+
+it.each([
+  [180, 190, 0, 0, false],
+  [190, 180, 0, 0, true],
+  [190, 190, 7, 8, false],
+  [190, 190, 8, 7, true],
+])("orders emergency queue/cancel transitions (%s, %s, %s, %s) and only reminds for a live queue", async (queueBlock, cancelBlock, queueIndex, cancelIndex, requeued) => {
+  const [events] = await getLatestProposalEvents(150);
+  const base = await getGovernanceSnapshot([proposal], 200);
+  const queued = {
+    ...events.queued[0],
+    blockNumber: String(queueBlock),
+    eta: String(now - 1),
+  };
+  const cancelled = {
+    ...queued,
+    blockNumber: String(cancelBlock),
+    transactionHash: `0x${"4".repeat(64)}`,
+  };
+  jest
+    .mocked(getEventLogIndex)
+    .mockImplementation(async (kind) =>
+      kind === "queued" ? queueIndex : cancelIndex,
+    );
+  jest
+    .mocked(getLatestProposalEvents)
+    .mockResolvedValue([
+      { ...events, queued: [queued], cancelled: [cancelled] },
+      200,
+    ]);
+  jest.mocked(getGovernanceSnapshot).mockResolvedValue({
+    ...base,
+    proposals: [
+      {
+        ...base.proposals[0],
+        state: ProposalState.Emergency,
+        endBlock: 0,
+        votingStarted: false,
+        eta: now - 1,
+      },
+    ],
+  });
+  await run(req, res);
+  expect(send.mock.calls.map((call) => call[1].split("\n")[0])).toEqual(
+    requeued
+      ? ["Proposal Cancelled", "Proposal Queued", "Proposal Executable"]
+      : ["Proposal Queued", "Proposal Cancelled"],
+  );
+  expect(state.proposals["19"].terminal).toBe(!requeued);
+  expect(getEventLogIndex).toHaveBeenCalledTimes(
+    queueBlock === cancelBlock ? 2 : 0,
+  );
 });

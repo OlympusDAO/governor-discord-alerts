@@ -1,17 +1,6 @@
 import { getLatestProposalEvents, getProposals } from "../indexer";
 import type { ProposalCreated } from "../types";
 
-// The two things this module does beyond issuing a request, both of which are
-// silent when wrong:
-//
-//   * `canceled` on the wire becomes `cancelled` in ProposalEvents. A missed
-//     rename means cancellation alerts stop and nothing errors.
-//   * queued proposals are de-duplicated against executed ones, which is what
-//     stops an execution reminder firing for a proposal that already executed.
-//
-// The requests themselves are covered against a deployed API by
-// indexer.contract.test.ts; this covers the mapping on top of them.
-
 const originalFetch = global.fetch;
 
 const proposal = (proposalId: string): ProposalCreated => ({

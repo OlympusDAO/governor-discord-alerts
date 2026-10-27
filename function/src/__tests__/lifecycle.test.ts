@@ -1,10 +1,13 @@
 import * as discord from "../discord";
+import { getCompletedVoteOutcome, wasExpiredAtCursor } from "../governor";
 import { processLifecycleReminders, processVotingEnded } from "../lifecycle";
 import {
   type AlertState,
   type GovernanceSnapshot,
   ProposalState,
 } from "../types";
+
+jest.mock("../governor");
 
 const now = 1793032919;
 const proposal = {
@@ -46,6 +49,8 @@ let send: jest.SpyInstance;
 beforeEach(() => {
   persist.mockClear();
   send = jest.spyOn(discord, "sendDiscordAlert").mockResolvedValue();
+  jest.mocked(getCompletedVoteOutcome).mockResolvedValue(true);
+  jest.mocked(wasExpiredAtCursor).mockResolvedValue(true);
 });
 afterEach(() => jest.restoreAllMocks());
 
@@ -197,4 +202,52 @@ it("leaves failed notifications unsent for retry", async () => {
   ).rejects.toThrow("Discord unavailable");
   expect(saved.proposals["19"].lastExecutionReminder).toBeUndefined();
   expect(persist).not.toHaveBeenCalled();
+});
+
+it.each([
+  ProposalState.Canceled,
+  ProposalState.Vetoed,
+])("reports a completed vote even when a later transaction changes its final state (%s)", async (status) => {
+  const saved = state();
+  await processVotingEnded(snapshot(status), saved, persist);
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(send.mock.calls[0][1]).toContain("Voting Ended — Passed");
+  expect(send.mock.calls[0][1]).not.toContain("ready to be queued");
+});
+
+it("announces an execution expiry crossed after the migration cursor", async () => {
+  jest.mocked(wasExpiredAtCursor).mockResolvedValue(false);
+  const saved = state();
+  const s = snapshot(ProposalState.Expired, { eta: now - 86401 });
+  await processLifecycleReminders(s, saved, persist);
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(send.mock.calls[0][1]).toContain("Proposal Expired");
+});
+
+it("announces an activation expiry crossed after the migration cursor", async () => {
+  jest.mocked(wasExpiredAtCursor).mockResolvedValue(false);
+  const saved = state();
+  const s = snapshot(ProposalState.Expired, {
+    eta: 0,
+    endBlock: 0,
+    votingStarted: false,
+  });
+  await processLifecycleReminders(s, saved, persist);
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(send.mock.calls[0][1]).toContain("without being activated");
+});
+
+it.each([
+  ProposalState.Canceled,
+  ProposalState.Vetoed,
+])("does not report a completed vote when it was interrupted before its deadline (%s)", async (status) => {
+  jest.mocked(getCompletedVoteOutcome).mockResolvedValue(undefined);
+  await processVotingEnded(snapshot(status), state(), persist);
+  expect(send).not.toHaveBeenCalled();
+});
+
+it("preserves a defeated vote outcome when the proposal is cancelled afterwards", async () => {
+  jest.mocked(getCompletedVoteOutcome).mockResolvedValue(false);
+  await processVotingEnded(snapshot(ProposalState.Canceled), state(), persist);
+  expect(send.mock.calls[0][1]).toContain("Voting Ended — Defeated");
 });

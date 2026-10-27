@@ -1,4 +1,5 @@
 import { EmbedBuilder, WebhookClient } from "discord.js";
+import { getEventLogIndex } from "./governor";
 import type {
   AlertState,
   GovernanceSnapshot,
@@ -100,11 +101,29 @@ export const processProposalEvents = async (
       proposal,
     })),
   };
-  const events = Object.entries(groups)
-    .flatMap(([kind, rows]) =>
-      rows.map((event) => ({ kind: kind as keyof ProposalEvents, event })),
-    )
-    .sort((a, b) => Number(a.event.blockNumber) - Number(b.event.blockNumber));
+  const entries = Object.entries(groups).flatMap(([kind, rows]) =>
+    rows.map((event) => ({ kind: kind as keyof ProposalEvents, event })),
+  );
+  const key = (event: { blockNumber: string; proposalId: string }) =>
+    `${event.blockNumber}:${event.proposalId}`;
+  const counts = new Map<string, number>();
+  for (const { event } of entries)
+    counts.set(key(event), (counts.get(key(event)) ?? 0) + 1);
+  const events = await Promise.all(
+    entries.map(async ({ kind, event }) => ({
+      kind,
+      event,
+      position:
+        (counts.get(key(event)) ?? 0) > 1
+          ? await getEventLogIndex(kind, event)
+          : 0,
+    })),
+  );
+  events.sort(
+    (a, b) =>
+      Number(a.event.blockNumber) - Number(b.event.blockNumber) ||
+      a.position - b.position,
+  );
   for (const { kind, event } of events) {
     state.proposals[event.proposalId] ??= { events: {} };
     const sent = state.proposals[event.proposalId];
@@ -137,6 +156,12 @@ export const processProposalEvents = async (
     if (kind === "queued") {
       sent.terminal = false;
       delete sent.lastExecutionReminder;
+    } else if (
+      kind === "cancelled" ||
+      kind === "vetoed" ||
+      kind === "executed"
+    ) {
+      sent.terminal = true;
     }
     await persist();
   }

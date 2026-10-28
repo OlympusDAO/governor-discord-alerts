@@ -42,6 +42,9 @@ const snapshot = (
       endBlock: 199,
       eta: 0,
       votingStarted: true,
+      quorumVotes: 100n,
+      forVotes: 0n,
+      againstVotes: 0n,
       ...overrides,
     },
   ],
@@ -83,6 +86,136 @@ it("baselines a previously cancelled emergency queue without executable or expir
 afterEach(() => {
   jest.useRealTimers();
   jest.restoreAllMocks();
+});
+
+it("sends active voting progress once every 24 hours across serialized state reloads", async () => {
+  const s = snapshot(ProposalState.Active, {
+    endBlock: 50000,
+    quorumVotes: 2000n * 10n ** 18n,
+    forVotes: 900n * 10n ** 18n,
+    againstVotes: 300n * 10n ** 18n,
+  });
+  let saved = state();
+  await processLifecycleReminders(s, saved, persist);
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(send.mock.calls[0]).toEqual([
+    proposal,
+    "Proposal Voting In Progress",
+    new Date(now * 1000),
+    expect.objectContaining({
+      details: expect.stringContaining("Quorum reached: **45.00%**"),
+      deadline: now + (50000 - 200) * 12,
+      deadlineNote: "Estimated. Voting ends after block 50000.",
+    }),
+  ]);
+  expect(send.mock.calls[0][3].details).toContain(
+    "Approval: **75.00% Yes / 25.00% No**",
+  );
+  expect(persist).toHaveBeenCalledTimes(1);
+  saved = JSON.parse(JSON.stringify(saved));
+  jest.setSystemTime(new Date((now + 86399) * 1000));
+  await processLifecycleReminders(
+    { ...s, timestamp: now + 86399 },
+    saved,
+    persist,
+  );
+  expect(send).toHaveBeenCalledTimes(1);
+  jest.setSystemTime(new Date((now + 86400) * 1000));
+  await processLifecycleReminders(
+    { ...s, timestamp: now + 86400 },
+    saved,
+    persist,
+  );
+  expect(send).toHaveBeenCalledTimes(2);
+});
+
+it.each([
+  [0n, 0n, 100n, "0.00%", "0.00% Yes / 0.00% No", "No Yes or No votes yet"],
+  [200n, 0n, 100n, "100.00%", "100.00% Yes / 0.00% No", ""],
+  [0n, 100n, 100n, "0.00%", "0.00% Yes / 100.00% No", ""],
+  [1n, 2n, 0n, "Unavailable", "33.33% Yes / 66.67% No", ""],
+])("handles zero votes, capped quorum and unavailable quorum (%s, %s, %s)", async (forVotes, againstVotes, quorumVotes, quorum, approval, note) => {
+  await processLifecycleReminders(
+    snapshot(ProposalState.Active, {
+      endBlock: 300,
+      forVotes,
+      againstVotes,
+      quorumVotes,
+    }),
+    state(),
+    persist,
+  );
+  const details = send.mock.calls[0][3].details;
+  expect(details).toContain(quorum);
+  expect(details).toContain(approval);
+  expect(details).toContain(note);
+  expect(details).not.toMatch(/NaN|Infinity/);
+});
+
+it.each([
+  ProposalState.Pending,
+  ProposalState.Canceled,
+  ProposalState.Vetoed,
+  ProposalState.Defeated,
+  ProposalState.Executed,
+  ProposalState.Emergency,
+])("does not send voting reminders outside active voting (%s)", async (status) => {
+  await processLifecycleReminders(
+    snapshot(status, { endBlock: 300 }),
+    state(),
+    persist,
+  );
+  expect(send).not.toHaveBeenCalled();
+});
+
+it("leaves a failed daily notification eligible for retry", async () => {
+  const saved = state();
+  const s = snapshot(ProposalState.Active, { endBlock: 300 });
+  send.mockRejectedValueOnce(new Error("Discord unavailable"));
+  await expect(processLifecycleReminders(s, saved, persist)).rejects.toThrow(
+    "Discord unavailable",
+  );
+  expect(persist).not.toHaveBeenCalled();
+  await processLifecycleReminders(s, saved, persist);
+  expect(send).toHaveBeenCalledTimes(2);
+});
+
+it("keeps deliveries 24 hours apart when the indexer catches up", async () => {
+  const saved = state();
+  const s = snapshot(ProposalState.Active, { endBlock: 50000 });
+  await processLifecycleReminders(
+    { ...s, timestamp: now - 7199 },
+    saved,
+    persist,
+  );
+  jest.setSystemTime(new Date((now + 79201) * 1000));
+  await processLifecycleReminders(
+    { ...s, timestamp: now + 79201 },
+    saved,
+    persist,
+  );
+  expect(send).toHaveBeenCalledTimes(1);
+  jest.setSystemTime(new Date((now + 86400) * 1000));
+  await processLifecycleReminders(
+    { ...s, timestamp: now + 86400 },
+    saved,
+    persist,
+  );
+  expect(send).toHaveBeenCalledTimes(2);
+});
+
+it("reminds through the inclusive end block, then stops", async () => {
+  const saved = state();
+  const s = snapshot(ProposalState.Active, { endBlock: 200 });
+  await processLifecycleReminders(s, saved, persist);
+  expect(send).toHaveBeenCalledTimes(1);
+  jest.setSystemTime(new Date((now + 86400) * 1000));
+  await processLifecycleReminders(
+    { ...s, blockNumber: 201, timestamp: now + 86400 },
+    saved,
+    persist,
+  );
+  expect(send).toHaveBeenCalledTimes(1);
 });
 
 it.each([

@@ -1,5 +1,6 @@
 import { WebhookClient } from "discord.js";
 import { processProposalEvents } from "../discord";
+import { processLifecycleReminders } from "../lifecycle";
 import {
   type AlertState,
   type GovernanceSnapshot,
@@ -50,6 +51,9 @@ const snapshot: GovernanceSnapshot = {
       endBlock: 50600,
       eta: 0,
       votingStarted: true,
+      quorumVotes: 100n,
+      forVotes: 0n,
+      againstVotes: 0n,
     },
   ],
 };
@@ -77,6 +81,10 @@ beforeEach(() => {
     .mocked(WebhookClient)
     .mockImplementation(() => ({ send }) as unknown as WebhookClient);
   process.env.DISCORD_WEBHOOK_URL = "https://example.invalid/mock-only";
+});
+
+afterEach(() => {
+  jest.useRealTimers();
 });
 
 afterAll(() => {
@@ -183,4 +191,44 @@ it("deduplicates delivered event alerts after a partial run is retried", async (
   await processEvents(events);
   expect(send).toHaveBeenCalledTimes(1);
   expect(persist).toHaveBeenCalledTimes(1);
+});
+
+it("renders daily voting progress with the description and frontend link, starting 24 hours after the start alert", async () => {
+  jest.useFakeTimers().setSystemTime(new Date(snapshot.timestamp * 1000));
+  const events = emptyEvents();
+  events.votingStarted.push(marker);
+  await processEvents(events);
+  send.mockClear();
+  await processLifecycleReminders(snapshot, saved, persist);
+  expect(send).not.toHaveBeenCalled();
+  const nextDay: GovernanceSnapshot = {
+    ...snapshot,
+    blockNumber: snapshot.blockNumber + 7200,
+    timestamp: snapshot.timestamp + 86400,
+    proposals: [
+      {
+        ...snapshot.proposals[0],
+        quorumVotes: 2000n * 10n ** 18n,
+        forVotes: 900n * 10n ** 18n,
+        againstVotes: 300n * 10n ** 18n,
+      },
+    ],
+  };
+  jest.setSystemTime(new Date(nextDay.timestamp * 1000));
+  await processLifecycleReminders(nextDay, saved, persist);
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(embed()).toMatchObject({
+    title: "#19 · CCIP Bridge Activation",
+    url: "https://app.olympusdao.finance/#/governance/proposals/19",
+    description: "Proposal Voting In Progress",
+  });
+  expect(field("Description").value).toBe(
+    "Restore OHM bridging to five EVM chains. Move pool administration under governance.",
+  );
+  expect(field("Details").value).toContain("Quorum reached: **45.00%**");
+  expect(field("Details").value).toContain(
+    "Approval: **75.00% Yes / 25.00% No**",
+  );
+  expect(field("Deadline").value).toContain("Voting ends after block 50600.");
+  expect(field("Transaction")).toBeUndefined();
 });

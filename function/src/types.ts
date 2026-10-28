@@ -69,6 +69,9 @@ export type GovernorProposal = {
   endBlock: number;
   eta: number;
   votingStarted: boolean;
+  quorumVotes: bigint;
+  forVotes: bigint;
+  againstVotes: bigint;
 };
 
 export type GovernanceSnapshot = {
@@ -84,6 +87,7 @@ export type ProposalNotifications = {
   terminal?: boolean;
   lastQueueReminder?: number;
   lastExecutionReminder?: number;
+  lastVotingReminder?: number;
 };
 
 export type AlertState = {

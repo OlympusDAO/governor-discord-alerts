@@ -190,7 +190,9 @@ export const processProposalEvents = async (
       options,
     );
     sent.events[kind] = event.transactionHash;
-    if (kind === "queued") {
+    if (kind === "votingStarted") {
+      sent.lastVotingReminder = Math.floor(Date.now() / 1000);
+    } else if (kind === "queued") {
       sent.terminal = false;
       delete sent.lastExecutionReminder;
     } else if (

@@ -13,6 +13,20 @@ import {
 import { fromBlockTimestamp } from "./utils/date";
 
 const REMINDER_INTERVAL = 4 * 60 * 60;
+const VOTING_REMINDER_INTERVAL = 24 * 60 * 60;
+const percentage = (part: bigint, total: bigint) =>
+  Number(part >= total ? 10000n : (part * 10000n) / total) / 100;
+
+const votingProgress = (row: GovernorProposal) => {
+  const quorum =
+    row.quorumVotes > 0n
+      ? `**${percentage(row.forVotes, row.quorumVotes).toFixed(2)}%** of required Yes votes`
+      : "Unavailable. Check the proposal for its quorum requirement.";
+  const total = row.forVotes + row.againstVotes;
+  const yes = total > 0n ? percentage(row.forVotes, total) : 0;
+  const no = total > 0n ? 100 - yes : 0;
+  return `Quorum reached: ${quorum}\nApproval: **${yes.toFixed(2)}% Yes / ${no.toFixed(2)}% No**${total === 0n ? " (No Yes or No votes yet)" : ""}\nVotes are weighted by gOHM. No and abstain votes do not count toward quorum; abstentions are excluded from approval.`;
+};
 const isExpired = (row: GovernorProposal, snapshot: GovernanceSnapshot) =>
   row.state === ProposalState.Expired ||
   (row.eta > 0 &&
@@ -124,6 +138,24 @@ export const processLifecycleReminders = async (
       ].includes(row.state)
     ) {
       sent.terminal = true;
+    } else if (
+      row.state === ProposalState.Active &&
+      row.votingStarted &&
+      row.endBlock >= snapshot.blockNumber
+    ) {
+      if (
+        sent.lastVotingReminder !== undefined &&
+        Date.now() / 1000 - sent.lastVotingReminder < VOTING_REMINDER_INTERVAL
+      )
+        continue;
+      await sendDiscordAlert(row.proposal, "Proposal Voting In Progress", at, {
+        deadline:
+          snapshot.timestamp + (row.endBlock - snapshot.blockNumber) * 12,
+        deadlineNote: `Estimated. Voting ends after block ${row.endBlock}.`,
+        details: votingProgress(row),
+      });
+      sent.lastVotingReminder = Math.floor(Date.now() / 1000);
+      await persist();
     } else if (row.state === ProposalState.Succeeded) {
       if (
         sent.lastQueueReminder !== undefined &&

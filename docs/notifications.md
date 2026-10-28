@@ -8,10 +8,11 @@ Each notification uses the same Discord embed layout:
 4. **Executable From**, for a queue event.
 5. **Deadline**, when the notification has a voting or execution deadline.
 6. **Details**, when there is an action or outcome to explain.
-7. **Proposal ID**, **Proposer**, and the event **Transaction**, when applicable.
+7. **Proposal ID** and **Proposer**, only for the initial **Proposal Created** alert.
+8. The event **Transaction**, when applicable.
 
 The title links to the proposal in the Olympus frontend.
-The proposer address links to Etherscan.
+The initial proposer address links to Etherscan.
 Each event notification links to its own transaction on Etherscan.
 Notifications derived from time or proposal state have no event transaction link.
 
@@ -47,7 +48,9 @@ Cancellation, veto, and execution notifications also have no active **Deadline**
 
 ## Notification fields
 
-All rows include the title, status, description, proposal ID, and proposer address.
+All rows include the title, status, and description.
+The proposal ID appears in every title.
+Only **Proposal Created** includes separate **Proposal ID** and **Proposer** fields.
 
 | Status | Timing fields | Details | Event transaction |
 | --- | --- | --- | --- |
@@ -145,14 +148,15 @@ These values are illustrative.
 
 The example represents 900 gOHM Yes and 300 gOHM No, with a stored quorum of 2,000 gOHM.
 Discord renders the deadline as a live countdown followed by the absolute date in the reader's time zone.
-The actual embed also includes the proposal ID and proposer.
+The proposal ID appears in the title, without separate **Proposal ID** or **Proposer** fields.
 
 ## Examples
 
 These examples use illustrative proposal states and times.
 The examples show the native Discord timestamp syntax.
 Discord renders each countdown and local date in the client.
-Every example also contains the proposal ID and linked proposer address.
+Every example includes the proposal ID in its title.
+Only the initial submission alert includes separate proposal ID and linked proposer fields.
 Event examples also contain their own linked transaction.
 
 ### Voting started
@@ -170,12 +174,6 @@ Event examples also contain their own linked transaction.
 > `<t:1793637780:R>`  
 > `<t:1793637780:F>`  
 > Estimated. Voting ends after block 26328525.
->
-> **Proposal ID**  
-> 19
->
-> **Proposer**  
-> [0x3dc70606c76125282084dc37f6f7b1e3a1ce6a5e](https://etherscan.io/address/0x3dc70606c76125282084dc37f6f7b1e3a1ce6a5e)
 >
 > **Transaction**  
 > [View on Etherscan](https://etherscan.io/tx/0x20c8ce40f8eea1ff74df688b04dcc30de25150ebf4544528739eb47c7591875b)

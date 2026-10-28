@@ -14,6 +14,7 @@ const USER_NOTIFY = "894321349210820618";
 export const EXECUTION_MENTIONS = `||@everyone <@&${ROLE_OGG}> <@${USER_NOTIFY}>||`;
 
 type AlertOptions = {
+  includeSubmissionFields?: boolean;
   transactionHash?: string;
   deadline?: number;
   deadlineNote?: string;
@@ -77,11 +78,15 @@ export const sendDiscordAlert = async (
           ]
         : []),
       ...(options.details ? [{ name: "Details", value: options.details }] : []),
-      { name: "Proposal ID", value: proposal.proposalId, inline: true },
-      {
-        name: "Proposer",
-        value: `[${proposal.proposer}](https://etherscan.io/address/${proposal.proposer})`,
-      },
+      ...(options.includeSubmissionFields
+        ? [
+            { name: "Proposal ID", value: proposal.proposalId, inline: true },
+            {
+              name: "Proposer",
+              value: `[${proposal.proposer}](https://etherscan.io/address/${proposal.proposer})`,
+            },
+          ]
+        : []),
       ...(options.transactionHash
         ? [
             {
@@ -164,7 +169,10 @@ export const processProposalEvents = async (
     state.proposals[event.proposalId] ??= { events: {} };
     const sent = state.proposals[event.proposalId];
     if (sent.events[kind] === event.transactionHash) continue;
-    const options: AlertOptions = { transactionHash: event.transactionHash };
+    const options: AlertOptions = {
+      transactionHash: event.transactionHash,
+      includeSubmissionFields: kind === "created",
+    };
     if (kind === "votingStarted") {
       const row = snapshot.proposals.find(
         (p) => p.proposal.proposalId === event.proposalId,

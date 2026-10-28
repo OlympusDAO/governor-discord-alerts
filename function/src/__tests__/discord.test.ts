@@ -112,13 +112,6 @@ it.each([
     url: "https://app.olympusdao.finance/#/governance/proposals/19",
     description: status,
     fields: expect.arrayContaining([
-      expect.objectContaining({ name: "Proposal ID", value: "19" }),
-      expect.objectContaining({
-        name: "Proposer",
-        value: expect.stringContaining(
-          `https://etherscan.io/address/${proposal.proposer}`,
-        ),
-      }),
       expect.objectContaining({
         name: "Transaction",
         value: expect.stringContaining(
@@ -127,6 +120,15 @@ it.each([
       }),
     ]),
   });
+  if (key === "created") {
+    expect(field("Proposal ID").value).toBe("19");
+    expect(field("Proposer").value).toContain(
+      `https://etherscan.io/address/${proposal.proposer}`,
+    );
+  } else {
+    expect(field("Proposal ID")).toBeUndefined();
+    expect(field("Proposer")).toBeUndefined();
+  }
   expect(embed().fields[0].name).toBe("Description");
   expect(field("Description").value).toBe(
     "Restore OHM bridging to five EVM chains. Move pool administration under governance.",
@@ -233,4 +235,6 @@ it("renders daily voting progress with the description and frontend link, starti
     "<t:1793637719:R>\n<t:1793637719:F>\nEstimated. Voting ends after block 50600.",
   );
   expect(field("Transaction")).toBeUndefined();
+  expect(field("Proposal ID")).toBeUndefined();
+  expect(field("Proposer")).toBeUndefined();
 });

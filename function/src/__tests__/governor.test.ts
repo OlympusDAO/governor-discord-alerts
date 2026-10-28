@@ -20,7 +20,7 @@ const proposal = {
 } as ProposalCreated;
 const word = (value: number | bigint) =>
   BigInt(value).toString(16).padStart(64, "0");
-const encodedProposal = `0x${[19, 1, 0, 0, 0, 26278037, 26328525, 0, 0, 0, 1, 0, 0, 0].map(word).join("")}`;
+const encodedProposal = `0x${[19, 1, 0, 2000n * 10n ** 18n, 0, 26278037, 26328525, 900n * 10n ** 18n, 300n * 10n ** 18n, 800n * 10n ** 18n, 1, 0, 0, 0].map(word).join("")}`;
 const originalFetch = global.fetch;
 const originalRpc = process.env.GOVERNOR_RPC_URL;
 let seen: { method: string; params: unknown[] }[];
@@ -126,6 +126,11 @@ it("reads current values at the indexed block and checks archive access at propo
     proposals: [
       { proposal, state: 1, eta: 0, endBlock: 26328525, votingStarted: true },
     ],
+  });
+  expect(snapshot.proposals[0]).toMatchObject({
+    quorumVotes: 2000n * 10n ** 18n,
+    forVotes: 900n * 10n ** 18n,
+    againstVotes: 300n * 10n ** 18n,
   });
   for (const call of seen.filter((c) => c.method === "eth_call")) {
     expect(call.params[1]).toBe(

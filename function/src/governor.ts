@@ -244,6 +244,9 @@ export const getGovernanceSnapshot = async (
         eta: number(data[4]),
         endBlock: number(data[6]),
         votingStarted: data[10] === 1n,
+        quorumVotes: data[3],
+        forVotes: data[7],
+        againstVotes: data[8],
       };
     }),
   };

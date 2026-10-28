@@ -71,6 +71,9 @@ beforeEach(() => {
         endBlock: 199,
         eta: now + 86400,
         votingStarted: true,
+        quorumVotes: 100n,
+        forVotes: 0n,
+        againstVotes: 0n,
       },
     ],
   });
@@ -125,6 +128,9 @@ it("includes proposals visible at the event head while excluding later creations
         endBlock: 300,
         eta: 0,
         votingStarted: true,
+        quorumVotes: 100n,
+        forVotes: 0n,
+        againstVotes: 0n,
       })),
     }));
   jest

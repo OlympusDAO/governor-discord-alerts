@@ -129,6 +129,12 @@ These values are illustrative.
 >
 > Restore OHM bridging to five EVM chains.
 >
+> **Deadline**
+>
+> `<t:1793637719:R>`\
+> `<t:1793637719:F>`\
+> Estimated. Voting ends after block 50600.
+>
 > **Details**
 >
 > Quorum reached: **45.00%** of required Yes votes
@@ -138,7 +144,8 @@ These values are illustrative.
 > Votes are weighted by gOHM. No and abstain votes do not count toward quorum; abstentions are excluded from approval.
 
 The example represents 900 gOHM Yes and 300 gOHM No, with a stored quorum of 2,000 gOHM.
-The actual embed also includes the estimated deadline, proposal ID, and proposer.
+Discord renders the deadline as a live countdown followed by the absolute date in the reader's time zone.
+The actual embed also includes the proposal ID and proposer.
 
 ## Examples
 

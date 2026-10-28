@@ -229,6 +229,8 @@ it("renders daily voting progress with the description and frontend link, starti
   expect(field("Details").value).toContain(
     "Approval: **75.00% Yes / 25.00% No**",
   );
-  expect(field("Deadline").value).toContain("Voting ends after block 50600.");
+  expect(field("Deadline").value).toBe(
+    "<t:1793637719:R>\n<t:1793637719:F>\nEstimated. Voting ends after block 50600.",
+  );
   expect(field("Transaction")).toBeUndefined();
 });

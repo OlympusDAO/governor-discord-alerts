@@ -63,7 +63,7 @@ Polling currently supports fewer than 1,000 proposals. It fails explicitly when 
 - `pnpm run build`: build the Cloud Function TypeScript.
 - `pnpm run lint`: run Biome fixes in `function/`.
 - `pnpm run lint:check`: run the non-mutating Biome check in `function/`.
-- `pnpm test`: run the Jest test suite in `function/`.
+- `pnpm test`: compile and run the Node.js test suite in `function/`.
 
 ## Deployment
 

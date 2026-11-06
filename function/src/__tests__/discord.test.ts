@@ -1,4 +1,8 @@
-import { WebhookClient } from "discord.js";
+import * as assert from "node:assert/strict";
+import { after as afterAll, afterEach, beforeEach, it, mock } from "node:test";
+import { format } from "node:util";
+import type { WebhookClient } from "discord.js";
+import * as discordSdk from "discord.js";
 import { processProposalEvents } from "../discord";
 import { processLifecycleReminders } from "../lifecycle";
 import {
@@ -8,13 +12,11 @@ import {
   type ProposalEvents,
   ProposalState,
 } from "../types";
+import { assertSubset, mocked } from "./support";
 
-jest.mock("discord.js", () => ({
-  ...jest.requireActual("discord.js"),
-  WebhookClient: jest.fn(),
-}));
-
-const send = jest.fn().mockResolvedValue({});
+const send = mock.fn(
+  async (_payload: { embeds: import("discord.js").EmbedBuilder[] }) => ({}),
+);
 const originalWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
 const proposal: ProposalCreated = {
   id: "19",
@@ -58,7 +60,7 @@ const snapshot: GovernanceSnapshot = {
   ],
 };
 let saved: AlertState;
-const persist = jest.fn().mockResolvedValue(undefined);
+const persist = mock.fn(async () => undefined);
 const processEvents = (events: ProposalEvents) =>
   processProposalEvents(events, snapshot, saved, persist);
 const emptyEvents = (): ProposalEvents => ({
@@ -69,22 +71,37 @@ const emptyEvents = (): ProposalEvents => ({
   queued: [],
   votingStarted: [],
 });
-const embed = () => send.mock.calls[0][0].embeds[0].toJSON();
+const embed = () => {
+  const data = send.mock.calls[0].arguments[0].embeds[0].toJSON();
+  assert.ok(data.fields);
+  assert.ok(data.title);
+  return { ...data, fields: data.fields, title: data.title };
+};
 const field = (name: string) =>
-  embed().fields.find((field: { name: string }) => field.name === name);
+  embed().fields.find((field) => field.name === name);
+const fieldValue = (name: string) => {
+  const value = field(name);
+  assert.ok(value, `Missing embed field: ${name}`);
+  return value.value;
+};
 
 beforeEach(() => {
-  send.mockClear();
+  send.mock.resetCalls();
   saved = { lastProcessedBlock: 0, proposals: {} };
-  persist.mockClear();
-  jest
-    .mocked(WebhookClient)
-    .mockImplementation(() => ({ send }) as unknown as WebhookClient);
+  persist.mock.resetCalls();
+  mock.method(
+    discordSdk,
+    "WebhookClient",
+    class {
+      send = send;
+    } as unknown as typeof WebhookClient,
+  );
   process.env.DISCORD_WEBHOOK_URL = "https://example.invalid/mock-only";
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  mock.restoreAll();
+  mock.timers.reset();
 });
 
 afterAll(() => {
@@ -92,69 +109,86 @@ afterAll(() => {
   else process.env.DISCORD_WEBHOOK_URL = originalWebhookUrl;
 });
 
-it.each([
+for (const [key, status] of [
   ["created", "Proposal Created"],
   ["cancelled", "Proposal Cancelled"],
   ["vetoed", "Proposal Vetoed"],
   ["votingStarted", "Proposal Voting Started"],
   ["queued", "Proposal Queued"],
   ["executed", "Proposal Executed"],
-] as const)("enriches %s alerts with proposal details and the event transaction", async (key, status) => {
-  const events = emptyEvents();
-  if (key === "created") events.created.push(proposal);
-  else events[key].push(marker);
+] as const) {
+  it(
+    format(
+      "enriches %s alerts with proposal details and the event transaction",
+      key,
+      status,
+    ),
+    async () => {
+      const events = emptyEvents();
+      if (key === "created") events.created.push(proposal);
+      else events[key].push(marker);
 
-  await processEvents(events);
+      await processEvents(events);
 
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(embed()).toMatchObject({
-    title: "#19 · CCIP Bridge Activation",
-    url: "https://app.olympusdao.finance/#/governance/proposals/19",
-    description: status,
-    fields: expect.arrayContaining([
-      expect.objectContaining({
-        name: "Transaction",
-        value: expect.stringContaining(
+      assert.strictEqual(mocked(send).mock.callCount(), 1);
+      assertSubset(embed(), {
+        title: "#19 · CCIP Bridge Activation",
+        url: "https://app.olympusdao.finance/#/governance/proposals/19",
+        description: status,
+      });
+      assert.ok(
+        fieldValue("Transaction").includes(
           `https://etherscan.io/tx/${key === "created" ? proposal.transactionHash : marker.transactionHash}`,
         ),
-      }),
-    ]),
-  });
-  if (key === "created") {
-    expect(field("Proposal ID").value).toBe("19");
-    expect(field("Proposer").value).toContain(
-      `https://etherscan.io/address/${proposal.proposer}`,
-    );
-  } else {
-    expect(field("Proposal ID")).toBeUndefined();
-    expect(field("Proposer")).toBeUndefined();
-  }
-  expect(embed().fields[0].name).toBe("Description");
-  expect(field("Description").value).toBe(
-    "Restore OHM bridging to five EVM chains. Move pool administration under governance.",
+      );
+      if (key === "created") {
+        assert.strictEqual(fieldValue("Proposal ID"), "19");
+        assert.ok(
+          fieldValue("Proposer").includes(
+            `https://etherscan.io/address/${proposal.proposer}`,
+          ),
+        );
+      } else {
+        assert.strictEqual(field("Proposal ID"), undefined);
+        assert.strictEqual(field("Proposer"), undefined);
+      }
+      assert.strictEqual(embed().fields[0].name, "Description");
+      assert.strictEqual(
+        fieldValue("Description"),
+        "Restore OHM bridging to five EVM chains. Move pool administration under governance.",
+      );
+      if (key === "votingStarted" || key === "queued") {
+        assert.strictEqual(
+          embed().fields[key === "queued" ? 2 : 1].name,
+          "Deadline",
+        );
+        assert.match(fieldValue("Deadline"), /^<t:\d+:R>\n<t:\d+:F>/);
+      } else assert.strictEqual(field("Deadline"), undefined);
+    },
   );
-  if (key === "votingStarted" || key === "queued") {
-    expect(embed().fields[key === "queued" ? 2 : 1].name).toBe("Deadline");
-    expect(field("Deadline").value).toMatch(/^<t:\d+:R>\n<t:\d+:F>/);
-  } else expect(field("Deadline")).toBeUndefined();
-});
+}
 
 it("shows absolute and live relative timestamps for queued execution deadlines", async () => {
   const events = emptyEvents();
   events.queued.push(marker);
   await processEvents(events);
-  expect(embed().fields[1].name).toBe("Executable From");
-  expect(field("Executable From").value).toBe(
+  assert.strictEqual(embed().fields[1].name, "Executable From");
+  assert.strictEqual(
+    fieldValue("Executable From"),
     "<t:1793119319:R>\n<t:1793119319:F>",
   );
-  expect(field("Deadline").value).toBe("<t:1793205719:R>\n<t:1793205719:F>");
+  assert.strictEqual(
+    fieldValue("Deadline"),
+    "<t:1793205719:R>\n<t:1793205719:F>",
+  );
 });
 
 it("labels the voting deadline as an estimate and keeps its end block", async () => {
   const events = emptyEvents();
   events.votingStarted.push(marker);
   await processEvents(events);
-  expect(field("Deadline").value).toBe(
+  assert.strictEqual(
+    fieldValue("Deadline"),
     "<t:1793637719:R>\n<t:1793637719:F>\nEstimated. Voting ends after block 50600.",
   );
 });
@@ -166,24 +200,24 @@ it("keeps long proposal text within Discord embed limits", async () => {
     description: `# ${"T".repeat(400)}\n\n${"x".repeat(6000)}`,
   });
   await processEvents(events);
-  expect(embed().title.length).toBeLessThanOrEqual(256);
-  expect(field("Description").value).toHaveLength(240);
-  expect(field("Description").value).toMatch(/\.\.\.$/);
+  assert.ok(embed().title.length <= 256);
+  assert.strictEqual(fieldValue("Description").length, 240);
+  assert.match(fieldValue("Description"), /\.\.\.$/);
 });
 
 it("handles descriptions with no separate heading or summary", async () => {
   const events = emptyEvents();
   events.created.push({ ...proposal, description: "Emergency Proposal" });
   await processEvents(events);
-  expect(embed().title).toBe("#19 · Emergency Proposal");
-  expect(field("Description").value).toBe("Emergency Proposal");
+  assert.strictEqual(embed().title, "#19 · Emergency Proposal");
+  assert.strictEqual(fieldValue("Description"), "Emergency Proposal");
 });
 
 it("shows a fallback when the proposal has only a title", async () => {
   const events = emptyEvents();
   events.created.push({ ...proposal, description: "# Title only" });
   await processEvents(events);
-  expect(field("Description").value).toBe("No description provided.");
+  assert.strictEqual(fieldValue("Description"), "No description provided.");
 });
 
 it("deduplicates delivered event alerts after a partial run is retried", async () => {
@@ -191,18 +225,21 @@ it("deduplicates delivered event alerts after a partial run is retried", async (
   events.votingStarted.push(marker);
   await processEvents(events);
   await processEvents(events);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(persist).toHaveBeenCalledTimes(1);
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.strictEqual(mocked(persist).mock.callCount(), 1);
 });
 
 it("renders daily voting progress with the description and frontend link, starting 24 hours after the start alert", async () => {
-  jest.useFakeTimers().setSystemTime(new Date(snapshot.timestamp * 1000));
+  mock.timers.enable({
+    apis: ["Date"],
+    now: new Date(snapshot.timestamp * 1000),
+  });
   const events = emptyEvents();
   events.votingStarted.push(marker);
   await processEvents(events);
-  send.mockClear();
+  send.mock.resetCalls();
   await processLifecycleReminders(snapshot, saved, persist);
-  expect(send).not.toHaveBeenCalled();
+  assert.strictEqual(mocked(send).mock.callCount(), 0);
   const nextDay: GovernanceSnapshot = {
     ...snapshot,
     blockNumber: snapshot.blockNumber + 7200,
@@ -216,25 +253,27 @@ it("renders daily voting progress with the description and frontend link, starti
       },
     ],
   };
-  jest.setSystemTime(new Date(nextDay.timestamp * 1000));
+  mock.timers.setTime(Number(new Date(nextDay.timestamp * 1000)));
   await processLifecycleReminders(nextDay, saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(embed()).toMatchObject({
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assertSubset(embed(), {
     title: "#19 · CCIP Bridge Activation",
     url: "https://app.olympusdao.finance/#/governance/proposals/19",
     description: "Proposal Voting In Progress",
   });
-  expect(field("Description").value).toBe(
+  assert.strictEqual(
+    fieldValue("Description"),
     "Restore OHM bridging to five EVM chains. Move pool administration under governance.",
   );
-  expect(field("Details").value).toContain("Quorum reached: **45.00%**");
-  expect(field("Details").value).toContain(
-    "Approval: **75.00% Yes / 25.00% No**",
+  assert.ok(fieldValue("Details").includes("Quorum reached: **45.00%**"));
+  assert.ok(
+    fieldValue("Details").includes("Approval: **75.00% Yes / 25.00% No**"),
   );
-  expect(field("Deadline").value).toBe(
+  assert.strictEqual(
+    fieldValue("Deadline"),
     "<t:1793637719:R>\n<t:1793637719:F>\nEstimated. Voting ends after block 50600.",
   );
-  expect(field("Transaction")).toBeUndefined();
-  expect(field("Proposal ID")).toBeUndefined();
-  expect(field("Proposer")).toBeUndefined();
+  assert.strictEqual(field("Transaction"), undefined);
+  assert.strictEqual(field("Proposal ID"), undefined);
+  assert.strictEqual(field("Proposer"), undefined);
 });

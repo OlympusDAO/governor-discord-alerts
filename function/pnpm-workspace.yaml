@@ -39,3 +39,4 @@ packages:
   - "."
 preferFrozenLockfile: true
 strictDepBuilds: true
+trustLockfile: false

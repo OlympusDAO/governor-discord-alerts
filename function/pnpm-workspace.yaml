@@ -20,3 +20,7 @@ packages:
 preferFrozenLockfile: true
 strictDepBuilds: true
 trustLockfile: false
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  # User-approved type-only exception; remove when this locked version is replaced.
+  - "undici-types@6.21.0"

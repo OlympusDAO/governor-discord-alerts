@@ -23,4 +23,4 @@ jobs:
       - name: Audit root workspace dependencies (fail on moderate+)
         run: pnpm run audit
       - name: Audit function archive dependencies (fail on moderate+)
-        run: pnpm run audit:function
+        run: pnpm --ignore-workspace --dir function audit --audit-level moderate --json

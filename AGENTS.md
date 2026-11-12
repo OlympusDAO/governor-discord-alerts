@@ -25,7 +25,7 @@ Data comes from the [Olympus protocol indexer](https://github.com/OlympusDAO/oly
 - `pnpm test`: compile and run Node.js tests in `function/`
 - `pnpm run validate:pnpm`: validate root and Cloud Function pnpm installs and audits
 - `pnpm run install:function:check`: verify the exact frozen lockfile/config GCP Cloud Build uses in a temporary standalone directory without creating `function/node_modules`
-- `pnpm audit --dir function --audit-level moderate --json`: audit the deploy archive dependency graph, not only the root workspace
+- `pnpm run audit:function`: audit the deploy archive dependency graph, not only the root workspace
 
 ## Deployment
 

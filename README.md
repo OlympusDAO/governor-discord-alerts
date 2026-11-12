@@ -108,5 +108,7 @@ This repo stores pnpm policy in `pnpm-workspace.yaml`, including dependency over
 
 Both package manifests pin pnpm 11.28.9. CI reads the root manifest through `pnpm/action-setup`.
 The function archive has its own policy and lockfile because GCP installs it separately.
-`pnpm run install:function:check` copies the deployment manifests into a temporary directory and checks its frozen lockfile.
-This preserves the function policy while excluding the parent workspace.
+`pnpm run install:function:check` copies the deployment manifests into a temporary directory and performs a frozen install.
+`pnpm run audit:function` audits the same standalone archive graph. Both commands preserve
+the function policy while excluding the parent workspace; `--ignore-workspace` would also
+ignore the archive’s `pnpm-workspace.yaml` policy.

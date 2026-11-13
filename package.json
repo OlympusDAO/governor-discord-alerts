@@ -5,7 +5,7 @@
   "main": "pulumi.ts",
   "scripts": {
     "audit": "pnpm audit --audit-level moderate --json",
-    "audit:function": "pnpm audit --dir function --audit-level moderate --json",
+    "audit:function": "node scripts/check-function-install.mjs --audit",
     "build": "cd function && pnpm run build",
     "install:function:check": "node scripts/check-function-install.mjs",
     "lint": "cd function && pnpm run lint",
@@ -17,10 +17,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@pulumi/gcp": "^9.18.0",
-    "@pulumi/pulumi": "^3.253.0",
-    "dotenv-cli": "^7.4.2",
-    "typescript": "^5.6.2"
+    "@pulumi/gcp": "^9.37.1",
+    "@pulumi/pulumi": "^3.274.1",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=22.13.0",

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../test-bin",
+    "rootDir": "src",
+    "esModuleInterop": false,
+    "lib": ["es2022", "dom"],
+    "noEmitOnError": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": []
+}

@@ -1,4 +1,8 @@
+import * as assert from "node:assert/strict";
+import { afterEach, beforeEach, it, mock } from "node:test";
+import { format, isDeepStrictEqual } from "node:util";
 import * as discord from "../discord";
+import * as governor from "../governor";
 import {
   getCompletedVoteOutcome,
   isEmergencyQueueCancelled,
@@ -10,8 +14,7 @@ import {
   type GovernanceSnapshot,
   ProposalState,
 } from "../types";
-
-jest.mock("../governor");
+import { mocked } from "./support";
 
 const now = 1793032919;
 const proposal = {
@@ -50,20 +53,35 @@ const snapshot = (
   ],
 });
 const state = (): AlertState => ({ lastProcessedBlock: 150, proposals: {} });
-const persist = jest.fn().mockResolvedValue(undefined);
-let send: jest.SpyInstance;
+const persist = mock.fn(async () => undefined);
+let send: ReturnType<typeof mock.fn<typeof discord.sendDiscordAlert>>;
+
+const sentOptions = () => {
+  const options = send.mock.calls[0].arguments[3];
+  assert.ok(options);
+  return options;
+};
+const sentDetails = () => {
+  const details = sentOptions().details;
+  assert.strictEqual(typeof details, "string");
+  return details as string;
+};
 
 beforeEach(() => {
-  jest.useFakeTimers().setSystemTime(new Date(now * 1000));
-  persist.mockClear();
-  send = jest.spyOn(discord, "sendDiscordAlert").mockResolvedValue();
-  jest.mocked(getCompletedVoteOutcome).mockResolvedValue(true);
-  jest.mocked(wasExpiredAtCursor).mockResolvedValue(true);
-  jest.mocked(isEmergencyQueueCancelled).mockResolvedValue(false);
+  mock.method(governor, "getCompletedVoteOutcome");
+  mock.method(governor, "wasExpiredAtCursor");
+  mock.method(governor, "isEmergencyQueueCancelled");
+
+  mock.timers.enable({ apis: ["Date"], now: new Date(now * 1000) });
+  persist.mock.resetCalls();
+  send = mock.method(discord, "sendDiscordAlert", async () => undefined);
+  mocked(getCompletedVoteOutcome).mock.mockImplementation(async () => true);
+  mocked(wasExpiredAtCursor).mock.mockImplementation(async () => true);
+  mocked(isEmergencyQueueCancelled).mock.mockImplementation(async () => false);
 });
 
 it("baselines a previously cancelled emergency queue without executable or expiry alerts", async () => {
-  jest.mocked(isEmergencyQueueCancelled).mockResolvedValue(true);
+  mocked(isEmergencyQueueCancelled).mock.mockImplementation(async () => true);
   const saved = state();
   const s = snapshot(ProposalState.Emergency, {
     eta: now - 1,
@@ -76,16 +94,17 @@ it("baselines a previously cancelled emergency queue without executable or expir
     saved,
     persist,
   );
-  expect(send).not.toHaveBeenCalled();
-  expect(saved.proposals["19"].terminal).toBe(true);
-  expect(isEmergencyQueueCancelled).toHaveBeenCalledWith(
-    s.proposals[0],
-    s.blockNumber,
+  assert.strictEqual(mocked(send).mock.callCount(), 0);
+  assert.strictEqual(saved.proposals["19"].terminal, true);
+  assert.ok(
+    mocked(isEmergencyQueueCancelled).mock.calls.some((call) =>
+      isDeepStrictEqual(call.arguments, [s.proposals[0], s.blockNumber]),
+    ),
   );
 });
 afterEach(() => {
-  jest.useRealTimers();
-  jest.restoreAllMocks();
+  mock.timers.reset();
+  mock.restoreAll();
 });
 
 it("sends active voting progress once every 24 hours across serialized state reloads", async () => {
@@ -97,87 +116,108 @@ it("sends active voting progress once every 24 hours across serialized state rel
   });
   let saved = state();
   await processLifecycleReminders(s, saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0]).toEqual([
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.deepStrictEqual(send.mock.calls[0].arguments.slice(0, 3), [
     proposal,
     "Proposal Voting In Progress",
     new Date(now * 1000),
-    expect.objectContaining({
-      details: expect.stringContaining("Quorum reached: **45.00%**"),
-      deadline: now + (50000 - 200) * 12,
-      deadlineNote: "Estimated. Voting ends after block 50000.",
-    }),
   ]);
-  expect(send.mock.calls[0][3].details).toContain(
-    "Approval: **75.00% Yes / 25.00% No**",
+  assert.strictEqual(sentOptions().deadline, now + (50000 - 200) * 12);
+  assert.strictEqual(
+    sentOptions().deadlineNote,
+    "Estimated. Voting ends after block 50000.",
   );
-  expect(persist).toHaveBeenCalledTimes(1);
+  assert.ok(sentDetails().includes("Quorum reached: **45.00%**"));
+  assert.ok(sentDetails().includes("Approval: **75.00% Yes / 25.00% No**"));
+  assert.strictEqual(mocked(persist).mock.callCount(), 1);
   saved = JSON.parse(JSON.stringify(saved));
-  jest.setSystemTime(new Date((now + 86399) * 1000));
+  mock.timers.setTime(Number(new Date((now + 86399) * 1000)));
   await processLifecycleReminders(
     { ...s, timestamp: now + 86399 },
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(1);
-  jest.setSystemTime(new Date((now + 86400) * 1000));
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  mock.timers.setTime(Number(new Date((now + 86400) * 1000)));
   await processLifecycleReminders(
     { ...s, timestamp: now + 86400 },
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(2);
+  assert.strictEqual(mocked(send).mock.callCount(), 2);
 });
 
-it.each([
+for (const [forVotes, againstVotes, quorumVotes, quorum, approval, note] of [
   [0n, 0n, 100n, "0.00%", "0.00% Yes / 0.00% No", "No Yes or No votes yet"],
   [200n, 0n, 100n, "100.00%", "100.00% Yes / 0.00% No", ""],
   [0n, 100n, 100n, "0.00%", "0.00% Yes / 100.00% No", ""],
   [1n, 2n, 0n, "Unavailable", "33.33% Yes / 66.67% No", ""],
-])("handles zero votes, capped quorum and unavailable quorum (%s, %s, %s)", async (forVotes, againstVotes, quorumVotes, quorum, approval, note) => {
-  await processLifecycleReminders(
-    snapshot(ProposalState.Active, {
-      endBlock: 300,
+] as const) {
+  it(
+    format(
+      "handles zero votes, capped quorum and unavailable quorum (%s, %s, %s)",
       forVotes,
       againstVotes,
       quorumVotes,
-    }),
-    state(),
-    persist,
+      quorum,
+      approval,
+      note,
+    ),
+    async () => {
+      await processLifecycleReminders(
+        snapshot(ProposalState.Active, {
+          endBlock: 300,
+          forVotes,
+          againstVotes,
+          quorumVotes,
+        }),
+        state(),
+        persist,
+      );
+      const details = sentDetails();
+      assert.ok(details.includes(quorum));
+      assert.ok(details.includes(approval));
+      assert.ok(details.includes(note));
+      assert.doesNotMatch(details, /NaN|Infinity/);
+    },
   );
-  const details = send.mock.calls[0][3].details;
-  expect(details).toContain(quorum);
-  expect(details).toContain(approval);
-  expect(details).toContain(note);
-  expect(details).not.toMatch(/NaN|Infinity/);
-});
+}
 
-it.each([
+for (const status of [
   ProposalState.Pending,
   ProposalState.Canceled,
   ProposalState.Vetoed,
   ProposalState.Defeated,
   ProposalState.Executed,
   ProposalState.Emergency,
-])("does not send voting reminders outside active voting (%s)", async (status) => {
-  await processLifecycleReminders(
-    snapshot(status, { endBlock: 300 }),
-    state(),
-    persist,
+] as const) {
+  it(
+    format("does not send voting reminders outside active voting (%s)", status),
+    async () => {
+      await processLifecycleReminders(
+        snapshot(status, { endBlock: 300 }),
+        state(),
+        persist,
+      );
+      assert.strictEqual(mocked(send).mock.callCount(), 0);
+    },
   );
-  expect(send).not.toHaveBeenCalled();
-});
+}
 
 it("leaves a failed daily notification eligible for retry", async () => {
   const saved = state();
   const s = snapshot(ProposalState.Active, { endBlock: 300 });
-  send.mockRejectedValueOnce(new Error("Discord unavailable"));
-  await expect(processLifecycleReminders(s, saved, persist)).rejects.toThrow(
-    "Discord unavailable",
+  send.mock.mockImplementationOnce(async () => {
+    throw new Error("Discord unavailable");
+  });
+  await assert.rejects(
+    processLifecycleReminders(s, saved, persist),
+    (error: unknown) =>
+      error instanceof Error && error.message.includes("Discord unavailable"),
   );
-  expect(persist).not.toHaveBeenCalled();
+  assert.strictEqual(mocked(persist).mock.callCount(), 0);
   await processLifecycleReminders(s, saved, persist);
-  expect(send).toHaveBeenCalledTimes(2);
+  assert.strictEqual(mocked(send).mock.callCount(), 2);
 });
 
 it("keeps deliveries 24 hours apart when the indexer catches up", async () => {
@@ -188,49 +228,56 @@ it("keeps deliveries 24 hours apart when the indexer catches up", async () => {
     saved,
     persist,
   );
-  jest.setSystemTime(new Date((now + 79201) * 1000));
+  mock.timers.setTime(Number(new Date((now + 79201) * 1000)));
   await processLifecycleReminders(
     { ...s, timestamp: now + 79201 },
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(1);
-  jest.setSystemTime(new Date((now + 86400) * 1000));
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  mock.timers.setTime(Number(new Date((now + 86400) * 1000)));
   await processLifecycleReminders(
     { ...s, timestamp: now + 86400 },
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(2);
+  assert.strictEqual(mocked(send).mock.callCount(), 2);
 });
 
 it("reminds through the inclusive end block, then stops", async () => {
   const saved = state();
   const s = snapshot(ProposalState.Active, { endBlock: 200 });
   await processLifecycleReminders(s, saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  jest.setSystemTime(new Date((now + 86400) * 1000));
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  mock.timers.setTime(Number(new Date((now + 86400) * 1000)));
   await processLifecycleReminders(
     { ...s, blockNumber: 201, timestamp: now + 86400 },
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(1);
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
 });
 
-it.each([
+for (const status of [
   ProposalState.Succeeded,
   ProposalState.Defeated,
-])("announces voting completion and its outcome once (%s)", async (status) => {
-  const saved = state();
-  await processVotingEnded(snapshot(status), saved, persist);
-  await processVotingEnded(snapshot(status), saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain(
-    status === ProposalState.Succeeded ? "Passed" : "Defeated",
+] as const) {
+  it(
+    format("announces voting completion and its outcome once (%s)", status),
+    async () => {
+      const saved = state();
+      await processVotingEnded(snapshot(status), saved, persist);
+      await processVotingEnded(snapshot(status), saved, persist);
+      assert.strictEqual(mocked(send).mock.callCount(), 1);
+      assert.ok(
+        send.mock.calls[0].arguments[1].includes(
+          status === ProposalState.Succeeded ? "Passed" : "Defeated",
+        ),
+      );
+      assert.strictEqual(saved.proposals["19"].votingEnded, true);
+    },
   );
-  expect(saved.proposals["19"].votingEnded).toBe(true);
-});
+}
 
 it("does not end voting at the inclusive end block", async () => {
   await processVotingEnded(
@@ -238,16 +285,16 @@ it("does not end voting at the inclusive end block", async () => {
     state(),
     persist,
   );
-  expect(send).not.toHaveBeenCalled();
+  assert.strictEqual(mocked(send).mock.callCount(), 0);
 });
 
 it("reminds unqueued successful proposals every four hours without inventing an expiry", async () => {
   const saved = state();
   const s = snapshot(ProposalState.Succeeded);
   await processVotingEnded(s, saved, persist);
-  send.mockClear();
+  send.mock.resetCalls();
   await processLifecycleReminders(s, saved, persist);
-  expect(send).not.toHaveBeenCalled();
+  assert.strictEqual(mocked(send).mock.callCount(), 0);
   await processLifecycleReminders(
     { ...s, timestamp: now + 14400 },
     saved,
@@ -258,13 +305,11 @@ it("reminds unqueued successful proposals every four hours without inventing an 
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain("Awaiting Queue");
-  expect(send.mock.calls[0][1]).not.toMatch(/expir|deadline/i);
-  expect(send.mock.calls[0][3].deadline).toBeUndefined();
-  expect(send.mock.calls[0][3].details).toContain(
-    "There is no queue deadline.",
-  );
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.ok(send.mock.calls[0].arguments[1].includes("Awaiting Queue"));
+  assert.doesNotMatch(send.mock.calls[0].arguments[1], /expir|deadline/i);
+  assert.strictEqual(sentOptions().deadline, undefined);
+  assert.ok(sentDetails().includes("There is no queue deadline."));
 });
 
 it("announces executability at ETA and uses wall-clock reminder intervals and an explicit deadline", async () => {
@@ -276,15 +321,15 @@ it("announces executability at ETA and uses wall-clock reminder intervals and an
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain("Executable");
-  expect(send.mock.calls[0][3].deadline).toBe(now + 86400);
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.ok(send.mock.calls[0].arguments[1].includes("Executable"));
+  assert.strictEqual(sentOptions().deadline, now + 86400);
   await processLifecycleReminders(
     { ...s, timestamp: now + 14400 },
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(2);
+  assert.strictEqual(mocked(send).mock.callCount(), 2);
 });
 
 it("waits until ETA before reminding", async () => {
@@ -293,59 +338,71 @@ it("waits until ETA before reminding", async () => {
     state(),
     persist,
   );
-  expect(send).not.toHaveBeenCalled();
+  assert.strictEqual(mocked(send).mock.callCount(), 0);
 });
 
 it("suppresses executable reminders after the real deadline while waiting for indexed expiry", async () => {
   const saved = state();
   const s = snapshot(ProposalState.Queued, { eta: now - 84600 });
-  jest.setSystemTime(new Date((now + 3600) * 1000));
+  mock.timers.setTime(Number(new Date((now + 3600) * 1000)));
   await processLifecycleReminders(s, saved, persist);
-  expect(send).not.toHaveBeenCalled();
-  expect(saved.proposals["19"].terminal).not.toBe(true);
+  assert.strictEqual(mocked(send).mock.callCount(), 0);
+  assert.notStrictEqual(saved.proposals["19"].terminal, true);
   await processLifecycleReminders(
     { ...s, timestamp: now + 3600 },
     saved,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain("Proposal Expired");
-  expect(saved.proposals["19"].terminal).toBe(true);
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.ok(send.mock.calls[0].arguments[1].includes("Proposal Expired"));
+  assert.strictEqual(saved.proposals["19"].terminal, true);
 });
 
-it.each([
-  true,
-  false,
-])("announces expiry once and stops reminders (activated=%s)", async (activated) => {
-  const saved = state();
-  saved.proposals["19"] = { events: {}, votingEnded: true };
-  const s = snapshot(ProposalState.Expired, {
-    eta: activated ? now - 86401 : 0,
-    votingStarted: activated,
-  });
-  await processLifecycleReminders(s, saved, persist);
-  await processLifecycleReminders(s, saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][3].details).toContain(
-    activated ? "without being executed" : "without being activated",
+for (const activated of [true, false] as const) {
+  it(
+    format(
+      "announces expiry once and stops reminders (activated=%s)",
+      activated,
+    ),
+    async () => {
+      const saved = state();
+      saved.proposals["19"] = { events: {}, votingEnded: true };
+      const s = snapshot(ProposalState.Expired, {
+        eta: activated ? now - 86401 : 0,
+        votingStarted: activated,
+      });
+      await processLifecycleReminders(s, saved, persist);
+      await processLifecycleReminders(s, saved, persist);
+      assert.strictEqual(mocked(send).mock.callCount(), 1);
+      assert.ok(
+        sentDetails().includes(
+          activated ? "without being executed" : "without being activated",
+        ),
+      );
+      assert.strictEqual(saved.proposals["19"].terminal, true);
+    },
   );
-  expect(saved.proposals["19"].terminal).toBe(true);
-});
+}
 
-it.each([
+for (const status of [
   ProposalState.Executed,
   ProposalState.Canceled,
   ProposalState.Vetoed,
-])("stops execution reminders for terminal state %s", async (status) => {
-  const saved = state();
-  await processLifecycleReminders(
-    snapshot(status, { eta: now - 1 }),
-    saved,
-    persist,
+] as const) {
+  it(
+    format("stops execution reminders for terminal state %s", status),
+    async () => {
+      const saved = state();
+      await processLifecycleReminders(
+        snapshot(status, { eta: now - 1 }),
+        saved,
+        persist,
+      );
+      assert.strictEqual(mocked(send).mock.callCount(), 0);
+      assert.strictEqual(saved.proposals["19"].terminal, true);
+    },
   );
-  expect(send).not.toHaveBeenCalled();
-  expect(saved.proposals["19"].terminal).toBe(true);
-});
+}
 
 it("baselines old completed proposals on migration while notifying current actionable proposals", async () => {
   const saved = state();
@@ -356,7 +413,7 @@ it("baselines old completed proposals on migration while notifying current actio
     saved,
     persist,
   );
-  expect(send).not.toHaveBeenCalled();
+  assert.strictEqual(mocked(send).mock.callCount(), 0);
   const actionable = state();
   actionable.lastProcessedBlock = 300;
   await processVotingEnded(
@@ -369,46 +426,57 @@ it("baselines old completed proposals on migration while notifying current actio
     actionable,
     persist,
   );
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain("Awaiting Queue");
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.ok(send.mock.calls[0].arguments[1].includes("Awaiting Queue"));
 });
 
 it("leaves failed notifications unsent for retry", async () => {
   const saved = state();
-  send.mockRejectedValueOnce(new Error("Discord unavailable"));
-  await expect(
+  send.mock.mockImplementationOnce(async () => {
+    throw new Error("Discord unavailable");
+  });
+  await assert.rejects(
     processLifecycleReminders(
       snapshot(ProposalState.Queued, { eta: now }),
       saved,
       persist,
     ),
-  ).rejects.toThrow("Discord unavailable");
-  expect(saved.proposals["19"].lastExecutionReminder).toBeUndefined();
-  expect(persist).not.toHaveBeenCalled();
+    (error: unknown) =>
+      error instanceof Error && error.message.includes("Discord unavailable"),
+  );
+  assert.strictEqual(saved.proposals["19"].lastExecutionReminder, undefined);
+  assert.strictEqual(mocked(persist).mock.callCount(), 0);
 });
 
-it.each([
-  ProposalState.Canceled,
-  ProposalState.Vetoed,
-])("reports a completed vote even when a later transaction changes its final state (%s)", async (status) => {
-  const saved = state();
-  await processVotingEnded(snapshot(status), saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain("Voting Ended — Passed");
-  expect(send.mock.calls[0][3].details).not.toContain("ready to be queued");
-});
+for (const status of [ProposalState.Canceled, ProposalState.Vetoed] as const) {
+  it(
+    format(
+      "reports a completed vote even when a later transaction changes its final state (%s)",
+      status,
+    ),
+    async () => {
+      const saved = state();
+      await processVotingEnded(snapshot(status), saved, persist);
+      assert.strictEqual(mocked(send).mock.callCount(), 1);
+      assert.ok(
+        send.mock.calls[0].arguments[1].includes("Voting Ended — Passed"),
+      );
+      assert.ok(!sentDetails().includes("ready to be queued"));
+    },
+  );
+}
 
 it("announces an execution expiry crossed after the migration cursor", async () => {
-  jest.mocked(wasExpiredAtCursor).mockResolvedValue(false);
+  mocked(wasExpiredAtCursor).mock.mockImplementation(async () => false);
   const saved = state();
   const s = snapshot(ProposalState.Expired, { eta: now - 86401 });
   await processLifecycleReminders(s, saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][1]).toContain("Proposal Expired");
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.ok(send.mock.calls[0].arguments[1].includes("Proposal Expired"));
 });
 
 it("announces an activation expiry crossed after the migration cursor", async () => {
-  jest.mocked(wasExpiredAtCursor).mockResolvedValue(false);
+  mocked(wasExpiredAtCursor).mock.mockImplementation(async () => false);
   const saved = state();
   const s = snapshot(ProposalState.Expired, {
     eta: 0,
@@ -416,21 +484,30 @@ it("announces an activation expiry crossed after the migration cursor", async ()
     votingStarted: false,
   });
   await processLifecycleReminders(s, saved, persist);
-  expect(send).toHaveBeenCalledTimes(1);
-  expect(send.mock.calls[0][3].details).toContain("without being activated");
+  assert.strictEqual(mocked(send).mock.callCount(), 1);
+  assert.ok(sentDetails().includes("without being activated"));
 });
 
-it.each([
-  ProposalState.Canceled,
-  ProposalState.Vetoed,
-])("does not report a completed vote when it was interrupted before its deadline (%s)", async (status) => {
-  jest.mocked(getCompletedVoteOutcome).mockResolvedValue(undefined);
-  await processVotingEnded(snapshot(status), state(), persist);
-  expect(send).not.toHaveBeenCalled();
-});
+for (const status of [ProposalState.Canceled, ProposalState.Vetoed] as const) {
+  it(
+    format(
+      "does not report a completed vote when it was interrupted before its deadline (%s)",
+      status,
+    ),
+    async () => {
+      mocked(getCompletedVoteOutcome).mock.mockImplementation(
+        async () => undefined,
+      );
+      await processVotingEnded(snapshot(status), state(), persist);
+      assert.strictEqual(mocked(send).mock.callCount(), 0);
+    },
+  );
+}
 
 it("preserves a defeated vote outcome when the proposal is cancelled afterwards", async () => {
-  jest.mocked(getCompletedVoteOutcome).mockResolvedValue(false);
+  mocked(getCompletedVoteOutcome).mock.mockImplementation(async () => false);
   await processVotingEnded(snapshot(ProposalState.Canceled), state(), persist);
-  expect(send.mock.calls[0][1]).toContain("Voting Ended — Defeated");
+  assert.ok(
+    send.mock.calls[0].arguments[1].includes("Voting Ended — Defeated"),
+  );
 });

@@ -18,6 +18,8 @@ jobs:
 
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
+      - name: Validate standalone function lockfile
+        run: pnpm run install:function:check
       - name: Audit root workspace dependencies (fail on moderate+)
         run: pnpm run audit
       - name: Audit function archive dependencies (fail on moderate+)

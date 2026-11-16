@@ -1,31 +1,33 @@
+import * as assert from "node:assert/strict";
 import { Writable } from "node:stream";
-import { Storage } from "@google-cloud/storage";
+import { after as afterAll, afterEach, beforeEach, it, mock } from "node:test";
+import type { Storage } from "@google-cloud/storage";
+import * as sdk from "@google-cloud/storage";
 import { getAlertState, saveAlertState } from "../storage";
 import type { AlertState } from "../types";
+import { assertSubset } from "./support";
 
-jest.mock("@google-cloud/storage", () => ({
-  ...jest.requireActual("@google-cloud/storage"),
-  Storage: jest.fn(),
-}));
+const RealStorage = sdk.Storage;
+let storageImplementation: typeof Storage;
 const files = new Map<string, string>();
 const originalBucket = process.env.BUCKET_NAME;
 beforeEach(() => {
+  mock.getter(sdk, "Storage", () => storageImplementation);
   files.clear();
   process.env.BUCKET_NAME = "test-bucket";
-  jest.mocked(Storage).mockImplementation(
-    () =>
-      ({
-        bucket: () => ({
-          file: (name: string) => ({
-            exists: async () => [files.has(name)],
-            download: async () => [Buffer.from(files.get(name) ?? "")],
-            save: async (contents: string) => {
-              files.set(name, contents);
-            },
-          }),
+  storageImplementation = class {
+    bucket() {
+      return {
+        file: (name: string) => ({
+          exists: async () => [files.has(name)],
+          download: async () => [Buffer.from(files.get(name) ?? "")],
+          save: async (contents: string) => {
+            files.set(name, contents);
+          },
         }),
-      }) as unknown as Storage,
-  );
+      };
+    }
+  } as unknown as typeof Storage;
 });
 afterAll(() => {
   if (originalBucket === undefined) delete process.env.BUCKET_NAME;
@@ -34,7 +36,7 @@ afterAll(() => {
 
 it("preserves the production block cursor when introducing notification state", async () => {
   files.set("latest_processed_block.txt", "26262494");
-  expect(await getAlertState()).toEqual({
+  assert.deepStrictEqual(await getAlertState(), {
     lastProcessedBlock: 26262494,
     proposals: {},
   });
@@ -52,46 +54,46 @@ it("persists cursor and notification history together and prefers them over the 
     },
   };
   await saveAlertState(state);
-  expect(await getAlertState()).toEqual(state);
+  assert.deepStrictEqual(await getAlertState(), state);
 });
 
 it("starts at zero only when neither state file exists", async () => {
-  expect(await getAlertState()).toEqual({
+  assert.deepStrictEqual(await getAlertState(), {
     lastProcessedBlock: 0,
     proposals: {},
   });
 });
 
 it("retries a throttled state save through the real SDK without changing its payload", async () => {
-  const sdk = jest.requireActual<typeof import("@google-cloud/storage")>(
-    "@google-cloud/storage",
-  );
-  jest
-    .mocked(Storage)
-    .mockImplementation((options) => new sdk.Storage(options));
+  storageImplementation = RealStorage;
   const attempts: string[] = [];
   // Keep the SDK's save/retry logic and replace only its upload transport.
-  const upload = jest
-    .spyOn(sdk.File.prototype, "createWriteStream")
-    .mockImplementation(
-      () =>
-        new Writable({
-          write(chunk, _encoding, callback) {
-            attempts.push(chunk.toString());
-            callback(
-              attempts.length === 1
-                ? Object.assign(new Error("Throttled"), { code: 429 })
-                : undefined,
-            );
-          },
-        }),
-    );
+  const upload = mock.method(
+    sdk.File.prototype,
+    "createWriteStream",
+    () =>
+      new Writable({
+        write(chunk, _encoding, callback) {
+          attempts.push(chunk.toString());
+          callback(
+            attempts.length === 1
+              ? Object.assign(new Error("Throttled"), { code: 429 })
+              : undefined,
+          );
+        },
+      }),
+  );
   const state: AlertState = { lastProcessedBlock: 26278125, proposals: {} };
   try {
     await saveAlertState(state);
-    expect(attempts).toEqual([JSON.stringify(state), JSON.stringify(state)]);
-    expect(upload.mock.calls[1][0]).toMatchObject({ resumable: false });
+    assert.deepStrictEqual(attempts, [
+      JSON.stringify(state),
+      JSON.stringify(state),
+    ]);
+    assertSubset(upload.mock.calls[1].arguments[0], { resumable: false });
   } finally {
-    upload.mockRestore();
+    upload.mock.restore();
   }
 });
+
+afterEach(() => mock.restoreAll());

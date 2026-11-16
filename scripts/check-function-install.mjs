@@ -3,6 +3,7 @@ import { copyFile, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+const audit = process.argv.includes("--audit");
 const archive = await mkdtemp(join(tmpdir(), "governor-function-install-"));
 try {
   for (const name of [
@@ -17,7 +18,9 @@ try {
   }
   const result = spawnSync(
     "pnpm",
-    ["install", "--frozen-lockfile", "--lockfile-only"],
+    audit
+      ? ["audit", "--audit-level", "moderate", "--json"]
+      : ["install", "--frozen-lockfile"],
     {
       cwd: archive,
       stdio: "inherit",

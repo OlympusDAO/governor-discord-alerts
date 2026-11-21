@@ -106,7 +106,7 @@ Pulumi may require pnpm's hoisted linker layout to avoid `.pnpm/...` closure-loa
 
 This repo stores pnpm policy in `pnpm-workspace.yaml`, including dependency overrides, `minimumReleaseAge`, `preferFrozenLockfile`, and the hoisted linker layout. The repository intentionally does not use `.npmrc` for these pnpm-only settings.
 
-Both package manifests pin pnpm 11.28.9. CI reads the root manifest through `pnpm/action-setup`.
+Both package manifests pin pnpm 11.28.9. CI enables Corepack from the checksum-verified Node.js distribution, and Corepack reads the root manifest to select pnpm.
 The function archive has its own policy and lockfile because GCP installs it separately.
 `pnpm run install:function:check` copies the deployment manifests into a temporary directory and performs a frozen install.
 `pnpm run audit:function` audits the same standalone archive graph. Both commands preserve

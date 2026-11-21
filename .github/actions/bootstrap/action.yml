@@ -1,26 +1,25 @@
 name: Bootstrap CI environment
 description: Standardized repository setup for CI.
 
-inputs:
-  install-foundry:
-    description: Install foundry toolchain if required by the project.
-    required: false
-    default: "false"
-
 runs:
   using: composite
   steps:
-    - name: Setup Node.js
-      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-      with:
-        node-version-file: .nvmrc
-
-    - name: Install pnpm
-      uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
-
-    - name: Install Foundry
-      if: ${{ inputs.install-foundry == 'true' }}
-      uses: foundry-rs/foundry-toolchain@8789b3e21e6c11b2697f5eb56eddae542f746c10 # v1.7.0
+    - name: Install verified Node.js and enable Corepack
+      shell: bash
+      run: |
+        version=22.23.4
+        archive="node-v${version}-linux-x64.tar.xz"
+        install_dir="$(mktemp -d "${RUNNER_TEMP}/governor-node.XXXXXXXX")"
+        curl --fail --silent --show-error --location \
+          "https://nodejs.org/dist/v${version}/${archive}" \
+          --output "${install_dir}/${archive}"
+        printf '%s  %s\n' \
+          1805bcd35e6815559bd2eb97db438d3fdb0eb3a5e6a977b7c1badca76337e9ce \
+          "${install_dir}/${archive}" | sha256sum --check
+        tar -xJf "${install_dir}/${archive}" -C "${install_dir}"
+        node_bin="${install_dir}/node-v${version}-linux-x64/bin"
+        PATH="${node_bin}:${PATH}" corepack enable --install-directory "${node_bin}" pnpm
+        printf '%s\n' "${node_bin}" >> "${GITHUB_PATH}"
 
     - name: Install dependencies
       run: pnpm install
